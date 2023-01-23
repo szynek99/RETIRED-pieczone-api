@@ -1,16 +1,19 @@
+import { NotFoundError } from 'api/utils/Error';
 import Order, { OrderInput, OrderOuput } from 'db/models/order';
 
 export const createOrder = async (payload: OrderInput): Promise<OrderOuput> => {
-  const order = await Order.create(payload);
-  return order;
+  const hash = (Math.random() + 1).toString(36).substring(7);
+  const processedPayload = {
+    ...payload,
+    hash,
+  };
+  return await Order.create(processedPayload);
 };
-export const getOrderById = async (id: number): Promise<OrderOuput> => {
-  const order = await Order.findByPk(id);
+export const getOrderByHash = async (hash: string): Promise<OrderOuput> => {
+  const order = await Order.findOne({ where: { hash } });
 
   if (!order) {
-    // @todo throw custom error
-    throw new Error('not found');
+    throw new NotFoundError('Order');
   }
-
   return order;
 };

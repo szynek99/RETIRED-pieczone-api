@@ -8,6 +8,7 @@ export interface OrderOuput extends Required<OrderAttributes> {}
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
   public id!: number;
+  public hash!: string;
   public firstName!: string;
   public secondName!: string;
 }
@@ -18,6 +19,10 @@ Order.init(
       type: INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    hash: {
+      type: STRING,
+      allowNull: false,
     },
     firstName: {
       type: STRING,
