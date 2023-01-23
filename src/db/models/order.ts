@@ -1,6 +1,6 @@
 import sequelizeConnection from 'db/config';
-import { OrderAttributes } from 'types/order';
-import { INTEGER, Model, STRING, Optional } from 'sequelize';
+import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
+import { INTEGER, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 
 export interface OrderInput extends Optional<OrderAttributes, 'id'> {}
 
@@ -9,8 +9,19 @@ export interface OrderOuput extends Required<OrderAttributes> {}
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
   public id!: number;
   public hash!: string;
-  public firstName!: string;
-  public secondName!: string;
+  public firstname!: string;
+  public surname!: string;
+  public status!: OrderStatus;
+  public phoneNumber!: string;
+  public occasion!: string | null;
+  public cakeType!: string;
+  public cakeFlavour!: string;
+  public spongeColour!: SpongeColour;
+  public cakeWeight!: number;
+  public cakeShape!: CakeShape;
+  public cakeInscription!: string | null;
+  public alcoholAllowed!: boolean;
+  public commentsToOrder!: string | null;
 }
 
 Order.init(
@@ -24,13 +35,57 @@ Order.init(
       type: STRING,
       allowNull: false,
     },
-    firstName: {
+    firstname: {
       type: STRING,
       allowNull: false,
     },
-    secondName: {
+    surname: {
       type: STRING,
       allowNull: false,
+    },
+    status: {
+      type: STRING,
+      allowNull: false,
+    },
+    phoneNumber: {
+      type: STRING,
+      allowNull: false,
+    },
+    occasion: {
+      type: STRING,
+      allowNull: true,
+    },
+    cakeType: {
+      type: STRING,
+      allowNull: false,
+    },
+    cakeFlavour: {
+      type: STRING,
+      allowNull: false,
+    },
+    spongeColour: {
+      type: STRING,
+      allowNull: false,
+    },
+    cakeWeight: {
+      type: FLOAT,
+      allowNull: false,
+    },
+    cakeShape: {
+      type: STRING,
+      allowNull: false,
+    },
+    cakeInscription: {
+      type: STRING,
+      allowNull: true,
+    },
+    alcoholAllowed: {
+      type: BOOLEAN,
+      allowNull: false,
+    },
+    commentsToOrder: {
+      type: STRING,
+      allowNull: true,
     },
   },
   {
