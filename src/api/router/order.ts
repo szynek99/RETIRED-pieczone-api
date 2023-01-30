@@ -7,6 +7,7 @@ import * as orderControler from 'api/controllers/order';
 import { NotFoundError } from 'api/utils/Error';
 import { HttpStatusCode } from 'constants/common';
 import { fieldsError, requestError } from 'api/utils/Response';
+import { UploadedFile } from 'express-fileupload';
 
 const orderRouter = Router();
 
@@ -18,9 +19,17 @@ orderRouter.post('/', orderRules.addSingle, async (req: Request, res: Response) 
         .status(HttpStatusCode.UNPROCESSABLE)
         .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
     }
+    const image = req.files?.image as UploadedFile | undefined;
 
+    if (image && !image.mimetype.startsWith('image')) {
+      return res.send(requestError(HttpStatusCode.BAD_REQUEST, 'Wrong file type'));
+    }
     const payload = matchedData(req) as OrderInput;
     const result = await orderControler.addOrder(payload);
+    if (image) {
+      image.mv('/uploads/' + result.hash + '.jpg');
+    }
+
     return res.status(HttpStatusCode.OK).send(result);
   } catch (error) {
     return res.status(HttpStatusCode.BAD_REQUEST).send(requestError(HttpStatusCode.BAD_REQUEST));
@@ -35,7 +44,6 @@ orderRouter.get('/:hash', orderRules.getSingle, async (req: Request, res: Respon
         .status(HttpStatusCode.UNPROCESSABLE)
         .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
     }
-
     const hash = req.params.hash;
     const result = await orderControler.getByHash(hash);
     return res.status(HttpStatusCode.OK).send(result);

@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import express, { Application } from 'express';
+import fileUpload from 'express-fileupload';
 import dbInit from 'db/init';
 import orderRouter from 'api/router/order';
 import { ROUTES } from 'constants/routes';
@@ -14,6 +15,7 @@ const start = () => {
   try {
     const app: Application = express();
     app.use(bodyParser.json());
+    app.use(fileUpload());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(ROUTES.ORDERS, orderRouter);
 

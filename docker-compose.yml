@@ -11,6 +11,7 @@ services:
       - db
     volumes:
       - .:/usr/src/app
+      - ./uploads:/uploads
 
   db:
     container_name: postgres
