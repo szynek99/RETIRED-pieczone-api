@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+import * as dotenv from 'dotenv';
 import { matchedData } from 'express-validator';
 import { Router, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
@@ -9,26 +11,31 @@ import { HttpStatusCode } from 'constants/common';
 import { fieldsError, requestError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
 
+dotenv.config();
+const { API_URL } = process.env;
 const orderRouter = Router();
 
 orderRouter.post('/', orderRules.addSingle, async (req: Request, res: Response) => {
   try {
+    const hash = nanoid();
     const errors = validationResult(req);
+    const image = req.files?.image as UploadedFile | undefined;
+
     if (!errors.isEmpty()) {
       return res
         .status(HttpStatusCode.UNPROCESSABLE)
         .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
     }
-    const image = req.files?.image as UploadedFile | undefined;
 
-    if (image && !image.mimetype.startsWith('image')) {
-      return res.send(requestError(HttpStatusCode.BAD_REQUEST, 'Wrong file type'));
-    }
     const payload = matchedData(req) as OrderInput;
-    const result = await orderControler.addOrder(payload);
+    payload.hash = hash;
+
     if (image) {
-      image.mv('/uploads/' + result.hash + '.jpg');
+      image.mv('/uploads/' + hash + '.jpg');
+      payload.imageUrl = API_URL + 'images/' + hash + '.jpg';
     }
+
+    const result = await orderControler.addOrder({ ...payload, hash });
 
     return res.status(HttpStatusCode.OK).send(result);
   } catch (error) {

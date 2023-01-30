@@ -22,6 +22,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
   public cakeInscription!: string | null;
   public alcoholAllowed!: boolean;
   public commentsToOrder!: string | null;
+  public imageUrl!: string | null;
 }
 
 Order.init(
@@ -84,6 +85,10 @@ Order.init(
       allowNull: false,
     },
     commentsToOrder: {
+      type: STRING,
+      allowNull: true,
+    },
+    imageUrl: {
       type: STRING,
       allowNull: true,
     },

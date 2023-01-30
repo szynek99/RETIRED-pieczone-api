@@ -1,5 +1,5 @@
-import { createOrder, getOrderByHash } from 'db/services/order';
 import { OrderInput, OrderOuput } from 'db/models/order';
+import { createOrder, getOrderByHash } from 'db/services/order';
 
 export const addOrder = async (payload: OrderInput): Promise<OrderOuput> => {
   return await createOrder(payload);

@@ -43,9 +43,22 @@ const orderRules = {
       .isString()
       .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
+    check('image')
+      .custom((_, { req }) => {
+        if (req.files && req.files.image.mimetype.startsWith('image')) {
+          return true;
+        } else {
+          console.log(!req.files);
+          if (!req.files) {
+            return true;
+          }
+          return false;
+        }
+      })
+      .withMessage('Nieprawidłowy rodzaj pliku'),
   ],
   getSingle: [
-    check('hash').isString().isLength({ min: 5, max: 5 }).withMessage('Nieprawidłowa wartość'),
+    check('hash').isString().isLength({ min: 21, max: 21 }).withMessage('Nieprawidłowa wartość'),
   ],
 };
 

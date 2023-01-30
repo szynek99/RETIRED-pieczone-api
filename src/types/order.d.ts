@@ -28,4 +28,5 @@ export interface OrderAttributes extends CakeAttributes {
   surname: string;
   phoneNumber: string;
   occasion: string?;
+  imageUrl: string?;
 }

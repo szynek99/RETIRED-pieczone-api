@@ -18,6 +18,7 @@ const start = () => {
     app.use(fileUpload());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(ROUTES.ORDERS, orderRouter);
+    app.use('/images', express.static('uploads'));
 
     app.listen(PORT, () => {
       console.log(`Server is running on PORT ${PORT}`);
