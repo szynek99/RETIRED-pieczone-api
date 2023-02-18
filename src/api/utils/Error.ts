@@ -1,8 +1,11 @@
+/* eslint-disable max-classes-per-file */
 import { HttpStatusCode } from 'constants/common';
 
 export class BaseError extends Error {
   public readonly name: string;
+
   public readonly httpCode: HttpStatusCode;
+
   public readonly isOperational: boolean;
 
   constructor(name: string, httpCode: HttpStatusCode, description: string, isOperational: boolean) {
@@ -34,6 +37,16 @@ export class NotFoundError extends BaseError {
     httpCode = HttpStatusCode.NOT_FOUND,
     isOperational = true,
     description = 'resource not found',
+  ) {
+    super(name, httpCode, description, isOperational);
+  }
+}
+export class ClientError extends BaseError {
+  constructor(
+    name: string,
+    httpCode = HttpStatusCode.BAD_REQUEST,
+    isOperational = true,
+    description = 'client request error',
   ) {
     super(name, httpCode, description, isOperational);
   }

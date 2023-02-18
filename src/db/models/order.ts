@@ -1,27 +1,42 @@
-import sequelizeConnection from 'db/config';
+import sequelize from 'db/config';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 import { INTEGER, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 
-export interface OrderInput extends Optional<OrderAttributes, 'id'> {}
+export type OrderInput = Optional<OrderAttributes, 'id'>;
 
-export interface OrderOuput extends Required<OrderAttributes> {}
+export type OrderOuput = Required<OrderAttributes>;
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
   public id!: number;
+
   public hash!: string;
+
   public firstname!: string;
+
   public surname!: string;
+
   public status!: OrderStatus;
+
   public phoneNumber!: string;
+
   public occasion!: string | null;
+
   public cakeType!: string;
+
   public cakeFlavour!: string;
+
   public spongeColour!: SpongeColour;
+
   public cakeWeight!: number;
+
   public cakeShape!: CakeShape;
+
   public cakeInscription!: string | null;
+
   public alcoholAllowed!: boolean;
+
   public commentsToOrder!: string | null;
+
   public imageUrl!: string | null;
 }
 
@@ -95,7 +110,7 @@ Order.init(
   },
   {
     timestamps: false,
-    sequelize: sequelizeConnection,
+    sequelize,
   },
 );
 
