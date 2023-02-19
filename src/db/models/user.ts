@@ -1,4 +1,4 @@
-import { INTEGER, Model, STRING, Optional } from 'sequelize';
+import { UUID, Model, STRING, Optional, UUIDV4 } from 'sequelize';
 import sequelize from 'db/config';
 import { Role, UserAttributes } from 'types/auth';
 
@@ -7,7 +7,7 @@ export type UserInput = Optional<UserAttributes, 'id'>;
 export type UserOuput = Required<UserAttributes>;
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
-  public id!: number;
+  public id!: string;
 
   public username!: string;
 
@@ -19,8 +19,8 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
 User.init(
   {
     id: {
-      type: INTEGER,
-      autoIncrement: true,
+      type: UUID,
+      defaultValue: UUIDV4,
       primaryKey: true,
     },
     username: {

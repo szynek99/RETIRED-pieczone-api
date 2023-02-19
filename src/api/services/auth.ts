@@ -1,6 +1,8 @@
 import { SignupInput } from 'types/auth';
-import { getUserByUsername, createUser } from 'db/services/auth';
+import { getUserByUsername, getUserById, createUser } from 'db/services/auth';
 
-export const addUser = async (credentials: SignupInput) => await createUser(credentials);
+export const addUser = (credentials: SignupInput) => createUser(credentials);
 
-export const getUser = async (username: string) => await getUserByUsername(username);
+export const findUserByUsername = (username: string) => getUserByUsername(username);
+
+export const findUserById = (id: string) => getUserById(id);

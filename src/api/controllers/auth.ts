@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { HttpStatusCode } from 'constants/common';
 import { SigninInput, SignupInput } from 'types/auth';
-import { addUser, getUser } from 'api/services/auth';
+import { addUser, findUserByUsername } from 'api/services/auth';
 import { JWT_LIFE, LOGIN_PROPS } from 'constants/auth';
 import { matchedData, validationResult } from 'express-validator';
 import { fieldsError, requestError, serverError } from 'api/utils/Response';
@@ -23,13 +23,6 @@ export const SignUpController = async (req: Request, res: Response) => {
     }
 
     const credentials = matchedData(req) as SignupInput;
-    const userExists = await getUser(credentials.username);
-
-    if (userExists) {
-      return res
-        .status(HttpStatusCode.BAD_REQUEST)
-        .json(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
-    }
 
     await addUser({
       ...credentials,
@@ -53,7 +46,7 @@ export const SignInController = async (req: Request, res: Response) => {
     }
     const credentials = matchedData(req) as SigninInput;
 
-    const user = await getUser(credentials.username);
+    const user = await findUserByUsername(credentials.username);
 
     if (!user) {
       return res

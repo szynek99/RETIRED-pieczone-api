@@ -21,8 +21,12 @@ export interface SigninOutput {
 }
 
 export interface UserAttributes {
-  id: number;
+  id: string;
   username: string;
   password: string;
   role: Role;
+}
+
+interface JwtPayload {
+  id: string;
 }
