@@ -22,9 +22,10 @@ const start = () => {
     app.use(fileUpload());
     app.use(cors());
     app.use(bodyParser.urlencoded({ extended: true }));
+
     app.use(ROUTES.ORDERS, orderRouter);
-    app.use(ROUTES.AUTH, authRouter);
-    app.use('/images', express.static('uploads'));
+    app.use(ROUTES.AUTH.BASE, authRouter);
+    app.use(ROUTES.IMAGES, express.static('uploads'));
 
     app.listen(PORT, () => {
       console.log(`Server is running on PORT ${PORT}`);

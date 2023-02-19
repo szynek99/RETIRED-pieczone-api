@@ -2,10 +2,9 @@ import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
 import { matchedData, validationResult } from 'express-validator';
 import { Router, Request, Response } from 'express';
-
 import { OrderInput } from 'db/models/order';
 import orderRules from 'api/validators/order';
-import * as orderControler from 'api/controllers/order';
+import * as orderControler from 'api/services/order';
 import { NotFoundError } from 'api/utils/Error';
 import { HttpStatusCode } from 'constants/common';
 import { fieldsError, requestError } from 'api/utils/Response';

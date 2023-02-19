@@ -1,21 +1,79 @@
-import { SignupInput } from 'types/auth';
-import { getUserByUsername, createUser } from 'db/services/auth';
+import bcrypt from 'bcryptjs';
+import pick from 'lodash/pick';
+import jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+import { Request, Response } from 'express';
+import { HttpStatusCode } from 'constants/common';
+import { SigninInput, SignupInput } from 'types/auth';
+import { addUser, getUser } from 'api/services/auth';
+import { JWT_LIFE, LOGIN_PROPS } from 'constants/auth';
+import { matchedData, validationResult } from 'express-validator';
+import { fieldsError, requestError, serverError } from 'api/utils/Response';
 
-export const addUser = async (credentials: SignupInput) => {
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
+export const SignUpController = async (req: Request, res: Response) => {
   try {
-    await createUser(credentials);
-    return Promise.resolve();
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(HttpStatusCode.UNPROCESSABLE)
+        .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
+    }
+
+    const credentials = matchedData(req) as SignupInput;
+    const userExists = await getUser(credentials.username);
+
+    if (userExists) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
+    }
+
+    await addUser({
+      ...credentials,
+      password: bcrypt.hashSync(credentials.password, 10),
+    });
+    return res.status(HttpStatusCode.OK).send('user created successfully');
   } catch (error) {
-    return Promise.reject();
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER)
+      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
-export const findUser = async (username: string) => {
+export const SignInController = async (req: Request, res: Response) => {
   try {
-    const user = await getUserByUsername(username);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(HttpStatusCode.UNPROCESSABLE)
+        .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
+    }
+    const credentials = matchedData(req) as SigninInput;
 
-    return Promise.resolve(user);
+    const user = await getUser(credentials.username);
+
+    if (!user) {
+      return res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'username or password did not match'));
+    }
+    const passwordIsValid = bcrypt.compareSync(credentials.password, user.password);
+
+    if (!passwordIsValid) {
+      return res.status(HttpStatusCode.UNAUTHORIZED).send('username or password did not match');
+    }
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      expiresIn: JWT_LIFE,
+    });
+    const userData = pick(user, LOGIN_PROPS);
+
+    return res.status(HttpStatusCode.OK).send({ ...userData, token });
   } catch (error) {
-    return Promise.reject();
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER)
+      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
