@@ -48,12 +48,16 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  findUserById(req.userId!).then((user) => {
-    if (user?.role !== 'admin') {
-      res
-        .status(HttpStatusCode.FORBIDDEN)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'insufficient user role'));
-    }
-    next();
-  });
+  const user = await findUserById(req.userId!);
+  if (!user) {
+    res
+      .status(HttpStatusCode.FORBIDDEN)
+      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'user does not exist'));
+  }
+  if (user?.role !== 'admin') {
+    res
+      .status(HttpStatusCode.FORBIDDEN)
+      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'insufficient user role'));
+  }
+  next();
 };
