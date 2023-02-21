@@ -13,7 +13,7 @@ import { fieldsError, requestError, serverError } from 'api/utils/Response';
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const SignUpController = async (req: Request, res: Response) => {
+export const SignUp = async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,7 +36,7 @@ export const SignUpController = async (req: Request, res: Response) => {
   }
 };
 
-export const SignInController = async (req: Request, res: Response) => {
+export const SignIn = async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -70,3 +70,5 @@ export const SignInController = async (req: Request, res: Response) => {
       .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
+
+export default { SignIn, SignUp };

@@ -45,6 +45,7 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "import/no-named-as-default-member": "off"
   }
 }
