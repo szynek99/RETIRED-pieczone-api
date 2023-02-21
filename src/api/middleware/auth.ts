@@ -7,14 +7,14 @@ import { HttpStatusCode } from 'constants/common';
 import { requestError } from 'api/utils/Response';
 import { JwtPayload, SignupInput } from 'types/auth';
 import { NextFunction, Request, Response } from 'express';
-import { findUserById, findUserByUsername } from 'api/services/auth';
+import { getUserById, getUserByUsername } from 'db/services/auth';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const checkDuplicateUsername = async (req: Request, res: Response, next: NextFunction) => {
   const credentials = matchedData(req) as SignupInput;
-  const userExists = await findUserByUsername(credentials.username);
+  const userExists = await getUserByUsername(credentials.username);
 
   if (userExists) {
     return res
@@ -48,7 +48,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const user = await findUserById(req.userId!);
+  const user = await getUserById(req.userId!);
   if (!user) {
     res
       .status(HttpStatusCode.FORBIDDEN)

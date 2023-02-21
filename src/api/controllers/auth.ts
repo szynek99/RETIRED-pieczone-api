@@ -2,10 +2,10 @@ import bcrypt from 'bcryptjs';
 import pick from 'lodash/pick';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import { addUser, getUserByUsername } from 'db/services/auth';
 import { Request, Response } from 'express';
 import { HttpStatusCode } from 'constants/common';
 import { SigninInput, SignupInput } from 'types/auth';
-import { addUser, findUserByUsername } from 'api/services/auth';
 import { JWT_LIFE, LOGIN_PROPS } from 'constants/auth';
 import { matchedData, validationResult } from 'express-validator';
 import { fieldsError, requestError, serverError } from 'api/utils/Response';
@@ -46,7 +46,7 @@ export const SignInController = async (req: Request, res: Response) => {
     }
     const credentials = matchedData(req) as SigninInput;
 
-    const user = await findUserByUsername(credentials.username);
+    const user = await getUserByUsername(credentials.username);
 
     if (!user) {
       return res
