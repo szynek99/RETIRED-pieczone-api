@@ -1,5 +1,3 @@
-/* eslint-disable import/no-import-module-exports */
-/* eslint-disable no-console */
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -15,18 +13,24 @@ const { PORT } = process.env;
 
 dbInit();
 
-const app: Application = express();
-app.use(bodyParser.json());
-app.use(fileUpload());
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
+const start = () => {
+  try {
+    const app: Application = express();
+    app.use(bodyParser.json());
+    app.use(fileUpload());
+    app.use(cors());
+    app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(ROUTES.ORDERS, orderRouter);
-app.use(ROUTES.AUTH.BASE, authRouter);
-app.use(ROUTES.IMAGES, express.static('uploads'));
+    app.use(ROUTES.ORDERS, orderRouter);
+    app.use(ROUTES.AUTH.BASE, authRouter);
+    app.use(ROUTES.IMAGES, express.static('uploads'));
 
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`Server is running on PORT ${PORT}`);
+    });
+  } catch (error) {
+    console.debug(error);
+  }
+};
 
-module.exports = server;
+start();

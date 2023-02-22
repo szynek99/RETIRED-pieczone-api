@@ -7,12 +7,12 @@ import { checkDuplicateUsername } from 'api/middleware/auth';
 const authRouter = Router();
 
 authRouter.post(
-  ROUTES.AUTH.SIGN_UP,
-  authRules.signUp,
+  ROUTES.AUTH.REGISTER,
+  authRules.register,
   [checkDuplicateUsername],
-  AuthController.signUp,
+  AuthController.register,
 );
 
-authRouter.post(ROUTES.AUTH.SIGN_IN, authRules.signIn, AuthController.signIn);
+authRouter.post(ROUTES.AUTH.LOGIN, authRules.login, AuthController.login);
 
 export default authRouter;

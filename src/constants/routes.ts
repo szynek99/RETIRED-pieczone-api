@@ -4,7 +4,7 @@ export const ROUTES = {
   IMAGES: '/api/images',
   AUTH: {
     BASE: '/api/auth',
-    SIGN_IN: '/signin',
-    SIGN_UP: '/signup',
+    LOGIN: '/login',
+    REGISTER: '/register',
   },
 };

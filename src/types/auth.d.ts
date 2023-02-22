@@ -3,18 +3,18 @@ import { ROLES } from 'constants/auth';
 type RolesTuple = typeof ROLES;
 export type Role = RolesTuple[number];
 
-export interface SignupInput {
+export interface RegisterInput {
   username: string;
   password: string;
   role: Role;
 }
 
-export interface SigninInput {
+export interface LoginInput {
   username: string;
   password: string;
 }
 
-export interface SigninOutput {
+export interface LoginOutput {
   username: string;
   password: string;
   role: string;

@@ -5,21 +5,26 @@ import * as dotenv from 'dotenv';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
 import { requestError } from 'api/utils/Response';
-import { JwtPayload, SignupInput } from 'types/auth';
+import { JwtPayload, RegisterInput } from 'types/auth';
 import { NextFunction, Request, Response } from 'express';
 import { getUserById, getUserByUsername } from 'db/services/auth';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const checkDuplicateUsername = async (req: Request, res: Response, next: NextFunction) => {
-  const credentials = matchedData(req) as SignupInput;
+export const checkDuplicateUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const credentials = matchedData(req) as RegisterInput;
   const userExists = await getUserByUsername(credentials.username);
 
   if (userExists) {
-    return res
+    res
       .status(HttpStatusCode.BAD_REQUEST)
       .json(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
+    return;
   }
 
   next();
@@ -61,3 +66,5 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
   }
   next();
 };
+
+export default { isAdmin, verifyToken, checkDuplicateUsername };

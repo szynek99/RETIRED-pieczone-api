@@ -2,7 +2,7 @@ import { ROLES } from 'constants/auth';
 import { check } from 'express-validator';
 
 const authRules = {
-  signUp: [
+  register: [
     check('username').isString().withMessage('Nieprawidłowa wartość'),
     check('password').isString().withMessage('Nieprawidłowa wartość'),
     check('role')
@@ -14,7 +14,7 @@ const authRules = {
       })
       .withMessage('Nieprawidłowa wartość'),
   ],
-  signIn: [
+  login: [
     check('username').isString().withMessage('Nieprawidłowa wartość'),
     check('password').isString().withMessage('Nieprawidłowa wartość'),
   ],
