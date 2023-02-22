@@ -13,7 +13,7 @@ import { fieldsError, requestError, serverError } from 'api/utils/Response';
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const SignUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -36,7 +36,7 @@ export const SignUp = async (req: Request, res: Response) => {
   }
 };
 
-export const SignIn = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -65,10 +65,11 @@ export const SignIn = async (req: Request, res: Response) => {
 
     return res.status(HttpStatusCode.OK).send({ ...userData, token });
   } catch (error) {
+    console.debug(error);
     return res
       .status(HttpStatusCode.INTERNAL_SERVER)
       .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
-export default { SignIn, SignUp };
+export default { signIn, signUp };

@@ -9,10 +9,10 @@ const authRouter = Router();
 authRouter.post(
   ROUTES.AUTH.SIGN_UP,
   authRules.signUp,
-  checkDuplicateUsername,
-  AuthController.SignUp,
+  [checkDuplicateUsername],
+  AuthController.signUp,
 );
 
-authRouter.post(ROUTES.AUTH.SIGN_IN, authRules.signIn, AuthController.SignIn);
+authRouter.post(ROUTES.AUTH.SIGN_IN, authRules.signIn, AuthController.signIn);
 
 export default authRouter;
