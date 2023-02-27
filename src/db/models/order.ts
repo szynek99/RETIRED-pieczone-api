@@ -109,6 +109,7 @@ Order.init(
     },
   },
   {
+    tableName: 'users',
     timestamps: false,
     sequelize,
   },
