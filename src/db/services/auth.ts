@@ -10,6 +10,7 @@ export const getUserByUsername = async (username: string): Promise<UserOuput | n
 
     return user.get({ plain: true });
   } catch (error) {
+    console.debug(error);
     throw new ApiError('User find');
   }
 };
@@ -33,5 +34,14 @@ export const addUser = async (credentials: UserInput): Promise<void> => {
     return;
   } catch {
     throw new ApiError('User create');
+  }
+};
+
+export const resetUser = async (): Promise<void> => {
+  try {
+    await User.truncate();
+    return;
+  } catch {
+    throw new ApiError('User clear');
   }
 };

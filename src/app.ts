@@ -10,12 +10,11 @@ import authRouter from 'api/router/auth';
 
 dotenv.config();
 const { PORT } = process.env;
-
+const app: Application = express();
 dbInit();
 
 const start = () => {
   try {
-    const app: Application = express();
     app.use(bodyParser.json());
     app.use(fileUpload());
     app.use(cors());
@@ -34,3 +33,5 @@ const start = () => {
 };
 
 start();
+
+export default app;
