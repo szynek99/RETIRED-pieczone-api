@@ -1,5 +1,5 @@
 import { Model, DataTypes, Optional } from 'sequelize';
-import sequelize from 'db/config';
+import sequelize from 'db/connection';
 import { Role, UserAttributes } from 'types/auth';
 
 export type UserInput = Optional<UserAttributes, 'id'>;
@@ -38,7 +38,7 @@ export const USER_MODEL = {
 
 User.init(USER_MODEL, {
   timestamps: false,
-  tableName: 'user',
+  tableName: 'User',
   sequelize,
 });
 

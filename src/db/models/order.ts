@@ -1,4 +1,4 @@
-import sequelize from 'db/config';
+import sequelize from 'db/connection';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 import { INTEGER, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 
@@ -109,7 +109,7 @@ Order.init(
     },
   },
   {
-    tableName: 'users',
+    tableName: 'Order',
     timestamps: false,
     sequelize,
   },

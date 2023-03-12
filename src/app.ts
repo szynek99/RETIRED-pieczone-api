@@ -3,7 +3,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import express, { Application } from 'express';
 import fileUpload from 'express-fileupload';
-import dbInit from 'db/init';
 import orderRouter from 'api/router/order';
 import { ROUTES } from 'constants/routes';
 import authRouter from 'api/router/auth';
@@ -11,7 +10,6 @@ import authRouter from 'api/router/auth';
 dotenv.config();
 const { PORT } = process.env;
 const app: Application = express();
-dbInit();
 
 const start = () => {
   try {

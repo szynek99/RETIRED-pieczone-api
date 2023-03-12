@@ -12,12 +12,11 @@ services:
     volumes:
       - .:/usr/src/app
       - ./uploads:/uploads
-
   db:
-    container_name: postgres
+    container_name: db-${ENVIROMENT}
     image: postgres
     ports:
-      - '5433:${DB_PORT}'
+      - '${DB_PORT}:5432'
     volumes:
       - data:/data/db
     environment:
