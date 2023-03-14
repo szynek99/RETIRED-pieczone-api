@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const ROLES = ['admin'] as const;
+export const ROLES = ['admin', 'user'] as const;
 
 export const LOGIN_PROPS = ['username', 'role'];
 

@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 const mSequelize = {};
 
-jest.mock('db/config', () => mSequelize);
+jest.mock('db/connection', () => mSequelize);
 
 const modelStaticMethodMocks = {
   init: jest.fn(),
@@ -36,7 +36,7 @@ describe('User model', () => {
         role: { type: DataTypes.STRING, allowNull: false },
       },
       {
-        tableName: 'user',
+        tableName: 'User',
         sequelize: mSequelize,
         timestamps: false,
       },

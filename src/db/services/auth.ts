@@ -7,10 +7,8 @@ export const getUserByUsername = async (username: string): Promise<UserOuput | n
     if (!user) {
       return null;
     }
-
     return user.get({ plain: true });
   } catch (error) {
-    console.debug(error);
     throw new ApiError('User find');
   }
 };
@@ -41,7 +39,7 @@ export const resetUser = async (): Promise<void> => {
   try {
     await User.truncate();
     return;
-  } catch {
+  } catch (error) {
     throw new ApiError('User clear');
   }
 };

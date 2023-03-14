@@ -23,7 +23,7 @@ export const checkDuplicateUsername = async (
   if (userExists) {
     res
       .status(HttpStatusCode.BAD_REQUEST)
-      .json(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
+      .send(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
     return;
   }
 
@@ -36,14 +36,14 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   if (!token || isArray(token)) {
     return res
       .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.FORBIDDEN, 'token not provided'));
+      .send(requestError(HttpStatusCode.FORBIDDEN, 'token not provided'));
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       return res
         .status(HttpStatusCode.UNAUTHORIZED)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'unauthorized'));
+        .send(requestError(HttpStatusCode.UNAUTHORIZED, 'unauthorized'));
     }
     const { id } = decoded as JwtPayload;
     req.userId = id;

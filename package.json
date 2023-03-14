@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -L -e ts --exec \"npm run build && npm start\"",
-    "start": "ts-node dist/app.js",
+    "start": "ts-node dist/server.js",
     "build": "tsc -p .",
-    "test": "jest"
+    "test": "set DB_HOST=127.0.0.1&& jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
