@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
-import { isArray } from 'lodash';
 import * as dotenv from 'dotenv';
+import { isArray, isNull } from 'lodash';
 import { matchedData } from 'express-validator';
 import { requestError } from 'api/utils/Response';
 import { HttpStatusCode } from 'constants/common';
@@ -52,14 +52,13 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 };
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const user = await getUserById(req.userId!);
-  if (!user) {
+  if (isNull(user)) {
     res
       .status(HttpStatusCode.FORBIDDEN)
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'user does not exist'));
   }
-  if (user?.role !== 'admin') {
+  if (user!.role !== 'admin') {
     res
       .status(HttpStatusCode.FORBIDDEN)
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'insufficient user role'));
