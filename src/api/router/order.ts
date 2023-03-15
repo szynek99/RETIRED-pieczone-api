@@ -1,11 +1,10 @@
 import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
-import { matchedData } from 'express-validator';
+import { matchedData, validationResult } from 'express-validator';
 import { Router, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import { OrderInput } from 'db/models/order';
 import orderRules from 'api/validators/order';
-import * as orderControler from 'api/controllers/order';
+import * as orderControler from 'api/services/order';
 import { NotFoundError } from 'api/utils/Error';
 import { HttpStatusCode } from 'constants/common';
 import { fieldsError, requestError } from 'api/utils/Response';
@@ -31,8 +30,8 @@ orderRouter.post('/', orderRules.addSingle, async (req: Request, res: Response) 
     payload.hash = hash;
 
     if (image) {
-      image.mv('/uploads/' + hash + '.jpg');
-      payload.imageUrl = API_URL + 'images/' + hash + '.jpg';
+      image.mv(`/uploads/${hash}.jpg`);
+      payload.imageUrl = `${API_URL}images/${hash}.jpg`;
     }
 
     const result = await orderControler.addOrder({ ...payload, hash });
@@ -51,7 +50,7 @@ orderRouter.get('/:hash', orderRules.getSingle, async (req: Request, res: Respon
         .status(HttpStatusCode.UNPROCESSABLE)
         .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
     }
-    const hash = req.params.hash;
+    const { hash } = req.params;
     const result = await orderControler.getByHash(hash);
     return res.status(HttpStatusCode.OK).send(result);
   } catch (error) {

@@ -47,13 +47,11 @@ const orderRules = {
       .custom((_, { req }) => {
         if (req.files && req.files.image.mimetype.startsWith('image')) {
           return true;
-        } else {
-          console.log(!req.files);
-          if (!req.files) {
-            return true;
-          }
-          return false;
         }
+        if (!req.files) {
+          return true;
+        }
+        return false;
       })
       .withMessage('Nieprawidłowy rodzaj pliku'),
   ],

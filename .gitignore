@@ -34,6 +34,8 @@ bower_components
 dist
 .env
 .env.prod
+prod.env
+dev.env
 
 # Ignore uploads directory
 uploads
