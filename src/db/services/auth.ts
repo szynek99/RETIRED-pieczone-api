@@ -40,6 +40,7 @@ export const resetUser = async (): Promise<void> => {
     await User.truncate();
     return;
   } catch (error) {
+    console.debug(error);
     throw new ApiError('User clear');
   }
 };
