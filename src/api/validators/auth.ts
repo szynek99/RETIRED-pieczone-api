@@ -23,8 +23,16 @@ const authRules = {
       .withMessage('Nieprawidłowa wartość'),
   ],
   login: [
-    check('username').isString().withMessage('Nieprawidłowa wartość'),
-    check('password').isString().withMessage('Nieprawidłowa wartość'),
+    check('username')
+      .isString()
+      .withMessage('Nieprawidłowa wartość')
+      .isLength({ min: 2 })
+      .withMessage('Nieprawidłowa wartość'),
+    check('password')
+      .isString()
+      .withMessage('Nieprawidłowa wartość')
+      .isLength({ min: 5 })
+      .withMessage('Nieprawidłowa wartość'),
   ],
 };
 

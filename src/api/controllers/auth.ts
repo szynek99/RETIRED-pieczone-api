@@ -29,13 +29,6 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res
-        .status(HttpStatusCode.UNPROCESSABLE)
-        .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
-      return;
-    }
     const credentials = matchedData(req) as LoginInput;
 
     const user = await getUserByUsername(credentials.username);

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import app from 'api/app';
 import request from 'supertest';
 import { resetUser } from 'db/services/auth';
-import app from 'api/app';
 
 describe('user/register', () => {
   beforeEach(resetUser);
