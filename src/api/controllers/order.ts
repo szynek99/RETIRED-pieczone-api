@@ -7,6 +7,7 @@ import { serverError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
 import { getOrderByHash, addOrder } from 'db/services/order';
+import { ROUTES } from 'constants/routes';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -20,7 +21,7 @@ const postOrder = async (req: Request, res: Response) => {
 
     if (image) {
       image.mv(`/uploads/${hash}.jpg`);
-      payload.imageUrl = `${API_URL}images/${hash}.jpg`;
+      payload.imageUrl = `${API_URL}${ROUTES.IMAGES}/${hash}.jpg`;
     }
 
     const result = await addOrder({ ...payload, hash });
