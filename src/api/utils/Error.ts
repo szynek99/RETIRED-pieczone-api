@@ -30,24 +30,3 @@ export class ApiError extends BaseError {
     super(name, httpCode, description, isOperational);
   }
 }
-
-export class NotFoundError extends BaseError {
-  constructor(
-    name: string,
-    httpCode = HttpStatusCode.NOT_FOUND,
-    isOperational = true,
-    description = 'resource not found',
-  ) {
-    super(name, httpCode, description, isOperational);
-  }
-}
-export class ClientError extends BaseError {
-  constructor(
-    name: string,
-    httpCode = HttpStatusCode.BAD_REQUEST,
-    isOperational = true,
-    description = 'client request error',
-  ) {
-    super(name, httpCode, description, isOperational);
-  }
-}

@@ -3,15 +3,15 @@ import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
 import { matchedData } from 'express-validator';
+import { serverError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
-import { requestError } from 'api/utils/Response';
 import { HttpStatusCode } from 'constants/common';
-import * as orderControler from 'api/services/order';
+import { getOrderByHash, addOrder } from 'db/services/order';
 
 dotenv.config();
 const { API_URL } = process.env;
 
-const addOrder = async (req: Request, res: Response) => {
+const postOrder = async (req: Request, res: Response) => {
   try {
     const hash = nanoid();
     const payload = matchedData(req) as OrderInput;
@@ -23,21 +23,25 @@ const addOrder = async (req: Request, res: Response) => {
       payload.imageUrl = `${API_URL}images/${hash}.jpg`;
     }
 
-    const result = await orderControler.addOrder({ ...payload, hash });
+    const result = await addOrder({ ...payload, hash });
 
     return res.status(HttpStatusCode.OK).send(result);
   } catch (error) {
-    return res.status(HttpStatusCode.BAD_REQUEST).send(requestError(HttpStatusCode.BAD_REQUEST));
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER)
+      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
 const getOrder = async (req: Request, res: Response) => {
   try {
     const { hash } = req.params;
-    const result = await orderControler.getByHash(hash);
+    const result = await getOrderByHash(hash);
     return res.status(HttpStatusCode.OK).send(result);
   } catch (error) {
-    return res.status(HttpStatusCode.BAD_REQUEST).send(requestError(HttpStatusCode.BAD_REQUEST));
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER)
+      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
-export default { getOrder, addOrder };
+export default { getOrder, postOrder };

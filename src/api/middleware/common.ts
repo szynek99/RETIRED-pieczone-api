@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import * as dotenv from 'dotenv';
-import { HttpStatusCode } from 'constants/common';
-import { NextFunction, Request, Response } from 'express';
 import { fieldsError } from 'api/utils/Response';
+import { HttpStatusCode } from 'constants/common';
 import { validationResult } from 'express-validator';
+import { NextFunction, Request, Response } from 'express';
 
 dotenv.config();
 

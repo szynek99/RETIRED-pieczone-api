@@ -8,7 +8,7 @@ import { checkRequired } from 'api/middleware/common';
 dotenv.config();
 const orderRouter = Router();
 
-orderRouter.post('/', orderRules.addSingle, [checkRequired], orderController.addOrder);
+orderRouter.post('/', orderRules.addSingle, [checkRequired], orderController.postOrder);
 
 orderRouter.get(
   '/:hash',

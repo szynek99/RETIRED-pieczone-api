@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import { isArray, isNull } from 'lodash';
@@ -34,16 +33,18 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   const token = req.headers['x-access-token'];
 
   if (!token || isArray(token)) {
-    return res
+    res
       .status(HttpStatusCode.FORBIDDEN)
       .send(requestError(HttpStatusCode.FORBIDDEN, 'token not provided'));
+    return;
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res
+      res
         .status(HttpStatusCode.UNAUTHORIZED)
         .send(requestError(HttpStatusCode.UNAUTHORIZED, 'unauthorized'));
+      return;
     }
     const { id } = decoded as JwtPayload;
     req.userId = id;
@@ -57,11 +58,13 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
     res
       .status(HttpStatusCode.FORBIDDEN)
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'user does not exist'));
+    return;
   }
   if (user!.role !== 'admin') {
     res
       .status(HttpStatusCode.FORBIDDEN)
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'insufficient user role'));
+    return;
   }
   next();
 };
