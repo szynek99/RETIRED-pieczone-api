@@ -16,7 +16,7 @@ app.use(fileUpload());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(ROUTES.ORDERS, orderRouter);
+app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.AUTH.BASE, authRouter);
 app.use(ROUTES.IMAGES, express.static('uploads'));
 

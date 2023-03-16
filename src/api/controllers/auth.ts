@@ -2,18 +2,18 @@ import bcrypt from 'bcryptjs';
 import pick from 'lodash/pick';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { addUser, getUserByUsername } from 'db/services/auth';
 import { Request, Response } from 'express';
+import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
 import { LoginInput, RegisterInput } from 'types/auth';
 import { JWT_LIFE, LOGIN_PROPS } from 'constants/auth';
-import { matchedData, validationResult } from 'express-validator';
-import { fieldsError, requestError, serverError } from 'api/utils/Response';
+import { addUser, getUserByUsername } from 'db/services/auth';
+import { requestError, serverError } from 'api/utils/Response';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const register = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
   try {
     const credentials = matchedData(req) as RegisterInput;
 
@@ -27,7 +27,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   try {
     const credentials = matchedData(req) as LoginInput;
 

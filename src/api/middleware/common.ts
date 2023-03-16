@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint-disable consistent-return */
 import * as dotenv from 'dotenv';
 import { HttpStatusCode } from 'constants/common';
 import { NextFunction, Request, Response } from 'express';
