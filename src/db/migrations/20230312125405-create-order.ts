@@ -7,9 +7,10 @@ module.exports = {
   up: async (queryInterface: QueryInterface) => {
     await queryInterface.createTable('Order', {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
       },
       hash: {
         type: DataTypes.STRING,

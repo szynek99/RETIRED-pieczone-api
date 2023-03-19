@@ -2,7 +2,6 @@
 import app from 'api/app';
 import request from 'supertest';
 import { resetUser } from 'db/services/auth';
-import { before } from 'lodash';
 
 describe('user/register', () => {
   beforeEach(resetUser);
