@@ -1,9 +1,7 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable import/no-import-module-exports */
 import { QueryInterface, DataTypes } from 'sequelize';
 
 module.exports = {
-  // tslint:disable-next-line:variable-name
   up: async (queryInterface: QueryInterface) => {
     await queryInterface.createTable('Order', {
       id: {
@@ -37,12 +35,20 @@ module.exports = {
         allowNull: true,
       },
       cakeType: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'CakeType',
+          key: 'id',
+        },
       },
       cakeFlavour: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'CakeFlavour',
+          key: 'id',
+        },
       },
       spongeColour: {
         type: DataTypes.STRING,

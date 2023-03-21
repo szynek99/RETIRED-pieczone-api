@@ -21,7 +21,7 @@ interface CakeAttributes {
 }
 
 export interface OrderAttributes extends CakeAttributes {
-  id: number;
+  id: string;
   hash: string;
   status: OrderStatus;
   firstname: string;

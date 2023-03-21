@@ -1,5 +1,5 @@
 import sequelize from 'db/connection';
-import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, INTEGER } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 
 export type OrderInput = Optional<OrderAttributes, 'id'>;
@@ -7,7 +7,7 @@ export type OrderInput = Optional<OrderAttributes, 'id'>;
 export type OrderOuput = Required<OrderAttributes>;
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
-  public id!: number;
+  public id!: string;
 
   public hash!: string;
 
@@ -73,12 +73,20 @@ Order.init(
       allowNull: true,
     },
     cakeType: {
-      type: STRING,
+      type: INTEGER,
       allowNull: false,
+      references: {
+        model: 'CakeType',
+        key: 'id',
+      },
     },
     cakeFlavour: {
-      type: STRING,
+      type: INTEGER,
       allowNull: false,
+      references: {
+        model: 'Flavour',
+        key: 'id',
+      },
     },
     spongeColour: {
       type: STRING,
