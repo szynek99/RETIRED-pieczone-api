@@ -1,8 +1,8 @@
 import sequelize from 'db/connection';
-import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, INTEGER } from 'sequelize';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 
-export type OrderInput = Optional<OrderAttributes, 'id'>;
+export type OrderInput = Optional<OrderAttributes, 'id' | 'status'>;
 
 export type OrderOuput = Required<OrderAttributes>;
 
@@ -62,6 +62,7 @@ Order.init(
     },
     status: {
       type: STRING,
+      defaultValue: 'pending',
       allowNull: false,
     },
     phoneNumber: {
@@ -73,20 +74,12 @@ Order.init(
       allowNull: true,
     },
     cakeType: {
-      type: INTEGER,
+      type: STRING,
       allowNull: false,
-      references: {
-        model: 'CakeType',
-        key: 'id',
-      },
     },
     cakeFlavour: {
-      type: INTEGER,
+      type: STRING,
       allowNull: false,
-      references: {
-        model: 'Flavour',
-        key: 'id',
-      },
     },
     spongeColour: {
       type: STRING,

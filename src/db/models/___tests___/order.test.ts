@@ -47,6 +47,7 @@ describe('Order model', () => {
         status: {
           type: DataTypes.STRING,
           allowNull: false,
+          defaultValue: 'pending',
         },
         phoneNumber: {
           type: DataTypes.STRING,

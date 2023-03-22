@@ -25,6 +25,7 @@ module.exports = {
       status: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: 'pending',
       },
       phoneNumber: {
         type: DataTypes.STRING,
@@ -35,20 +36,12 @@ module.exports = {
         allowNull: true,
       },
       cakeType: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-          model: 'CakeType',
-          key: 'id',
-        },
       },
       cakeFlavour: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-          model: 'CakeFlavour',
-          key: 'id',
-        },
       },
       spongeColour: {
         type: DataTypes.STRING,

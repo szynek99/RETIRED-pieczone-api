@@ -1,19 +1,20 @@
 import { ROLES } from 'constants/auth';
 import { check } from 'express-validator';
+import { BASIC_STRING_RULE } from 'constants/common';
 
 const authRules = {
   register: [
     check('username')
       .isString()
-      .withMessage('Nieprawidłowa wartość')
+      .withMessage('Zły format')
       .isLength({ min: 2 })
-      .withMessage('Nieprawidłowa wartość'),
+      .withMessage('Za krótkie'),
     check('password')
       .isString()
-      .withMessage('Nieprawidłowa wartość')
+      .withMessage('Zły format')
       .isLength({ min: 5 })
-      .withMessage('Nieprawidłowa wartość'),
-    check('role')
+      .withMessage('Za krótkie'),
+    BASIC_STRING_RULE('role')
       .custom((value) => {
         if (!ROLES.includes(value) || value === ROLES[0]) {
           throw new Error();
@@ -25,14 +26,14 @@ const authRules = {
   login: [
     check('username')
       .isString()
-      .withMessage('Nieprawidłowa wartość')
+      .withMessage('Zły typ zmiennej')
       .isLength({ min: 2 })
-      .withMessage('Nieprawidłowa wartość'),
+      .withMessage('Za krótkie'),
     check('password')
       .isString()
-      .withMessage('Nieprawidłowa wartość')
+      .withMessage('Zły format')
       .isLength({ min: 5 })
-      .withMessage('Nieprawidłowa wartość'),
+      .withMessage('Za krótkie'),
   ],
 };
 
