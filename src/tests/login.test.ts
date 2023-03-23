@@ -3,7 +3,7 @@ import app from 'api/app';
 import request from 'supertest';
 import { resetUser } from 'db/services/auth';
 
-describe('user/register', () => {
+describe('user/login', () => {
   beforeEach(resetUser);
 
   it('fields validation', async () => {
@@ -15,9 +15,7 @@ describe('user/register', () => {
     expect(body.errors).toEqual(
       expect.arrayContaining([
         { error: 'Zły typ zmiennej', name: 'username' },
-        { error: 'Za krótkie', name: 'username' },
         { error: 'Zły format', name: 'password' },
-        { error: 'Za krótkie', name: 'password' },
       ]),
     );
   });

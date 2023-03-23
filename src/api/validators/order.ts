@@ -1,5 +1,5 @@
 import { check } from 'express-validator';
-import { BASIC_STRING_RULE } from 'constants/common';
+import { BASIC_STRING_RULE } from 'api/validators/common';
 import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
 
 const orderRules = {
@@ -29,10 +29,9 @@ const orderRules = {
       .withMessage('Nieprawidłowa wartość'),
     check('cakeInscription')
       .isString()
-      .withMessage('Nieprawidłowa wartość')
       .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
-    check('alcoholAllowed').isBoolean().withMessage('Nieprawidłowa wartość'),
+    check('alcoholAllowed').isBoolean().withMessage('Zły format'),
     check('commentsToOrder')
       .isString()
       .optional({ nullable: true })
@@ -48,7 +47,12 @@ const orderRules = {
       .withMessage('Nieprawidłowy rodzaj pliku'),
   ],
   getSingle: [
-    check('hash').isString().isLength({ min: 21, max: 21 }).withMessage('Nieprawidłowa wartość'),
+    check('hash')
+      .isString()
+      .withMessage('Nieprawidłowa wartość')
+      .bail()
+      .isLength({ min: 21, max: 21 })
+      .withMessage('Nieprawidłowa wartość'),
   ],
 };
 

@@ -1,17 +1,19 @@
 import { ROLES } from 'constants/auth';
 import { check } from 'express-validator';
-import { BASIC_STRING_RULE } from 'constants/common';
+import { BASIC_STRING_RULE } from 'api/validators/common';
 
 const authRules = {
   register: [
     check('username')
       .isString()
       .withMessage('Zły format')
+      .bail()
       .isLength({ min: 2 })
       .withMessage('Za krótkie'),
     check('password')
       .isString()
       .withMessage('Zły format')
+      .bail()
       .isLength({ min: 5 })
       .withMessage('Za krótkie'),
     BASIC_STRING_RULE('role')
@@ -27,11 +29,13 @@ const authRules = {
     check('username')
       .isString()
       .withMessage('Zły typ zmiennej')
+      .bail()
       .isLength({ min: 2 })
       .withMessage('Za krótkie'),
     check('password')
       .isString()
       .withMessage('Zły format')
+      .bail()
       .isLength({ min: 5 })
       .withMessage('Za krótkie'),
   ],

@@ -15,12 +15,8 @@ describe('user/register', () => {
     expect(body.errors).toEqual(
       expect.arrayContaining([
         { error: 'Zły format', name: 'username' },
-        { error: 'Za krótkie', name: 'username' },
         { error: 'Zły format', name: 'password' },
-        { error: 'Za krótkie', name: 'password' },
         { error: 'Zły format', name: 'role' },
-        { error: 'Za krótkie', name: 'role' },
-        { error: 'Nieprawidłowa wartość', name: 'role' },
       ]),
     );
   });
