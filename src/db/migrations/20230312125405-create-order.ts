@@ -1,15 +1,14 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable import/no-import-module-exports */
 import { QueryInterface, DataTypes } from 'sequelize';
 
 module.exports = {
-  // tslint:disable-next-line:variable-name
   up: async (queryInterface: QueryInterface) => {
     await queryInterface.createTable('Order', {
       id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
       },
       hash: {
         type: DataTypes.STRING,
@@ -26,6 +25,7 @@ module.exports = {
       status: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: 'pending',
       },
       phoneNumber: {
         type: DataTypes.STRING,

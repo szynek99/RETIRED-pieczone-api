@@ -1,5 +1,4 @@
 cat > ./src/db/migrations/$(date +"%Y%m%d%H%M%S")-$1.ts << EOF
-/* eslint-disable linebreak-style */
 /* eslint-disable import/no-import-module-exports */
 import { QueryInterface, DataTypes } from 'sequelize';
 

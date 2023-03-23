@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
 export const ROUTES = {
-  ORDERS: '/api/order',
+  ORDERS: { BASE: '/api/order' },
   IMAGES: '/api/images',
   AUTH: {
     BASE: '/api/auth',

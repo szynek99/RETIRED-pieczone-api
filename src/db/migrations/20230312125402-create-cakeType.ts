@@ -3,29 +3,34 @@ import { QueryInterface, DataTypes } from 'sequelize';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('User', {
+    await queryInterface.createTable('CakeType', {
       id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
       },
-      username: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      password: {
+      value: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.STRING,
+      accessible: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: true,
+      },
+      customizable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
     });
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('User');
+    await queryInterface.dropTable('CakeType');
   },
 };

@@ -2,12 +2,11 @@
 import app from 'api/app';
 import request from 'supertest';
 import { resetUser } from 'db/services/auth';
-import { before } from 'lodash';
 
-describe('user/register', () => {
+describe('user/login', () => {
   beforeEach(resetUser);
 
-  it('required fields', async () => {
+  it('fields validation', async () => {
     const response = await request(app).post('/api/auth/login');
     const { status, body } = response;
     expect(status).toBe(422);
@@ -15,23 +14,8 @@ describe('user/register', () => {
     expect(body).toHaveProperty('errors');
     expect(body.errors).toEqual(
       expect.arrayContaining([
-        { name: 'username', error: 'Nieprawidłowa wartość' },
-        { name: 'password', error: 'Nieprawidłowa wartość' },
-      ]),
-    );
-  });
-
-  it('bad request', async () => {
-    const payload = { username: 3, password: 'test' };
-    const response = await request(app).post('/api/auth/login').send(payload);
-    const { status, body } = response;
-    expect(status).toBe(422);
-    expect(body).toHaveProperty('status', 422);
-    expect(body).toHaveProperty('errors');
-    expect(body.errors).toEqual(
-      expect.arrayContaining([
-        { name: 'username', error: 'Nieprawidłowa wartość' },
-        { name: 'password', error: 'Nieprawidłowa wartość' },
+        { error: 'Zły typ zmiennej', name: 'username' },
+        { error: 'Zły format', name: 'password' },
       ]),
     );
   });

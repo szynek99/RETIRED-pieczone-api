@@ -1,13 +1,13 @@
 import sequelize from 'db/connection';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
-import { INTEGER, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
 
-export type OrderInput = Optional<OrderAttributes, 'id'>;
+export type OrderInput = Optional<OrderAttributes, 'id' | 'status'>;
 
 export type OrderOuput = Required<OrderAttributes>;
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
-  public id!: number;
+  public id!: string;
 
   public hash!: string;
 
@@ -43,9 +43,10 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 Order.init(
   {
     id: {
-      type: INTEGER,
-      autoIncrement: true,
+      type: UUID,
+      defaultValue: UUIDV4,
       primaryKey: true,
+      allowNull: false,
     },
     hash: {
       type: STRING,
@@ -61,6 +62,7 @@ Order.init(
     },
     status: {
       type: STRING,
+      defaultValue: 'pending',
       allowNull: false,
     },
     phoneNumber: {

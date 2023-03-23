@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ROUTES } from 'constants/routes';
 import authRules from 'api/validators/auth';
-import AuthController from 'api/controllers/auth';
+import authController from 'api/controllers/auth';
 import { checkRequired } from 'api/middleware/common';
 import { checkDuplicateUsername } from 'api/middleware/auth';
 
@@ -11,9 +11,9 @@ authRouter.post(
   ROUTES.AUTH.REGISTER,
   authRules.register,
   [checkRequired, checkDuplicateUsername],
-  AuthController.register,
+  authController.register,
 );
 
-authRouter.post(ROUTES.AUTH.LOGIN, authRules.login, [checkRequired], AuthController.login);
+authRouter.post(ROUTES.AUTH.LOGIN, authRules.login, [checkRequired], authController.login);
 
 export default authRouter;
