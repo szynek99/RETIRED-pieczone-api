@@ -5,6 +5,7 @@ import orderController from 'api/controllers/order';
 import { checkRequired } from 'api/middleware/common';
 
 dotenv.config();
+
 const orderRouter = Router();
 
 orderRouter.post('/', orderRules.addSingle, [checkRequired], orderController.postOrder);

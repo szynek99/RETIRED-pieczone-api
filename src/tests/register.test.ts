@@ -28,7 +28,7 @@ describe('user/register', () => {
     const { status, body } = response;
     expect(status).toBe(400);
     expect(body).toHaveProperty('status', 400);
-    expect(body.error).toBe('user already exists');
+    expect(body.error).toBe('Użytkownik już istnieje');
   });
 
   it('user register', async () => {
@@ -36,6 +36,6 @@ describe('user/register', () => {
     const response = await request(app).post('/api/auth/register').send(payload);
     const { status, text } = response;
     expect(status).toBe(200);
-    expect(text).toMatch('user created successfully');
+    expect(text).toMatch('Użytkownik pomyślnie stworzony');
   });
 });

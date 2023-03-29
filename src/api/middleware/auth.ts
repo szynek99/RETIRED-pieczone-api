@@ -22,7 +22,7 @@ export const checkDuplicateUsername = async (
   if (userExists) {
     res
       .status(HttpStatusCode.BAD_REQUEST)
-      .send(requestError(HttpStatusCode.BAD_REQUEST, 'user already exists'));
+      .json(requestError(HttpStatusCode.BAD_REQUEST, 'Użytkownik już istnieje'));
     return;
   }
 
@@ -35,7 +35,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   if (!token || isArray(token)) {
     res
       .status(HttpStatusCode.FORBIDDEN)
-      .send(requestError(HttpStatusCode.FORBIDDEN, 'token not provided'));
+      .json(requestError(HttpStatusCode.FORBIDDEN, 'Brak tokenu'));
     return;
   }
 
@@ -43,7 +43,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     if (err) {
       res
         .status(HttpStatusCode.UNAUTHORIZED)
-        .send(requestError(HttpStatusCode.UNAUTHORIZED, 'unauthorized'));
+        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Niezautoryzowany'));
       return;
     }
     const { id } = decoded as JwtPayload;
@@ -57,13 +57,13 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
   if (isNull(user)) {
     res
       .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'user does not exist'));
+      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Użytkownik nie istnieje'));
     return;
   }
-  if (user!.role !== 'admin') {
+  if (user && user.role !== 'admin') {
     res
       .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'insufficient user role'));
+      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Niewystarczające uprawnienia'));
     return;
   }
   next();

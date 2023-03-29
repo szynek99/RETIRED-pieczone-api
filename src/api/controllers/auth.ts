@@ -21,9 +21,9 @@ const register = async (req: Request, res: Response) => {
       ...credentials,
       password: bcrypt.hashSync(credentials.password, 10),
     });
-    res.status(HttpStatusCode.OK).send('user created successfully');
+    res.status(HttpStatusCode.OK).json('Użytkownik pomyślnie stworzony');
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).send(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
@@ -36,23 +36,25 @@ const login = async (req: Request, res: Response) => {
     if (!user) {
       res
         .status(HttpStatusCode.UNAUTHORIZED)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'username or password did not match'));
+        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Dane logowania błędne'));
       return;
     }
     const passwordIsValid = bcrypt.compareSync(credentials.password, user.password);
 
     if (!passwordIsValid) {
-      res.status(HttpStatusCode.UNAUTHORIZED).send('username or password did not match');
+      res
+        .status(HttpStatusCode.UNAUTHORIZED)
+        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Dane logowania błędne'));
       return;
     }
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+    const userData = pick(user, LOGIN_PROPS);
+    const token = jwt.sign({ id: user.id, ...userData }, JWT_SECRET, {
       expiresIn: JWT_LIFE,
     });
-    const userData = pick(user, LOGIN_PROPS);
 
-    res.status(HttpStatusCode.OK).send({ ...userData, token });
+    res.status(HttpStatusCode.OK).json({ token });
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).send(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 

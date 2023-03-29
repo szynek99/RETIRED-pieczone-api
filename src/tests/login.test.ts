@@ -28,8 +28,6 @@ describe('user/login', () => {
       .send({ username: 'testUser', password: 'testPassword' });
     const { status, body } = response;
     expect(status).toBe(200);
-    expect(body).toHaveProperty('username', 'testUser');
-    expect(body).toHaveProperty('role', 'user');
     expect(body).toHaveProperty('token');
   });
 });

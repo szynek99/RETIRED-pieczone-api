@@ -26,11 +26,11 @@ const postOrder = async (req: Request, res: Response) => {
 
     const result = await addOrder({ ...payload, hash });
 
-    return res.status(HttpStatusCode.OK).send(result);
+    return res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     return res
       .status(HttpStatusCode.INTERNAL_SERVER)
-      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
+      .json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
@@ -38,11 +38,11 @@ const getOrder = async (req: Request, res: Response) => {
   try {
     const { hash } = req.params;
     const result = await getOrderByHash(hash);
-    return res.status(HttpStatusCode.OK).send(result);
+    return res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     return res
       .status(HttpStatusCode.INTERNAL_SERVER)
-      .send(serverError(HttpStatusCode.INTERNAL_SERVER));
+      .json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 export default { getOrder, postOrder };
