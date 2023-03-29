@@ -2,7 +2,7 @@ import { Result, ValidationError } from 'express-validator';
 
 export const requestError = (status: number, message?: string) => ({
   status,
-  error: message || 'request error',
+  error: message || 'błąd zapytania',
 });
 
 export const fieldsError = (status: number, fields: Result<ValidationError>) => {
@@ -15,5 +15,5 @@ export const fieldsError = (status: number, fields: Result<ValidationError>) => 
 };
 export const serverError = (status: number, message?: string) => ({
   status,
-  error: message || 'server error',
+  error: message || 'błąd serwera',
 });

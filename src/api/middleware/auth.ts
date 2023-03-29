@@ -60,7 +60,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Użytkownik nie istnieje'));
     return;
   }
-  if (user!.role !== 'admin') {
+  if (user && user.role !== 'admin') {
     res
       .status(HttpStatusCode.FORBIDDEN)
       .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Niewystarczające uprawnienia'));

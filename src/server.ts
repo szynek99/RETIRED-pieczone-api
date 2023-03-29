@@ -10,7 +10,7 @@ const start = () => {
       console.log(`Server is running on PORT ${PORT}`);
     });
   } catch (error) {
-    console.debug(error);
+    console.error(error);
   }
 };
 
