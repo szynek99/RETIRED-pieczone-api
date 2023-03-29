@@ -27,6 +27,10 @@ module.exports = {
         allowNull: false,
         defaultValue: true,
       },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     });
   },
 

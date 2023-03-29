@@ -4,4 +4,5 @@ export interface CakeTypeAttributes {
   value: string;
   accessible: boolean;
   customizable: boolean;
+  description?: string;
 }

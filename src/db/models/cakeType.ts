@@ -41,6 +41,10 @@ CakeType.init(
       type: BOOLEAN,
       defaultValue: true,
     },
+    description: {
+      type: STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: 'CakeType',
