@@ -23,6 +23,7 @@ CakeType.init(
     id: {
       type: INTEGER,
       primaryKey: true,
+      autoIncrement: true,
       allowNull: false,
     },
     name: {
@@ -31,6 +32,7 @@ CakeType.init(
     },
     value: {
       type: STRING,
+      unique: true,
       allowNull: false,
     },
     accessible: {

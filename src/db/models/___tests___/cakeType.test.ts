@@ -29,6 +29,7 @@ describe('Cake type model', () => {
         id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
+          autoIncrement: true,
           allowNull: false,
         },
         name: {
@@ -38,6 +39,7 @@ describe('Cake type model', () => {
         value: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: true,
         },
         accessible: {
           type: DataTypes.BOOLEAN,
