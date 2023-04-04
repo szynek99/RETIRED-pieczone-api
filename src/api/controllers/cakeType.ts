@@ -29,7 +29,7 @@ const postType = async (req: Request, res: Response) => {
 
 const putType = async (req: Request, res: Response) => {
   try {
-    const { id, ...rest } = matchedData(req);
+    const { id, ...rest } = matchedData(req, { includeOptionals: true });
 
     const cakeType = await getCakeType(id);
     if (isNull(cakeType)) {

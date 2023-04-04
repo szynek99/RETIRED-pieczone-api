@@ -45,15 +45,9 @@ const cakeTypeRules = {
   ],
   updateSingle: [
     check('id').isNumeric().withMessage('Nieprawidłowa wartość'),
-    check('name').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
-    check('accessible')
-      .isBoolean()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    check('customizable')
-      .isBoolean()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
+    check('name').isString().withMessage('Nieprawidłowa wartość'),
+    check('accessible').isBoolean().withMessage('Nieprawidłowa wartość'),
+    check('customizable').isBoolean().withMessage('Nieprawidłowa wartość'),
     check('description')
       .isString()
       .optional({ nullable: true })
