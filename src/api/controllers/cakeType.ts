@@ -8,6 +8,7 @@ import {
 import * as dotenv from 'dotenv';
 import isNull from 'lodash/isNull';
 import { Request, Response } from 'express';
+import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
 import { AddTypeInput, UpdateTypeProps } from 'types/cakeType';
@@ -62,10 +63,14 @@ const getType = async (req: Request, res: Response) => {
   }
 };
 
-const getAllTypes = async (_: Request, res: Response) => {
+const getAllTypes = async (req: Request, res: Response) => {
   try {
-    const result = await getAllCakeTypes();
-    res.status(HttpStatusCode.OK).json(result);
+    const params = queryParams(matchedData(req));
+    const { rows, count } = await getAllCakeTypes(params);
+
+    res.append('Content-Range', count.toString());
+    res.append('Access-Control-Expose-Headers', 'Content-Range');
+    res.status(HttpStatusCode.OK).json(rows);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }

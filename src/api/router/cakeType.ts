@@ -10,7 +10,12 @@ dotenv.config();
 
 const cakeTypeRouter = Router();
 
-cakeTypeRouter.get('/', [verifyToken], cakeTypeController.getAllTypes);
+cakeTypeRouter.get(
+  '/',
+  cakeTypeRules.getAll,
+  [verifyToken, checkRequired],
+  cakeTypeController.getAllTypes,
+);
 
 cakeTypeRouter.get(
   '/:id',

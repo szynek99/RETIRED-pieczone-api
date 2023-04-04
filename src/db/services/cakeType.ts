@@ -1,5 +1,7 @@
 import { CakeTypeAttributes, UpdateTypeProps } from 'types/cakeType';
 import CakeType, { CakeTypeInput } from 'db/models/cakeType';
+import { QueryParams } from 'types/common';
+import { off } from 'process';
 
 export const addCakeType = (payload: CakeTypeInput): Promise<CakeTypeAttributes> =>
   CakeType.create(payload);
@@ -7,7 +9,15 @@ export const addCakeType = (payload: CakeTypeInput): Promise<CakeTypeAttributes>
 export const getCakeType = (id: number): Promise<CakeTypeAttributes | null> =>
   CakeType.findByPk(id);
 
-export const getAllCakeTypes = (): Promise<Array<CakeTypeAttributes>> => CakeType.findAll();
+export const getAllCakeTypes = (
+  queryParams: QueryParams,
+): Promise<{ rows: CakeTypeAttributes[]; count: number }> => {
+  const { page, pageSize, field, order } = queryParams;
+  let offset = (page - 1) * pageSize;
+  offset = offset < 0 ? 0 : offset;
+
+  return CakeType.findAndCountAll({ limit: pageSize, offset, order: [[field, order]] });
+};
 
 export const removeCakeType = (id: number): Promise<number> => CakeType.destroy({ where: { id } });
 
