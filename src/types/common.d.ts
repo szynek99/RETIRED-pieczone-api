@@ -2,7 +2,7 @@
 export type KVObject = Record<string, any>;
 
 export interface QueryParams {
-  page: number;
+  offset: number;
   pageSize: number;
   filter: string | undefined;
   order: string;
