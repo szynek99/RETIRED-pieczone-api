@@ -12,6 +12,6 @@ export const resetOrder = async (): Promise<void> => {
     await Order.truncate();
     return;
   } catch (error) {
-    throw new ApiError('User clear');
+    throw new ApiError('Order clear');
   }
 };

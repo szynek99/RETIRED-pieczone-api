@@ -1,6 +1,7 @@
 import { CakeTypeAttributes, UpdateTypeProps } from 'types/cakeType';
 import CakeType, { CakeTypeInput } from 'db/models/cakeType';
 import { QueryParams } from 'types/common';
+import { ApiError } from 'api/utils/Error';
 
 export const addCakeType = (payload: CakeTypeInput): Promise<CakeTypeAttributes> =>
   CakeType.create(payload);
@@ -26,3 +27,12 @@ export const updateCakeType = (
   props: UpdateTypeProps,
 ): Promise<[affectedCount: number, affectedRows: CakeType[]]> =>
   CakeType.update(props, { where: { id }, returning: true });
+
+export const resetCakeType = async (): Promise<void> => {
+  try {
+    await CakeType.truncate();
+    return;
+  } catch (error) {
+    throw new ApiError('CakeType clear');
+  }
+};
