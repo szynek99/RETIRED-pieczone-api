@@ -75,7 +75,6 @@
     "nanoid": "^3.0.0",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "ra-data-simple-rest": "^4.9.0",
     "sequelize": "^6.29.3"
   },
   "lint-staged": {
