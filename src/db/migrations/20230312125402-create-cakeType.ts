@@ -7,6 +7,7 @@ module.exports = {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
       name: {
@@ -15,6 +16,7 @@ module.exports = {
       },
       value: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       accessible: {

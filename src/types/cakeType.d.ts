@@ -6,3 +6,18 @@ export interface CakeTypeAttributes {
   customizable: boolean;
   description?: string;
 }
+
+export interface AddTypeInput {
+  name: string;
+  value: string;
+  accessible: boolean;
+  customizable: boolean;
+  description?: string;
+}
+
+export interface UpdateTypeProps {
+  name?: string;
+  accessible?: boolean;
+  customizable?: boolean;
+  description?: string;
+}

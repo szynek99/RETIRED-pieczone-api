@@ -24,6 +24,7 @@ CakeFlavour.init(
     id: {
       type: INTEGER,
       primaryKey: true,
+      autoIncrement: true,
       allowNull: false,
     },
     name: {

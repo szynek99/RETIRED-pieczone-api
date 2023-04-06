@@ -1,11 +1,12 @@
-import * as dotenv from 'dotenv';
 import cors from 'cors';
+import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import express, { Application } from 'express';
-import fileUpload from 'express-fileupload';
-import orderRouter from 'api/router/order';
-import { ROUTES } from 'constants/routes';
 import authRouter from 'api/router/auth';
+import { ROUTES } from 'constants/routes';
+import orderRouter from 'api/router/order';
+import fileUpload from 'express-fileupload';
+import express, { Application } from 'express';
+import cakeTypeRouter from 'api/router/cakeType';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.AUTH.BASE, authRouter);
+app.use(ROUTES.CAKE_TYPES.BASE, cakeTypeRouter);
 app.use(ROUTES.IMAGES, express.static('uploads'));
 
 export default app;
