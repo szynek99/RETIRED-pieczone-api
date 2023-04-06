@@ -68,8 +68,8 @@ const getAllTypes = async (req: Request, res: Response) => {
     const params = queryParams(matchedData(req));
     const { rows, count } = await getAllCakeTypes(params);
 
-    res.append('Content-Range', count.toString());
-    res.append('Access-Control-Expose-Headers', 'Content-Range');
+    res.append('Content-Count', count.toString());
+
     res.status(HttpStatusCode.OK).json(rows);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
