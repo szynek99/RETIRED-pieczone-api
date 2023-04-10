@@ -4,3 +4,14 @@ export interface CakeFlavourAttributes {
   value: string;
   accessible: boolean;
 }
+
+export interface AddTypeInput {
+  name: string;
+  value: string;
+  accessible: boolean;
+}
+
+export interface UpdateTypeProps {
+  name?: string;
+  accessible?: boolean;
+}
