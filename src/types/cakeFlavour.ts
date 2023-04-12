@@ -5,13 +5,13 @@ export interface CakeFlavourAttributes {
   accessible: boolean;
 }
 
-export interface AddTypeInput {
+export interface AddFlavourInput {
   name: string;
   value: string;
   accessible: boolean;
 }
 
-export interface UpdateTypeProps {
+export interface UpdateFlavourProps {
   name?: string;
   accessible?: boolean;
 }

@@ -11,14 +11,14 @@ import { Request, Response } from 'express';
 import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import { AddTypeInput, UpdateTypeProps } from 'types/cakeFlavour';
 import { serverError, requestError } from 'api/utils/Response';
+import { AddFlavourInput, UpdateFlavourProps } from 'types/cakeFlavour';
 
 dotenv.config();
 
 const postFlavour = async (req: Request, res: Response) => {
   try {
-    const properties = matchedData(req) as AddTypeInput;
+    const properties = matchedData(req) as AddFlavourInput;
 
     const result = await addCakeFlavour(properties);
     res.status(HttpStatusCode.OK).json(result);
@@ -38,7 +38,7 @@ const putFlavour = async (req: Request, res: Response) => {
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
       return;
     }
-    const result = (await updateCakeFlavour(id, rest as UpdateTypeProps))[1].pop();
+    const result = (await updateCakeFlavour(id, rest as UpdateFlavourProps))[1].pop();
 
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
