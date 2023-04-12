@@ -1,7 +1,7 @@
 import { QueryParams } from 'types/common';
 import { ApiError } from 'api/utils/Error';
 import CakeFlavour, { CakeFlavourInput } from 'db/models/cakeFlavour';
-import { CakeFlavourAttributes, UpdateTypeProps } from 'types/cakeFlavour';
+import { CakeFlavourAttributes, UpdateFlavourProps } from 'types/cakeFlavour';
 
 export const addCakeFlavour = (payload: CakeFlavourInput): Promise<CakeFlavourAttributes> =>
   CakeFlavour.create(payload);
@@ -25,7 +25,7 @@ export const getCakeFlavourByValue = (value: string): Promise<CakeFlavourAttribu
 
 export const updateCakeFlavour = (
   id: number,
-  props: UpdateTypeProps,
+  props: UpdateFlavourProps,
 ): Promise<[affectedCount: number, affectedRows: CakeFlavour[]]> =>
   CakeFlavour.update(props, { where: { id }, returning: true });
 

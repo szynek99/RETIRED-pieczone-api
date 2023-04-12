@@ -1,7 +1,7 @@
-import { AddTypeInput } from 'types/cakeFlavour';
 import { matchedData } from 'express-validator';
 import { requestError } from 'api/utils/Response';
 import { HttpStatusCode } from 'constants/common';
+import { AddFlavourInput } from 'types/cakeFlavour';
 import { NextFunction, Request, Response } from 'express';
 import { getCakeFlavourByValue } from 'db/services/cakeFlavour';
 
@@ -11,7 +11,7 @@ export const checkDuplicateValue = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const attributes = matchedData(req) as AddTypeInput;
+  const attributes = matchedData(req) as AddFlavourInput;
   const cakeFlavour = await getCakeFlavourByValue(attributes.value);
 
   if (cakeFlavour) {
