@@ -2,6 +2,7 @@
 export const ROUTES = {
   ORDERS: { BASE: '/api/order' },
   CAKE_TYPES: { BASE: '/api/cake-type' },
+  CAKE_FLAVOURS: { BASE: '/api/cake-flavour' },
   IMAGES: '/api/images',
   AUTH: {
     BASE: '/api/auth',

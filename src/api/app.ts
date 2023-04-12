@@ -7,6 +7,7 @@ import orderRouter from 'api/router/order';
 import fileUpload from 'express-fileupload';
 import express, { Application } from 'express';
 import cakeTypeRouter from 'api/router/cakeType';
+import cakeFlavourRouter from 'api/router/cakeFlavour';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.AUTH.BASE, authRouter);
 app.use(ROUTES.CAKE_TYPES.BASE, cakeTypeRouter);
+app.use(ROUTES.CAKE_FLAVOURS.BASE, cakeFlavourRouter);
 app.use(ROUTES.IMAGES, express.static('uploads'));
 
 export default app;

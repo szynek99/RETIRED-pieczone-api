@@ -1,44 +1,44 @@
 import {
-  addCakeType,
-  getAllCakeTypes,
-  getCakeType,
-  removeCakeType,
-  updateCakeType,
-} from 'db/services/cakeType';
+  addCakeFlavour,
+  getCakeFlavour,
+  updateCakeFlavour,
+  getAllCakeFlavours,
+  removeCakeFlavour,
+} from 'db/services/cakeFlavour';
 import * as dotenv from 'dotenv';
 import isNull from 'lodash/isNull';
 import { Request, Response } from 'express';
 import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import { AddTypeInput, UpdateTypeProps } from 'types/cakeType';
 import { serverError, requestError } from 'api/utils/Response';
+import { AddFlavourInput, UpdateFlavourProps } from 'types/cakeFlavour';
 
 dotenv.config();
 
-const postType = async (req: Request, res: Response) => {
+const postFlavour = async (req: Request, res: Response) => {
   try {
-    const properties = matchedData(req) as AddTypeInput;
+    const properties = matchedData(req) as AddFlavourInput;
 
-    const result = await addCakeType(properties);
+    const result = await addCakeFlavour(properties);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
-const putType = async (req: Request, res: Response) => {
+const putFlavour = async (req: Request, res: Response) => {
   try {
-    const { id, ...rest } = matchedData(req, { includeOptionals: true });
+    const { id, ...rest } = matchedData(req);
 
-    const cakeType = await getCakeType(id);
-    if (isNull(cakeType)) {
+    const cakeFlavour = await getCakeFlavour(id);
+    if (isNull(cakeFlavour)) {
       res
         .status(HttpStatusCode.NOT_FOUND)
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
       return;
     }
-    const result = (await updateCakeType(id, rest as UpdateTypeProps))[1].pop();
+    const result = (await updateCakeFlavour(id, rest as UpdateFlavourProps))[1].pop();
 
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
@@ -46,10 +46,10 @@ const putType = async (req: Request, res: Response) => {
   }
 };
 
-const getType = async (req: Request, res: Response) => {
+const getFlavour = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const result = await getCakeType(id);
+    const result = await getCakeFlavour(id);
 
     if (isNull(result)) {
       res
@@ -63,10 +63,10 @@ const getType = async (req: Request, res: Response) => {
   }
 };
 
-const getAllTypes = async (req: Request, res: Response) => {
+const getAllFlavours = async (req: Request, res: Response) => {
   try {
     const params = queryParams(matchedData(req));
-    const { rows, count } = await getAllCakeTypes(params);
+    const { rows, count } = await getAllCakeFlavours(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
     res.append('Content-Count', count.toString());
@@ -77,22 +77,22 @@ const getAllTypes = async (req: Request, res: Response) => {
   }
 };
 
-const deleteType = async (req: Request, res: Response) => {
+const deleteFlavour = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const cakeType = await getCakeType(id);
+    const cakeFlavour = await getCakeFlavour(id);
 
-    if (isNull(cakeType)) {
+    if (isNull(cakeFlavour)) {
       res
         .status(HttpStatusCode.NOT_FOUND)
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
       return;
     }
-    await removeCakeType(id);
-    res.status(HttpStatusCode.OK).json(cakeType);
+    await removeCakeFlavour(id);
+    res.status(HttpStatusCode.OK).json(cakeFlavour);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
 
-export default { postType, getType, getAllTypes, deleteType, putType };
+export default { postFlavour, getFlavour, getAllFlavours, deleteFlavour, putFlavour };
