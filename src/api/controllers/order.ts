@@ -6,8 +6,9 @@ import { matchedData } from 'express-validator';
 import { serverError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
-import { getOrderByHash, addOrder } from 'db/services/order';
+import { getOrderByHash, addOrder, getAllOrders } from 'db/services/order';
 import { ROUTES } from 'constants/routes';
+import queryParams from 'api/utils/queryParams';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -45,4 +46,19 @@ const getOrder = async (req: Request, res: Response) => {
       .json(serverError(HttpStatusCode.INTERNAL_SERVER));
   }
 };
-export default { getOrder, postOrder };
+
+const getOrders = async (req: Request, res: Response) => {
+  try {
+    const params = queryParams(matchedData(req));
+    const { rows, count } = await getAllOrders(params);
+
+    res.append('Access-Control-Expose-Headers', 'Content-Count');
+    res.append('Content-Count', count.toString());
+
+    res.status(HttpStatusCode.OK).json(rows);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+  }
+};
+
+export default { getOrder, postOrder, getOrders };

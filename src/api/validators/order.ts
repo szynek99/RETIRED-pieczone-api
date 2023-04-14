@@ -1,8 +1,44 @@
-import { check } from 'express-validator';
+import { check, query } from 'express-validator';
 import { BASIC_STRING_RULE } from 'api/validators/common';
 import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
 
+import multer from 'multer';
+
+const storage = multer.memoryStorage(); // Holds a buffer of the file in memory
+const upload = multer({ storage });
+
 const orderRules = {
+  getAll: [
+    query('page')
+      .isInt({ min: 0 })
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
+    query('pageSize')
+      .isInt({ min: 0 })
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
+    check('order')
+      .isString()
+      .optional({ nullable: true })
+      .custom((value) => {
+        if (value === 'ASC' || value === 'DESC') {
+          return true;
+        }
+        return false;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+    check('field')
+      .isString()
+      .optional({ nullable: true })
+      .custom((value) => {
+        if (['name', 'accessible', 'customizable', 'id'].includes(value)) {
+          return true;
+        }
+        return false;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+    check('filter').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+  ],
   addSingle: [
     BASIC_STRING_RULE('firstname'),
     BASIC_STRING_RULE('surname'),
