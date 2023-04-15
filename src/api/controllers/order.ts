@@ -1,14 +1,14 @@
 import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
+import { ROUTES } from 'constants/routes';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
+import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { serverError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
 import { getOrderByHash, addOrder, getAllOrders } from 'db/services/order';
-import { ROUTES } from 'constants/routes';
-import queryParams from 'api/utils/queryParams';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -21,8 +21,8 @@ const postOrder = async (req: Request, res: Response) => {
     payload.hash = hash;
 
     if (image) {
-      image.mv(`/uploads/${hash}.jpg`);
-      payload.imageUrl = `${API_URL}${ROUTES.IMAGES}/${hash}.jpg`;
+      image.mv(`uploads/${hash}.jpg`);
+      payload.imageUrl = `${API_URL}${ROUTES.UPLOADS.ORDER}/${hash}.jpg`;
     }
 
     const result = await addOrder({ ...payload, hash });

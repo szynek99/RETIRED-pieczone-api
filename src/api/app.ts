@@ -22,6 +22,6 @@ app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.AUTH.BASE, authRouter);
 app.use(ROUTES.CAKE_TYPES.BASE, cakeTypeRouter);
 app.use(ROUTES.CAKE_FLAVOURS.BASE, cakeFlavourRouter);
-app.use(ROUTES.IMAGES, express.static('uploads'));
+app.use(`/uploads/orders`, express.static('uploads'));
 
 export default app;

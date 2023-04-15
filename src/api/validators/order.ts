@@ -1,11 +1,7 @@
 import { check, query } from 'express-validator';
 import { BASIC_STRING_RULE } from 'api/validators/common';
 import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
-
-import multer from 'multer';
-
-const storage = multer.memoryStorage(); // Holds a buffer of the file in memory
-const upload = multer({ storage });
+import { isArray } from 'lodash';
 
 const orderRules = {
   getAll: [
@@ -73,14 +69,30 @@ const orderRules = {
       .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
     check('image')
-      .optional({ nullable: true })
-      .custom((_, { req }) => {
-        if (req.files && req.files.image.mimetype.startsWith('image')) {
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (isArray(files.image)) {
+            return false;
+          }
+          if (!files.image.mimetype.startsWith('image')) {
+            return false;
+          }
           return true;
         }
-        return false;
+        return true;
       })
-      .withMessage('Nieprawidłowy rodzaj pliku'),
+      .withMessage('Dozwolone jest tylko jeden plik graficzny')
+      .bail()
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (files.image.size < 5000000) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      })
+      .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
   ],
   getSingle: [
     check('hash')
