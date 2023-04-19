@@ -23,7 +23,7 @@ const postFlavour = async (req: Request, res: Response) => {
     const result = await addCakeFlavour(properties);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -42,7 +42,7 @@ const putFlavour = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -59,7 +59,7 @@ const getFlavour = async (req: Request, res: Response) => {
     }
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -73,7 +73,7 @@ const getAllFlavours = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json(rows);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -91,7 +91,7 @@ const deleteFlavour = async (req: Request, res: Response) => {
     await removeCakeFlavour(id);
     res.status(HttpStatusCode.OK).json(cakeFlavour);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 

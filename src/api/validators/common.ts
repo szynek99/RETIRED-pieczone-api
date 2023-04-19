@@ -4,7 +4,7 @@ import { check } from 'express-validator';
 export const BASIC_STRING_RULE = (name: string) =>
   check(name)
     .isString()
-    .withMessage('Zły format')
+    .withMessage('Nieprawidłowa wartość')
     .bail()
     .isLength({ min: 1 })
     .withMessage('Za krótkie');

@@ -1,7 +1,7 @@
+import { isArray } from 'lodash';
 import { check, query } from 'express-validator';
 import { BASIC_STRING_RULE } from 'api/validators/common';
 import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
-import { isArray } from 'lodash';
 
 const orderRules = {
   getAll: [
@@ -27,13 +27,32 @@ const orderRules = {
       .isString()
       .optional({ nullable: true })
       .custom((value) => {
-        if (['name', 'accessible', 'customizable', 'id'].includes(value)) {
+        if (
+          [
+            'firstname',
+            'surname',
+            'status',
+            'id',
+            'cakeWeight',
+            'createdAt',
+            'updatedAt',
+            'hash',
+          ].includes(value)
+        ) {
           return true;
         }
         return false;
       })
       .withMessage('Nieprawidłowa wartość'),
-    check('filter').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('search').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('cakeWeight')
+      .isNumeric()
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
+    check('createdAt').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('status').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('firstname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('surname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
   ],
   addSingle: [
     BASIC_STRING_RULE('firstname'),
@@ -63,7 +82,7 @@ const orderRules = {
       .isString()
       .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
-    check('alcoholAllowed').isBoolean().withMessage('Zły format'),
+    check('alcoholAllowed').isBoolean().withMessage('Nieprawidłowa wartość'),
     check('commentsToOrder')
       .isString()
       .optional({ nullable: true })

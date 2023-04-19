@@ -23,7 +23,7 @@ const register = async (req: Request, res: Response) => {
     });
     res.status(HttpStatusCode.OK).json('Użytkownik pomyślnie stworzony');
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -54,7 +54,7 @@ const login = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json({ token });
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 

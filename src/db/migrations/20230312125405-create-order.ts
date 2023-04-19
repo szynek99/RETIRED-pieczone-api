@@ -1,5 +1,5 @@
 /* eslint-disable import/no-import-module-exports */
-import { QueryInterface, DataTypes } from 'sequelize';
+import { QueryInterface, DataTypes, Sequelize } from 'sequelize';
 
 module.exports = {
   up: async (queryInterface: QueryInterface) => {
@@ -70,6 +70,16 @@ module.exports = {
       imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
       },
     });
   },

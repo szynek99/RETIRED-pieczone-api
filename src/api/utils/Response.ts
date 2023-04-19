@@ -1,19 +1,18 @@
 import { Result, ValidationError } from 'express-validator';
 
 export const requestError = (status: number, message?: string) => ({
-  status,
   error: message || 'błąd zapytania',
 });
 
 export const fieldsError = (status: number, fields: Result<ValidationError>) => {
-  const errors = fields.array().map((entry) => ({ name: entry.param, error: entry.msg }));
+  const mappedErrors: { [key: string]: any } = { errors: {} };
+  fields.array({ onlyFirstError: true }).forEach(({ msg, param }) => {
+    mappedErrors.errors[param] = msg;
+  });
 
-  return {
-    status,
-    errors,
-  };
+  return mappedErrors;
 };
-export const serverError = (status: number, message?: string) => ({
-  status,
+
+export const serverError = (message?: string) => ({
   error: message || 'błąd serwera',
 });

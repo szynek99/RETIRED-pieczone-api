@@ -23,7 +23,7 @@ const postType = async (req: Request, res: Response) => {
     const result = await addCakeType(properties);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -42,7 +42,7 @@ const putType = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -59,7 +59,7 @@ const getType = async (req: Request, res: Response) => {
     }
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -73,7 +73,7 @@ const getAllTypes = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json(rows);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -91,7 +91,7 @@ const deleteType = async (req: Request, res: Response) => {
     await removeCakeType(id);
     res.status(HttpStatusCode.OK).json(cakeType);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 

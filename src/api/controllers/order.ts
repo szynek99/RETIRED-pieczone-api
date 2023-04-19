@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
+import { QueryParams } from 'types/order';
 import { ROUTES } from 'constants/routes';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
@@ -29,9 +30,7 @@ const postOrder = async (req: Request, res: Response) => {
 
     return res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res
-      .status(HttpStatusCode.INTERNAL_SERVER)
-      .json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -41,15 +40,13 @@ const getOrder = async (req: Request, res: Response) => {
     const result = await getOrderByHash(hash);
     return res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res
-      .status(HttpStatusCode.INTERNAL_SERVER)
-      .json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
 const getOrders = async (req: Request, res: Response) => {
   try {
-    const params = queryParams(matchedData(req));
+    const params = queryParams<QueryParams>(matchedData(req));
     const { rows, count } = await getAllOrders(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
@@ -57,7 +54,7 @@ const getOrders = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json(rows);
   } catch (error) {
-    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError(HttpStatusCode.INTERNAL_SERVER));
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
