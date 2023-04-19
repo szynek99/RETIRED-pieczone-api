@@ -12,7 +12,7 @@ export type SpongeColour = SpongeTuple[number];
 
 interface CakeAttributes {
   cakeType: string;
-  cakeFlavour: string;
+  cakeFlavour: string?;
   spongeColour: SpongeColour;
   cakeWeight: number;
   cakeShape: CakeShape;

@@ -60,7 +60,10 @@ const orderRules = {
     BASIC_STRING_RULE('phoneNumber').isMobilePhone('pl-PL').withMessage('Nieprawidłowa wartość'),
     check('occasion').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
     BASIC_STRING_RULE('cakeType'),
-    BASIC_STRING_RULE('cakeFlavour'),
+    check('cakeFlavour')
+      .isString()
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
     BASIC_STRING_RULE('spongeColour')
       .custom((value) => {
         if (!SPONGE_COLOUR.includes(value)) {

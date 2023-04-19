@@ -23,7 +23,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 
   public cakeType!: string;
 
-  public cakeFlavour!: string;
+  public cakeFlavour!: string | null;
 
   public spongeColour!: SpongeColour;
 
@@ -83,7 +83,7 @@ Order.init(
     },
     cakeFlavour: {
       type: STRING,
-      allowNull: false,
+      allowNull: true,
     },
     spongeColour: {
       type: STRING,
