@@ -16,3 +16,5 @@ export const fieldsError = (status: number, fields: Result<ValidationError>) => 
 export const serverError = (message?: string) => ({
   error: message || 'błąd serwera',
 });
+
+export const singleFieldError = (key: string, msg?: string) => ({ errors: { [key]: msg } });

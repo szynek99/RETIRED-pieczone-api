@@ -41,7 +41,7 @@ module.exports = {
       },
       cakeFlavour: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       spongeColour: {
         type: DataTypes.STRING,

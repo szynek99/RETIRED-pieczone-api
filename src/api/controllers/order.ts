@@ -20,7 +20,7 @@ const postOrder = async (req: Request, res: Response) => {
     const payload = matchedData(req) as OrderInput;
     const image = req.files?.image as UploadedFile | undefined;
     payload.hash = hash;
-
+    console.debug(image);
     if (image) {
       image.mv(`uploads/${hash}.jpg`);
       payload.imageUrl = `${API_URL}${ROUTES.UPLOADS.ORDER}/${hash}.jpg`;
