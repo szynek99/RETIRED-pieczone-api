@@ -116,7 +116,8 @@ const orderRules = {
       })
       .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
   ],
-  getSingle: [
+  getSingle: [check('id').isString().withMessage('Nieprawidłowa wartość')],
+  getSingleByHash: [
     check('hash')
       .isString()
       .withMessage('Nieprawidłowa wartość')

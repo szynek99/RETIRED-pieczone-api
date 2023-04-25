@@ -19,6 +19,11 @@ orderRouter.post(
 
 orderRouter.get('/', orderRules.getAll, [verifyToken, checkRequired], orderController.getOrders);
 
-orderRouter.get('/:hash', orderRules.getSingle, [checkRequired], orderController.getOrder);
+orderRouter.get(
+  '/:id',
+  orderRules.getSingle,
+  [verifyToken, checkRequired],
+  orderController.getOrder,
+);
 
 export default orderRouter;

@@ -6,6 +6,8 @@ import Order, { OrderInput, OrderOuput } from 'db/models/order';
 export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
   await Order.create(payload);
 
+export const getOrderById = (id: string): Promise<OrderOuput | null> => Order.findByPk(id);
+
 export const getOrderByHash = (hash: string): Promise<OrderOuput | null> =>
   Order.findOne({ where: { hash } });
 
