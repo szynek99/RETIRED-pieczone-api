@@ -1,7 +1,8 @@
 import { isArray } from 'lodash';
 import { check, query } from 'express-validator';
 import { BASIC_STRING_RULE } from 'api/validators/common';
-import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
+import { CAKE_SHAPE, ORDER_STATUS, SPONGE_COLOUR } from 'constants/order';
+import { PRIMARY_VALIDATION } from 'constants/common';
 
 const orderRules = {
   getAll: [
@@ -55,41 +56,7 @@ const orderRules = {
     check('surname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
   ],
   addSingle: [
-    BASIC_STRING_RULE('firstname'),
-    BASIC_STRING_RULE('surname'),
-    BASIC_STRING_RULE('phoneNumber').isMobilePhone('pl-PL').withMessage('Nieprawidłowa wartość'),
-    check('occasion').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('cakeType'),
-    check('cakeFlavour')
-      .isString()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('spongeColour')
-      .custom((value) => {
-        if (!SPONGE_COLOUR.includes(value)) {
-          throw new Error();
-        }
-        return true;
-      })
-      .withMessage('Nieprawidłowa wartość'),
-    check('cakeWeight').isFloat({ min: 0 }).withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('cakeShape')
-      .custom((value) => {
-        if (!CAKE_SHAPE.includes(value)) {
-          throw new Error();
-        }
-        return true;
-      })
-      .withMessage('Nieprawidłowa wartość'),
-    check('cakeInscription')
-      .isString()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    check('alcoholAllowed').isBoolean().withMessage('Nieprawidłowa wartość'),
-    check('commentsToOrder')
-      .isString()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
+    ...PRIMARY_VALIDATION,
     check('image')
       .custom((_, { req: { files } }) => {
         if (files && files.image) {
@@ -115,6 +82,18 @@ const orderRules = {
         return true;
       })
       .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
+  ],
+  updateSingle: [
+    ...PRIMARY_VALIDATION,
+    BASIC_STRING_RULE('id'),
+    BASIC_STRING_RULE('status')
+      .custom((value) => {
+        if (!ORDER_STATUS.includes(value)) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Nieprawidłowa wartość'),
   ],
   getSingle: [check('id').isString().withMessage('Nieprawidłowa wartość')],
   getSingleByHash: [

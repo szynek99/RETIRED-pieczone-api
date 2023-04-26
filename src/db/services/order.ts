@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { ApiError } from 'api/utils/Error';
-import { QueryParams, OrderAttributes } from 'types/order';
 import Order, { OrderInput, OrderOuput } from 'db/models/order';
+import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
 
 export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
   await Order.create(payload);
@@ -10,6 +10,12 @@ export const getOrderById = (id: string): Promise<OrderOuput | null> => Order.fi
 
 export const getOrderByHash = (hash: string): Promise<OrderOuput | null> =>
   Order.findOne({ where: { hash } });
+
+export const updateOrder = (
+  id: string,
+  props: UpdateOrderProps,
+): Promise<[affectedCount: number, affectedRows: Order[]]> =>
+  Order.update(props, { where: { id }, returning: true });
 
 export const getAllOrders = (
   queryParams: QueryParams,

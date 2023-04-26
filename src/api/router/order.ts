@@ -26,4 +26,11 @@ orderRouter.get(
   orderController.getOrder,
 );
 
+orderRouter.put(
+  '/:id',
+  orderRules.updateSingle,
+  [verifyToken, checkRequired],
+  orderController.putOrder,
+);
+
 export default orderRouter;

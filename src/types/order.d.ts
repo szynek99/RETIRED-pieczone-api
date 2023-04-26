@@ -34,6 +34,14 @@ export interface OrderAttributes extends CakeAttributes {
   updatedAt: Date;
 }
 
+export interface UpdateOrderProps extends CakeAttributes {
+  status: OrderStatus;
+  firstname: string;
+  surname: string;
+  phoneNumber: string;
+  occasion: string?;
+}
+
 export interface QueryParams extends BasicQueryParams {
   cakeWeight: number?;
   firstname: string?;
