@@ -1,15 +1,23 @@
 import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
-import { QueryParams, UpdateOrderProps } from 'types/order';
+import {
+  addOrder,
+  getAllOrders,
+  getOrderById,
+  getOrdersByIds,
+  removeOrder,
+  updateOrder,
+} from 'db/services/order';
+import { isNull, isString } from 'lodash';
 import { ROUTES } from 'constants/routes';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
 import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
-import { serverError } from 'api/utils/Response';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
-import { addOrder, getAllOrders, getOrderById, updateOrder } from 'db/services/order';
+import { QueryParams, UpdateOrderProps } from 'types/order';
+import { requestError, serverError } from 'api/utils/Response';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -70,4 +78,43 @@ const getOrders = async (req: Request, res: Response) => {
   }
 };
 
-export default { getOrder, postOrder, getOrders, putOrder };
+const deleteOrder = async (req: Request, res: Response) => {
+  try {
+    const { id } = matchedData(req);
+    const order = await getOrderById(id);
+
+    if (isNull(order)) {
+      res
+        .status(HttpStatusCode.NOT_FOUND)
+        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      return;
+    }
+    await removeOrder(id);
+    res.status(HttpStatusCode.OK).json(order);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
+const deleteOrders = async (req: Request, res: Response) => {
+  try {
+    let { id } = matchedData(req);
+    if (isString(id)) {
+      id = [id];
+    }
+    const orders = await getOrdersByIds(id);
+
+    if (isNull(orders)) {
+      res
+        .status(HttpStatusCode.NOT_FOUND)
+        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      return;
+    }
+    await removeOrder(id);
+    res.status(HttpStatusCode.OK).json(orders);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
+export default { getOrder, postOrder, getOrders, putOrder, deleteOrder, deleteOrders };

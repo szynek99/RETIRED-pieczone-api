@@ -8,6 +8,13 @@ export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
 
 export const getOrderById = (id: string): Promise<OrderOuput | null> => Order.findByPk(id);
 
+export const getOrdersByIds = (ids: string[]): Promise<OrderOuput[] | null> =>
+  Order.findAll({
+    where: {
+      id: { [Op.in]: ids },
+    },
+  });
+
 export const getOrderByHash = (hash: string): Promise<OrderOuput | null> =>
   Order.findOne({ where: { hash } });
 
@@ -46,6 +53,9 @@ export const getAllOrders = (
     },
   });
 };
+
+export const removeOrder = (id: string | string[]): Promise<number> =>
+  Order.destroy({ where: { id } });
 
 export const resetOrder = async (): Promise<void> => {
   try {

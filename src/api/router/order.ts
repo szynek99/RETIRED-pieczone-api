@@ -33,4 +33,18 @@ orderRouter.put(
   orderController.putOrder,
 );
 
+orderRouter.delete(
+  '/',
+  orderRules.getMany,
+  [verifyToken, checkRequired],
+  orderController.deleteOrders,
+);
+
+orderRouter.delete(
+  '/:id',
+  orderRules.getSingle,
+  [verifyToken, checkRequired],
+  orderController.deleteOrder,
+);
+
 export default orderRouter;

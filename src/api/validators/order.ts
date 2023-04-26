@@ -1,8 +1,8 @@
-import { isArray } from 'lodash';
+import { isArray, isString } from 'lodash';
+import { ORDER_STATUS } from 'constants/order';
 import { check, query } from 'express-validator';
-import { BASIC_STRING_RULE } from 'api/validators/common';
-import { CAKE_SHAPE, ORDER_STATUS, SPONGE_COLOUR } from 'constants/order';
 import { PRIMARY_VALIDATION } from 'constants/common';
+import { BASIC_STRING_RULE } from 'api/validators/common';
 
 const orderRules = {
   getAll: [
@@ -95,7 +95,26 @@ const orderRules = {
       })
       .withMessage('Nieprawidłowa wartość'),
   ],
-  getSingle: [check('id').isString().withMessage('Nieprawidłowa wartość')],
+  getSingle: [
+    check('id').isString().isLength({ max: 36, min: 36 }).withMessage('Nieprawidłowa wartość'),
+  ],
+  getMany: [
+    check('id')
+      .exists()
+      .withMessage('Nieprawidłowa wartość')
+      .bail()
+      .custom((value) => {
+        if (isArray(value)) {
+          if (!value.every((val: string) => val.length === 36)) {
+            throw new Error();
+          }
+        } else if (!isString(value) || value.length !== 36) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+  ],
   getSingleByHash: [
     check('hash')
       .isString()
