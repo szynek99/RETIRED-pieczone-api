@@ -1,7 +1,7 @@
 import { matchedData } from 'express-validator';
-import { requestError } from 'api/utils/Response';
 import { HttpStatusCode } from 'constants/common';
 import { AddFlavourInput } from 'types/cakeFlavour';
+import { singleFieldError } from 'api/utils/Response';
 import { NextFunction, Request, Response } from 'express';
 import { getCakeFlavourByValue } from 'db/services/cakeFlavour';
 
@@ -17,7 +17,7 @@ export const checkDuplicateValue = async (
   if (cakeFlavour) {
     res
       .status(HttpStatusCode.BAD_REQUEST)
-      .json(requestError(HttpStatusCode.BAD_REQUEST, 'Wartość name jest już zajęta'));
+      .json(singleFieldError('value', 'Wartość jest już zajęta'));
     return;
   }
   next();
