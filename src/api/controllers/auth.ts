@@ -34,17 +34,13 @@ const login = async (req: Request, res: Response) => {
     const user = await getUserByUsername(credentials.username);
 
     if (!user) {
-      res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Dane logowania błędne'));
+      res.status(HttpStatusCode.UNAUTHORIZED).json(requestError('Dane logowania błędne'));
       return;
     }
     const passwordIsValid = bcrypt.compareSync(credentials.password, user.password);
 
     if (!passwordIsValid) {
-      res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Dane logowania błędne'));
+      res.status(HttpStatusCode.UNAUTHORIZED).json(requestError('Dane logowania błędne'));
       return;
     }
     const userData = pick(user, LOGIN_PROPS);
