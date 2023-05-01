@@ -97,9 +97,7 @@ const deleteOrder = async (req: Request, res: Response) => {
     const order = await getOrderById(id);
 
     if (isNull(order)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     removeOrderImage(order.hash);
@@ -119,9 +117,7 @@ const deleteOrders = async (req: Request, res: Response) => {
     const orders = await getOrdersByIds(id);
 
     if (isNull(orders) || id.length !== orders.length) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     orders.forEach(({ hash }) => removeOrderImage(hash));

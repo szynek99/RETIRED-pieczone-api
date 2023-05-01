@@ -15,9 +15,7 @@ export const checkRequired = async (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    res
-      .status(HttpStatusCode.UNPROCESSABLE)
-      .json(fieldsError(HttpStatusCode.UNPROCESSABLE, errors));
+    res.status(HttpStatusCode.UNPROCESSABLE).json(fieldsError(errors));
     return;
   }
 

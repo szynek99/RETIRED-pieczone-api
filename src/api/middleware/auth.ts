@@ -20,9 +20,7 @@ export const checkDuplicateUsername = async (
   const userExists = await getUserByUsername(credentials.username);
 
   if (userExists) {
-    res
-      .status(HttpStatusCode.BAD_REQUEST)
-      .json(requestError(HttpStatusCode.BAD_REQUEST, 'Użytkownik już istnieje'));
+    res.status(HttpStatusCode.BAD_REQUEST).json(requestError('Użytkownik już istnieje'));
     return;
   }
 
@@ -33,17 +31,13 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
   const token = req.headers['x-access-token'];
 
   if (!token || isArray(token)) {
-    res
-      .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.FORBIDDEN, 'Brak tokenu'));
+    res.status(HttpStatusCode.FORBIDDEN).json(requestError('Brak tokenu'));
     return;
   }
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      res
-        .status(HttpStatusCode.UNAUTHORIZED)
-        .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Niezautoryzowany'));
+      res.status(HttpStatusCode.UNAUTHORIZED).json(requestError('Niezautoryzowany'));
       return;
     }
     const { id } = decoded as JwtPayload;
@@ -55,15 +49,11 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const user = await getUserById(req.userId!);
   if (isNull(user)) {
-    res
-      .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Użytkownik nie istnieje'));
+    res.status(HttpStatusCode.FORBIDDEN).json(requestError('Użytkownik nie istnieje'));
     return;
   }
   if (user && user.role !== 'admin') {
-    res
-      .status(HttpStatusCode.FORBIDDEN)
-      .json(requestError(HttpStatusCode.UNAUTHORIZED, 'Niewystarczające uprawnienia'));
+    res.status(HttpStatusCode.FORBIDDEN).json(requestError('Niewystarczające uprawnienia'));
     return;
   }
   next();

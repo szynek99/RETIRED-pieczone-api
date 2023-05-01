@@ -33,9 +33,7 @@ const putType = async (req: Request, res: Response) => {
 
     const cakeType = await getCakeType(id);
     if (isNull(cakeType)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     const result = (await updateCakeType(id, rest as UpdateTypeProps))[1].pop();
@@ -52,9 +50,7 @@ const getType = async (req: Request, res: Response) => {
     const result = await getCakeType(id);
 
     if (isNull(result)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     res.status(HttpStatusCode.OK).json(result);
@@ -83,9 +79,7 @@ const deleteType = async (req: Request, res: Response) => {
     const cakeType = await getCakeType(id);
 
     if (isNull(cakeType)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     await removeCakeType(id);

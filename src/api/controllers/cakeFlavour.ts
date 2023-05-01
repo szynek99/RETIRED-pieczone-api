@@ -33,9 +33,7 @@ const putFlavour = async (req: Request, res: Response) => {
 
     const cakeFlavour = await getCakeFlavour(id);
     if (isNull(cakeFlavour)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     const result = (await updateCakeFlavour(id, rest as UpdateFlavourProps))[1].pop();
@@ -52,9 +50,7 @@ const getFlavour = async (req: Request, res: Response) => {
     const result = await getCakeFlavour(id);
 
     if (isNull(result)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     res.status(HttpStatusCode.OK).json(result);
@@ -83,9 +79,7 @@ const deleteFlavour = async (req: Request, res: Response) => {
     const cakeFlavour = await getCakeFlavour(id);
 
     if (isNull(cakeFlavour)) {
-      res
-        .status(HttpStatusCode.NOT_FOUND)
-        .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
     await removeCakeFlavour(id);
