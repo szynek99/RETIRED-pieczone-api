@@ -1,5 +1,3 @@
-import { nanoid } from 'nanoid';
-import * as dotenv from 'dotenv';
 import {
   addOrder,
   getAllOrders,
@@ -8,14 +6,17 @@ import {
   removeOrder,
   updateOrder,
 } from 'db/services/order';
-import { isNull, isString } from 'lodash';
+import { nanoid } from 'nanoid';
+import * as dotenv from 'dotenv';
 import { ROUTES } from 'constants/routes';
+import { isNull, isString } from 'lodash';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
 import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
+import removeOrderImage from 'api/utils/removeOrderImage';
 import { QueryParams, UpdateOrderProps } from 'types/order';
 import { requestError, serverError } from 'api/utils/Response';
 
@@ -89,6 +90,7 @@ const deleteOrder = async (req: Request, res: Response) => {
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
       return;
     }
+    removeOrderImage(order.hash);
     await removeOrder(id);
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
@@ -110,6 +112,7 @@ const deleteOrders = async (req: Request, res: Response) => {
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
       return;
     }
+    orders.forEach(({ hash }) => removeOrderImage(hash));
     await removeOrder(id);
     res.status(HttpStatusCode.OK).json(orders);
   } catch (error) {

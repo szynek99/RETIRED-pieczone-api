@@ -1,8 +1,8 @@
 import { isArray, isString } from 'lodash';
-import { ORDER_STATUS } from 'constants/order';
 import { check, query } from 'express-validator';
 import { PRIMARY_VALIDATION } from 'constants/common';
 import { BASIC_STRING_RULE } from 'api/validators/common';
+import { GET_ALL_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
 
 const orderRules = {
   getAll: [
@@ -28,18 +28,7 @@ const orderRules = {
       .isString()
       .optional({ nullable: true })
       .custom((value) => {
-        if (
-          [
-            'firstname',
-            'surname',
-            'status',
-            'id',
-            'cakeWeight',
-            'createdAt',
-            'updatedAt',
-            'hash',
-          ].includes(value)
-        ) {
+        if (GET_ALL_ATTRIBUTES.includes(value)) {
           return true;
         }
         return false;
