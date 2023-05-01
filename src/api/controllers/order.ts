@@ -5,6 +5,7 @@ import {
   getOrdersByIds,
   removeOrder,
   updateOrder,
+  getOrderByHash,
 } from 'db/services/order';
 import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
@@ -65,6 +66,17 @@ const getOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getOrderPublic = async (req: Request, res: Response) => {
+  try {
+    const { hash } = req.params;
+    const result = await getOrderByHash(hash);
+
+    return res.status(HttpStatusCode.OK).json(result);
+  } catch (error) {
+    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
 const getOrders = async (req: Request, res: Response) => {
   try {
     const params = queryParams<QueryParams>(matchedData(req));
@@ -106,7 +118,7 @@ const deleteOrders = async (req: Request, res: Response) => {
     }
     const orders = await getOrdersByIds(id);
 
-    if (isNull(orders)) {
+    if (isNull(orders) || id.length !== orders.length) {
       res
         .status(HttpStatusCode.NOT_FOUND)
         .json(requestError(HttpStatusCode.NOT_FOUND, 'Nie znaleziono'));
@@ -120,4 +132,12 @@ const deleteOrders = async (req: Request, res: Response) => {
   }
 };
 
-export default { getOrder, postOrder, getOrders, putOrder, deleteOrder, deleteOrders };
+export default {
+  getOrder,
+  postOrder,
+  getOrders,
+  putOrder,
+  deleteOrder,
+  deleteOrders,
+  getOrderPublic,
+};

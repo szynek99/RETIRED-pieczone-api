@@ -17,6 +17,13 @@ orderRouter.post(
   orderController.postOrder,
 );
 
+orderRouter.get(
+  'public/:hash',
+  orderRules.getSingleByHash,
+  [checkRequired],
+  orderController.getOrderPublic,
+);
+
 orderRouter.get('/', orderRules.getAll, [verifyToken, checkRequired], orderController.getOrders);
 
 orderRouter.get(
