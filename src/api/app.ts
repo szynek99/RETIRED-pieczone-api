@@ -8,11 +8,13 @@ import fileUpload from 'express-fileupload';
 import express, { Application } from 'express';
 import cakeTypeRouter from 'api/router/cakeType';
 import cakeFlavourRouter from 'api/router/cakeFlavour';
+import { requestLogger } from 'api/middleware/common';
 
 dotenv.config();
 
 const app: Application = express();
 
+app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(cors());
