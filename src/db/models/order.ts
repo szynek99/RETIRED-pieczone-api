@@ -1,5 +1,5 @@
 import sequelize from 'db/connection';
-import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN } from 'sequelize';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 
 export type OrderInput = Optional<OrderAttributes, 'id' | 'status'>;
@@ -23,7 +23,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 
   public cakeType!: string;
 
-  public cakeFlavour!: string;
+  public cakeFlavour!: string | null;
 
   public spongeColour!: SpongeColour;
 
@@ -38,6 +38,10 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
   public commentsToOrder!: string | null;
 
   public imageUrl!: string | null;
+
+  public createdAt!: Date;
+
+  public updatedAt!: Date;
 }
 
 Order.init(
@@ -79,7 +83,7 @@ Order.init(
     },
     cakeFlavour: {
       type: STRING,
-      allowNull: false,
+      allowNull: true,
     },
     spongeColour: {
       type: STRING,
@@ -109,10 +113,20 @@ Order.init(
       type: STRING,
       allowNull: true,
     },
+    createdAt: {
+      type: DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false,
+    },
   },
   {
     tableName: 'Order',
-    timestamps: false,
+    timestamps: true,
     sequelize,
   },
 );

@@ -13,6 +13,7 @@ export const checkRequired = async (
   next: NextFunction,
 ): Promise<void> => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     res
       .status(HttpStatusCode.UNPROCESSABLE)

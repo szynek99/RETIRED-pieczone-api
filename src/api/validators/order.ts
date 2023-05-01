@@ -1,52 +1,110 @@
-import { check } from 'express-validator';
+import { isArray, isString } from 'lodash';
+import { check, query } from 'express-validator';
+import { PRIMARY_VALIDATION } from 'constants/common';
 import { BASIC_STRING_RULE } from 'api/validators/common';
-import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
+import { GET_ALL_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
 
 const orderRules = {
-  addSingle: [
-    BASIC_STRING_RULE('firstname'),
-    BASIC_STRING_RULE('surname'),
-    BASIC_STRING_RULE('phoneNumber').isMobilePhone('pl-PL').withMessage('Nieprawidłowa wartość'),
-    check('occasion').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('cakeType'),
-    BASIC_STRING_RULE('cakeFlavour'),
-    BASIC_STRING_RULE('spongeColour')
-      .custom((value) => {
-        if (!SPONGE_COLOUR.includes(value)) {
-          throw new Error();
-        }
-        return true;
-      })
+  getAll: [
+    query('page')
+      .isInt({ min: 0 })
+      .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
-    check('cakeWeight').isFloat({ min: 0 }).withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('cakeShape')
-      .custom((value) => {
-        if (!CAKE_SHAPE.includes(value)) {
-          throw new Error();
-        }
-        return true;
-      })
+    query('pageSize')
+      .isInt({ min: 0 })
+      .optional({ nullable: true })
       .withMessage('Nieprawidłowa wartość'),
-    check('cakeInscription')
+    check('order')
       .isString()
       .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    check('alcoholAllowed').isBoolean().withMessage('Zły format'),
-    check('commentsToOrder')
-      .isString()
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    check('image')
-      .optional({ nullable: true })
-      .custom((_, { req }) => {
-        if (req.files && req.files.image.mimetype.startsWith('image')) {
+      .custom((value) => {
+        if (value === 'ASC' || value === 'DESC') {
           return true;
         }
         return false;
       })
-      .withMessage('Nieprawidłowy rodzaj pliku'),
+      .withMessage('Nieprawidłowa wartość'),
+    check('field')
+      .isString()
+      .optional({ nullable: true })
+      .custom((value) => {
+        if (GET_ALL_ATTRIBUTES.includes(value)) {
+          return true;
+        }
+        return false;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+    check('search').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('cakeWeight')
+      .isNumeric()
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
+    check('createdAt').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('status').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('firstname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    check('surname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+  ],
+  addSingle: [
+    ...PRIMARY_VALIDATION,
+    check('image')
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (isArray(files.image)) {
+            return false;
+          }
+          if (!files.image.mimetype.startsWith('image')) {
+            return false;
+          }
+          return true;
+        }
+        return true;
+      })
+      .withMessage('Dozwolone jest tylko jeden plik graficzny')
+      .bail()
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (files.image.size < 5000000) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      })
+      .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
+  ],
+  updateSingle: [
+    ...PRIMARY_VALIDATION,
+    BASIC_STRING_RULE('id'),
+    BASIC_STRING_RULE('status')
+      .custom((value) => {
+        if (!ORDER_STATUS.includes(value)) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Nieprawidłowa wartość'),
   ],
   getSingle: [
+    check('id').isString().isLength({ max: 36, min: 36 }).withMessage('Nieprawidłowa wartość'),
+  ],
+  getMany: [
+    check('id')
+      .exists()
+      .withMessage('Nieprawidłowa wartość')
+      .bail()
+      .custom((value) => {
+        if (isArray(value)) {
+          if (!value.every((val: string) => val.length === 36)) {
+            throw new Error();
+          }
+        } else if (!isString(value) || value.length !== 36) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+  ],
+  getSingleByHash: [
     check('hash')
       .isString()
       .withMessage('Nieprawidłowa wartość')
