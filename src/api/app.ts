@@ -14,11 +14,14 @@ dotenv.config();
 
 const app: Application = express();
 
-app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(fileUpload());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+if (process.env.ENVIROMENT !== 'TEST') {
+  app.use(requestLogger);
+}
 
 app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.USER.BASE, userRouter);
