@@ -7,8 +7,8 @@ import { HttpStatusCode } from 'constants/common';
 import { addUser, resetUser } from 'db/services/user';
 
 describe('User: login', () => {
-  beforeAll(() => {
-    resetUser();
+  beforeAll(async () => {
+    await resetUser();
     addUser({
       username: 'JohnDoe',
       password: bcrypt.hashSync('Password1!', 10),
