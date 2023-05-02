@@ -8,7 +8,5 @@ export const ROUTES = {
   },
   USER: {
     BASE: '/api/auth',
-    LOGIN: '/login',
-    REGISTER: '/register',
   },
 };

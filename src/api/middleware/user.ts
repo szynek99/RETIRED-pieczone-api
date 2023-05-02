@@ -20,7 +20,7 @@ export const checkDuplicateUsername = async (
   const userExists = await getUserByUsername(credentials.username);
 
   if (userExists) {
-    res.status(HttpStatusCode.BAD_REQUEST).json(requestError('Użytkownik już istnieje'));
+    res.status(HttpStatusCode.BAD_REQUEST).json(requestError('Nazwa użytkownia jest już zajęta'));
     return;
   }
 
