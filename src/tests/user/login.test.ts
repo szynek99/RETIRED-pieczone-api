@@ -2,9 +2,9 @@
 import app from 'api/app';
 import bcrypt from 'bcryptjs';
 import request from 'supertest';
-import { addUser, resetUser } from 'db/services/user';
 import { ROUTES } from 'constants/routes';
 import { HttpStatusCode } from 'constants/common';
+import { addUser, resetUser } from 'db/services/user';
 
 describe('User: login', () => {
   beforeAll(() => {
@@ -25,8 +25,6 @@ describe('User: login', () => {
       role: 'user',
     });
   });
-
-  afterAll(resetUser);
 
   it('fields validation', async () => {
     const response = await request(app).post(`${ROUTES.USER.BASE}/login`);

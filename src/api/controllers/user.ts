@@ -21,7 +21,7 @@ const register = async (req: Request, res: Response) => {
       ...credentials,
       password: bcrypt.hashSync(credentials.password, 10),
     });
-    res.status(HttpStatusCode.OK).json('Użytkownik pomyślnie stworzony');
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

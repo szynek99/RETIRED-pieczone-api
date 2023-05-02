@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import { isArray, isNull } from 'lodash';
 import { matchedData } from 'express-validator';
-import { requestError } from 'api/utils/Response';
 import { HttpStatusCode } from 'constants/common';
 import { JwtPayload, RegisterInput } from 'types/user';
 import { NextFunction, Request, Response } from 'express';
 import { getUserById, getUserByUsername } from 'db/services/user';
+import { requestError, singleFieldError } from 'api/utils/Response';
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -20,7 +20,9 @@ export const checkDuplicateUsername = async (
   const userExists = await getUserByUsername(credentials.username);
 
   if (userExists) {
-    res.status(HttpStatusCode.BAD_REQUEST).json(requestError('Nazwa użytkownia jest już zajęta'));
+    res
+      .status(HttpStatusCode.UNPROCESSABLE)
+      .json(singleFieldError('username', 'Nazwa użytkownia jest już zajęta'));
     return;
   }
 

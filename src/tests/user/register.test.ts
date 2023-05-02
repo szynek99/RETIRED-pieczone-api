@@ -1,41 +1,60 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import app from 'api/app';
+import bcrypt from 'bcryptjs';
 import request from 'supertest';
-import { resetUser } from 'db/services/user';
+import { ROUTES } from 'constants/routes';
+import { addUser, resetUser } from 'db/services/user';
+import { HttpStatusCode } from 'constants/common';
 
-describe('user/register', () => {
-  beforeEach(resetUser);
+describe('User: register', () => {
+  beforeAll(() => {
+    resetUser();
+    addUser({
+      username: 'JohnDoe',
+      password: bcrypt.hashSync('Password1!', 10),
+      role: 'user',
+    });
+  });
 
   it('fields validation', async () => {
-    const response = await request(app).post('/api/auth/register');
+    const response = await request(app).post(`${ROUTES.USER.BASE}/register`);
     const { status, body } = response;
-    expect(status).toBe(422);
-    expect(body).toHaveProperty('status', 422);
+    expect(status).toBe(HttpStatusCode.UNPROCESSABLE);
     expect(body).toHaveProperty('errors');
-    expect(body.errors).toEqual(
-      expect.arrayContaining([
-        { error: 'Zły format', name: 'username' },
-        { error: 'Zły format', name: 'password' },
-        { error: 'Zły format', name: 'role' },
-      ]),
-    );
+    expect(body.errors).toHaveProperty('username');
+    expect(body.errors).toHaveProperty('password');
+    expect(body.errors).toHaveProperty('role');
   });
 
-  it('username duplicate', async () => {
-    const payload = { username: 'testUser', password: 'testPassword', role: 'user' };
-    await request(app).post('/api/auth/register').send(payload);
-    const response = await request(app).post('/api/auth/register').send(payload);
+  it('incorrect login: username already taken', async () => {
+    const response = await request(app)
+      .post(`${ROUTES.USER.BASE}/register`)
+      .send({ username: 'JohnDoe', password: 'Password2!', role: 'user' });
+
     const { status, body } = response;
-    expect(status).toBe(400);
-    expect(body).toHaveProperty('status', 400);
-    expect(body.error).toBe('Użytkownik już istnieje');
+    expect(status).toBe(HttpStatusCode.UNPROCESSABLE);
+    expect(body).toHaveProperty('errors');
+    expect(body.errors).toHaveProperty('username');
   });
 
-  it('user register', async () => {
-    const payload = { username: 'testUser', password: 'testPassword', role: 'user' };
-    const response = await request(app).post('/api/auth/register').send(payload);
-    const { status, text } = response;
-    expect(status).toBe(200);
-    expect(text).toMatch('Użytkownik pomyślnie stworzony');
+  it('incorrect login: username already taken', async () => {
+    const response = await request(app)
+      .post(`${ROUTES.USER.BASE}/register`)
+      .send({ username: 'JohnDoe', password: 'Password2!', role: 'user' });
+
+    const { status, body } = response;
+    expect(status).toBe(HttpStatusCode.UNPROCESSABLE);
+    expect(body).toHaveProperty('errors');
+    expect(body.errors).toHaveProperty('username');
+  });
+
+  it('correct register', async () => {
+    const response = await request(app)
+      .post(`${ROUTES.USER.BASE}/register`)
+      .send({ username: 'Maximus1', password: 'Password2!', role: 'user' });
+
+    const { status, body } = response;
+    expect(status).toBe(HttpStatusCode.OK);
+    expect(body).toBe('');
   });
 });
