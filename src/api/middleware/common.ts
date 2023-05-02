@@ -25,10 +25,10 @@ export const checkRequired = async (
 
 export const requestLogger = morgan((tokens, req, res) =>
   [
-    chalk.green.bold(tokens.method(req, res)),
     chalk.red.bold(tokens.status(req, res)),
+    chalk.green.bold(tokens.method(req, res)),
     chalk.white(tokens.url(req, res)),
-    chalk.blue(`@ ${tokens.date(req, res)}`),
+    chalk.blue(`${tokens.date(req, res)}`),
     chalk.hex('#f7578e').bold(tokens['remote-addr'](req, res)),
     chalk.yellow(`${tokens['response-time'](req, res)} ms`),
   ].join(' '),
