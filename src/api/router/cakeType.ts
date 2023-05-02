@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Router } from 'express';
-import { verifyToken } from 'api/middleware/auth';
+import { verifyToken } from 'api/middleware/user';
 import cakeTypeRules from 'api/validators/cakeType';
 import { checkRequired } from 'api/middleware/common';
 import cakeTypeController from 'api/controllers/cakeType';

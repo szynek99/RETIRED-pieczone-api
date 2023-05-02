@@ -6,7 +6,7 @@ export const ROUTES = {
   UPLOADS: {
     ORDER: 'uploads/orders',
   },
-  AUTH: {
+  USER: {
     BASE: '/api/auth',
     LOGIN: '/login',
     REGISTER: '/register',

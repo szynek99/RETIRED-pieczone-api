@@ -2,7 +2,7 @@
 import app from 'api/app';
 import bcrypt from 'bcryptjs';
 import request from 'supertest';
-import { addUser, resetUser } from 'db/services/auth';
+import { addUser, resetUser } from 'db/services/user';
 
 describe('Integration test: user login', () => {
   beforeAll(async () => {
