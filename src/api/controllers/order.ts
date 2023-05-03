@@ -104,6 +104,7 @@ const deleteOrder = async (req: Request, res: Response) => {
     await removeOrder(id);
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
+    console.debug(error);
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };

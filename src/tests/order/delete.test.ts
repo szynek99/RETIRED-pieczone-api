@@ -35,13 +35,13 @@ describe('Order: delete', () => {
     jest.clearAllMocks();
   });
 
-  it('incorrect single delete: no id', async () => {
-    const response = await request(app).delete(`${ROUTES.ORDERS.BASE}/`);
-    const { status, body } = response;
+  it('incorrect single delete: wrong id', async () => {
+    const response = await request(app).delete(
+      `${ROUTES.ORDERS.BASE}/70a861cc-cb40-4aff-8d7a-579285386417`,
+    );
+    const { status } = response;
 
-    expect(status).toBe(HttpStatusCode.UNPROCESSABLE);
-    expect(body).toHaveProperty('errors');
-    expect(body.errors).toHaveProperty('id');
+    expect(status).toBe(HttpStatusCode.NOT_FOUND);
   });
 
   it('correct single delete', async () => {

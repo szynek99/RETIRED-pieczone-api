@@ -85,7 +85,10 @@ const orderRules = {
       .withMessage('Nieprawidłowa wartość'),
   ],
   getSingle: [
-    check('id').isString().isLength({ max: 36, min: 36 }).withMessage('Nieprawidłowa wartość'),
+    check('id')
+      .isString()
+      .matches(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
+      .withMessage('Nieprawidłowa wartość'),
   ],
   getMany: [
     check('id')
@@ -94,7 +97,13 @@ const orderRules = {
       .bail()
       .custom((value) => {
         if (isArray(value)) {
-          if (!value.every((val: string) => val.length === 36)) {
+          if (
+            !value.every((val: string) =>
+              /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
+                val,
+              ),
+            )
+          ) {
             throw new Error();
           }
         } else if (!isString(value) || value.length !== 36) {
