@@ -16,7 +16,7 @@ export const checkDuplicateValue = async (
 
   if (cakeFlavour) {
     res
-      .status(HttpStatusCode.BAD_REQUEST)
+      .status(HttpStatusCode.UNPROCESSABLE)
       .json(singleFieldError('value', 'Wartość jest już zajęta'));
     return;
   }
