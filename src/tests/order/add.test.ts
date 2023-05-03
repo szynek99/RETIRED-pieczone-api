@@ -29,7 +29,7 @@ const SAMPLE_ORDER_2 = {
   alcoholAllowed: false,
   cakeInscription: 'sample inscription',
   commentsToOrder: 'be nice',
-  occasion: 'birtday',
+  occasion: 'birthday',
 };
 
 jest.mock('db/services/cakeType', () => ({
@@ -37,8 +37,11 @@ jest.mock('db/services/cakeType', () => ({
 }));
 
 describe('Order: add', () => {
-  beforeEach(async () => {
-    await resetOrder();
+  beforeAll(() => {
+    resetOrder();
+  });
+
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
