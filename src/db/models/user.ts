@@ -1,5 +1,5 @@
 import sequelize from 'db/connection';
-import { Role, UserAttributes } from 'types/auth';
+import { Role, UserAttributes } from 'types/user';
 import { Model, DataTypes, Optional } from 'sequelize';
 
 export type UserInput = Optional<UserAttributes, 'id'>;

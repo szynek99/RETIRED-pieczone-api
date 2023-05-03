@@ -2,7 +2,7 @@ import sequelize from 'db/connection';
 import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
 
-export type OrderInput = Optional<OrderAttributes, 'id' | 'status'>;
+export type OrderInput = Optional<OrderAttributes, 'id' | 'status' | 'createdAt' | 'updatedAt'>;
 
 export type OrderOuput = Required<OrderAttributes>;
 

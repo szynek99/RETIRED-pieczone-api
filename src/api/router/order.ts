@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { Router } from 'express';
 import orderRules from 'api/validators/order';
-import { verifyToken } from 'api/middleware/auth';
+import { verifyToken } from 'api/middleware/user';
 import orderController from 'api/controllers/order';
 import { checkRequired } from 'api/middleware/common';
 import { checkValidFlavour } from 'api/middleware/order';
@@ -18,7 +18,7 @@ orderRouter.post(
 );
 
 orderRouter.get(
-  'public/:hash',
+  '/public/:hash',
   orderRules.getSingleByHash,
   [checkRequired],
   orderController.getOrderPublic,

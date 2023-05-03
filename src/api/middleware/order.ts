@@ -17,13 +17,13 @@ export const checkValidFlavour = async (
 
   if (isNil(cakeType)) {
     res
-      .status(HttpStatusCode.BAD_REQUEST)
+      .status(HttpStatusCode.UNPROCESSABLE)
       .json(singleFieldError('cakeType', 'Nieprawidłowa wartość'));
     return;
   }
 
   if (cakeType.customizable && isNil(cakeFlavourValue)) {
-    res.status(HttpStatusCode.BAD_REQUEST).json(singleFieldError('cakeFlavour', 'Wymagany'));
+    res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagany'));
     return;
   }
 

@@ -1,9 +1,9 @@
 import { matchedData } from 'express-validator';
-import { requestError } from 'api/utils/Response';
-import { HttpStatusCode } from 'constants/common';
 import { AddTypeInput } from 'types/cakeType';
-import { getCakeTypeByValue } from 'db/services/cakeType';
+import { HttpStatusCode } from 'constants/common';
+import { singleFieldError } from 'api/utils/Response';
 import { NextFunction, Request, Response } from 'express';
+import { getCakeTypeByValue } from 'db/services/cakeType';
 
 // eslint-disable-next-line import/prefer-default-export
 export const checkDuplicateValue = async (
@@ -16,8 +16,8 @@ export const checkDuplicateValue = async (
 
   if (cakeType) {
     res
-      .status(HttpStatusCode.BAD_REQUEST)
-      .json(requestError(HttpStatusCode.BAD_REQUEST, 'Wartość name jest już zajęta'));
+      .status(HttpStatusCode.UNPROCESSABLE)
+      .json(singleFieldError('value', 'Wartość jest już zajęta'));
     return;
   }
   next();
