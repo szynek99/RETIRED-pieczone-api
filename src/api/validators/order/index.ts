@@ -2,7 +2,7 @@ import { isArray, isString } from 'lodash';
 import { check, param, query } from 'express-validator';
 import { PRIMARY_VALIDATION } from 'constants/common';
 import { GET_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
-import { ARRAY_BELONING_RULE, BASIC_STRING_RULE, GET_ALL_RULES } from 'api/validators/common';
+import { ARRAY_BELONING_RULE, GET_ALL_RULES } from 'api/validators/common';
 import { ID_RULE } from './constants';
 
 const orderRules = {

@@ -11,7 +11,7 @@ const cakeFlavourRules = {
     check('accessible').isBoolean().withMessage('Nieprawidłowa wartość'),
   ],
   updateSingle: [
-    check('id').isNumeric().withMessage('Nieprawidłowa wartość'),
+    param('id').isNumeric().withMessage('Nieprawidłowa wartość'),
     check('name').isString().withMessage('Nieprawidłowa wartość'),
     check('accessible').isBoolean().withMessage('Nieprawidłowa wartość'),
   ],
