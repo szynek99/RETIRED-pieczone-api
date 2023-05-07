@@ -29,6 +29,7 @@ app.use(ROUTES.USER.BASE, userRouter);
 app.use(ROUTES.CAKE_TYPES.BASE, cakeTypeRouter);
 app.use(ROUTES.CAKE_FLAVOURS.BASE, cakeFlavourRouter);
 app.use(ROUTES.OFFER.BASE, offerRouter);
-app.use(`/uploads/orders`, express.static('uploads'));
+app.use(`/${ROUTES.UPLOADS.ORDER}`, express.static('uploads'));
+app.use(`/${ROUTES.UPLOADS.OFFER}`, express.static('offer'));
 
 export default app;

@@ -17,7 +17,7 @@ const postOffer = async (req: Request, res: Response) => {
   try {
     const properties = matchedData(req) as AddOfferInput;
     properties.images = [];
-    const images = req.files?.image;
+    const images = req.files?.images;
 
     if (images) {
       if (isArray(images)) {
@@ -32,10 +32,10 @@ const postOffer = async (req: Request, res: Response) => {
         properties.images.push(`${API_URL}${ROUTES.UPLOADS.OFFER}/${hash}.jpg`);
       }
     }
+
     const result = await addOffer(properties);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    console.debug(error);
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };

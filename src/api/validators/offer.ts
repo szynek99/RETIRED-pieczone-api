@@ -32,7 +32,7 @@ const offerRules = {
         }
         return true;
       })
-      .withMessage('Dozwolony jest maksymalnie 5 plików graficznych')
+      .withMessage('Dozwolonych jest maksymalnie 5 plików graficznych')
       .bail()
       .custom((_, { req: { files } }) => {
         if (files && files.images) {
