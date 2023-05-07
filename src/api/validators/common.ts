@@ -1,6 +1,5 @@
 import { check, query } from 'express-validator';
 
-// eslint-disable-next-line import/prefer-default-export
 export const BASIC_STRING_RULE = (name: string) =>
   check(name)
     .isString()
@@ -8,6 +7,16 @@ export const BASIC_STRING_RULE = (name: string) =>
     .bail()
     .isLength({ min: 1 })
     .withMessage('Za krótkie');
+
+export const ARRAY_BELONING_RULE = (name: string, array: readonly string[]) =>
+  BASIC_STRING_RULE(name)
+    .custom((value) => {
+      if (!array.includes(value)) {
+        throw new Error();
+      }
+      return true;
+    })
+    .withMessage('Nieprawidłowa wartość');
 
 export const GET_ALL_RULES = (sortAttributes: string[]) => [
   query('page').isInt({ min: 0 }).optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),

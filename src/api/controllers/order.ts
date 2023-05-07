@@ -37,9 +37,9 @@ const postOrder = async (req: Request, res: Response) => {
     }
 
     const result = await addOrder({ ...payload, hash });
-    return res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -47,11 +47,16 @@ const putOrder = async (req: Request, res: Response) => {
   try {
     const { id, ...rest } = matchedData(req, { includeOptionals: true });
 
-    const result = (await updateOrder(id, rest as UpdateOrderProps))[1].pop();
+    const order = await getOrderById(id);
+    if (isNull(order)) {
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+      return;
+    }
 
-    return res.status(HttpStatusCode.OK).json(result);
+    const result = (await updateOrder(id, rest as UpdateOrderProps))[1].pop();
+    res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -60,9 +65,9 @@ const getOrder = async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await getOrderById(id);
 
-    return res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -71,9 +76,9 @@ const getOrderPublic = async (req: Request, res: Response) => {
     const { hash } = req.params;
     const result = await getOrderByHash(hash);
 
-    return res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
-    return res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
 
@@ -104,7 +109,6 @@ const deleteOrder = async (req: Request, res: Response) => {
     await removeOrder(id);
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
-    console.debug(error);
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
