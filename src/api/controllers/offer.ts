@@ -25,12 +25,12 @@ const postOffer = async (req: Request, res: Response) => {
         images.forEach((image) => {
           const hash = nanoid();
           image.mv(`offer/${hash}.jpg`);
-          properties.images.push(`${API_URL}${ROUTES.UPLOADS.OFFER}/${hash}.jpg`);
+          properties.images.push(hash);
         });
       } else {
         const hash = nanoid();
         images.mv(`offer/${hash}.jpg`);
-        properties.images.push(`${API_URL}${ROUTES.UPLOADS.OFFER}/${hash}.jpg`);
+        properties.images.push(hash);
       }
     }
 
@@ -64,7 +64,15 @@ const getOffer = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    res.status(HttpStatusCode.OK).json(result);
+    const processedResult = {
+      ...result,
+      images: result.images.map((imageHash) => ({
+        title: imageHash,
+        src: `${API_URL}${ROUTES.UPLOADS.OFFER}/${imageHash}.jpg`,
+      })),
+    };
+
+    res.status(HttpStatusCode.OK).json(processedResult);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

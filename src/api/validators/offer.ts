@@ -5,6 +5,7 @@ import { GET_ATTRIBUTES, OFFER_CATEGORIES } from 'constants/offer';
 import { BASIC_STRING_RULE, GET_ALL_RULES } from 'api/validators/common';
 
 const offerRules = {
+  getSingle: [check('id').isNumeric().withMessage('Nieprawidłowa wartość')],
   getAll: GET_ALL_RULES(GET_ATTRIBUTES),
   addSingle: [
     BASIC_STRING_RULE('title'),

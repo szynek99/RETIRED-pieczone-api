@@ -4,7 +4,8 @@ import { QueryParams } from 'types/common';
 
 export const addOffer = (payload: OfferInput): Promise<OfferAttributes> => Offer.create(payload);
 
-export const findOffer = (id: number): Promise<OfferAttributes | null> => Offer.findByPk(id);
+export const findOffer = (id: number): Promise<OfferAttributes | null> =>
+  Offer.findByPk(id, { raw: true });
 
 export const findAllOffers = (
   queryParams: QueryParams,
