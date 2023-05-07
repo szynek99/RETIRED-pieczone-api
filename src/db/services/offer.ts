@@ -1,4 +1,5 @@
 import { Op } from 'sequelize';
+import { GET_ATTRIBUTES } from 'constants/offer';
 import Offer, { OfferInput } from 'db/models/offer';
 import { OfferAttributes, QueryParams, UpdateTypeProps } from 'types/offer';
 
@@ -21,6 +22,7 @@ export const findAllOffers = (
         [Op.substring]: category || '',
       },
     },
+    attributes: GET_ATTRIBUTES,
   });
 };
 

@@ -1,5 +1,6 @@
 import { QueryParams } from 'types/common';
 import { ApiError } from 'api/utils/Error';
+import { GET_ATTRIBUTES } from 'constants/cakeFlavour';
 import CakeFlavour, { CakeFlavourInput } from 'db/models/cakeFlavour';
 import { CakeFlavourAttributes, UpdateFlavourProps } from 'types/cakeFlavour';
 
@@ -14,7 +15,12 @@ export const getAllCakeFlavours = (
 ): Promise<{ rows: CakeFlavourAttributes[]; count: number }> => {
   const { offset, pageSize, field, order } = queryParams;
 
-  return CakeFlavour.findAndCountAll({ limit: pageSize, offset, order: [[field, order]] });
+  return CakeFlavour.findAndCountAll({
+    limit: pageSize,
+    offset,
+    order: [[field, order]],
+    attributes: GET_ATTRIBUTES,
+  });
 };
 
 export const removeCakeFlavour = (id: number): Promise<number> =>
