@@ -1,10 +1,11 @@
 import { isArray } from 'lodash';
 import { check } from 'express-validator';
 import { UploadedFile } from 'express-fileupload';
-import { OFFER_CATEGORIES } from 'constants/offer';
-import { BASIC_STRING_RULE } from 'api/validators/common';
+import { GET_ATTRIBUTES, OFFER_CATEGORIES } from 'constants/offer';
+import { BASIC_STRING_RULE, GET_ALL_RULES } from 'api/validators/common';
 
 const offerRules = {
+  getAll: GET_ALL_RULES(GET_ATTRIBUTES),
   addSingle: [
     BASIC_STRING_RULE('title'),
     BASIC_STRING_RULE('placement'),

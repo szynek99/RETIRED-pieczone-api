@@ -7,8 +7,9 @@ import { AddOfferInput } from 'types/offer';
 import { Request, Response } from 'express';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import { addOffer, findOffer } from 'db/services/offer';
+import { addOffer, findAllOffers, findOffer } from 'db/services/offer';
 import { serverError, requestError } from 'api/utils/Response';
+import queryParams from 'api/utils/queryParams';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -40,6 +41,20 @@ const postOffer = async (req: Request, res: Response) => {
   }
 };
 
+const getAllOffers = async (req: Request, res: Response) => {
+  try {
+    const params = queryParams(matchedData(req));
+    const { rows, count } = await findAllOffers(params);
+
+    res.append('Access-Control-Expose-Headers', 'Content-Count');
+    res.append('Content-Count', count.toString());
+
+    res.status(HttpStatusCode.OK).json(rows);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
 const getOffer = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
@@ -55,4 +70,4 @@ const getOffer = async (req: Request, res: Response) => {
   }
 };
 
-export default { getOffer, postOffer };
+export default { getOffer, postOffer, getAllOffers };

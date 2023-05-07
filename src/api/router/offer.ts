@@ -16,4 +16,6 @@ offerRouter.post(
   offerController.postOffer,
 );
 
+offerRouter.get('/', offerRules.getAll, [verifyToken, checkRequired], offerController.getAllOffers);
+
 export default offerRouter;
