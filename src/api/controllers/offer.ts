@@ -3,13 +3,14 @@ import { nanoid } from 'nanoid';
 import * as dotenv from 'dotenv';
 import isNull from 'lodash/isNull';
 import { ROUTES } from 'constants/routes';
-import { AddOfferInput } from 'types/offer';
 import { Request, Response } from 'express';
+import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import { addOffer, findAllOffers, findOffer } from 'db/services/offer';
+import removeOfferImages from 'api/utils/removeOfferImages';
 import { serverError, requestError } from 'api/utils/Response';
-import queryParams from 'api/utils/queryParams';
+import { AddOfferInput, QueryParams, UpdateTypeProps } from 'types/offer';
+import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db/services/offer';
 
 dotenv.config();
 const { API_URL } = process.env;
@@ -17,21 +18,18 @@ const { API_URL } = process.env;
 const postOffer = async (req: Request, res: Response) => {
   try {
     const properties = matchedData(req) as AddOfferInput;
-    properties.images = [];
-    const images = req.files?.images;
+    let images = req.files?.images;
+    if (images && !isArray(images)) {
+      images = [images];
+    }
 
+    properties.images = [];
     if (images) {
-      if (isArray(images)) {
-        images.forEach((image) => {
-          const hash = nanoid();
-          image.mv(`offer/${hash}.jpg`);
-          properties.images.push(hash);
-        });
-      } else {
+      images.forEach((image) => {
         const hash = nanoid();
-        images.mv(`offer/${hash}.jpg`);
+        image.mv(`offer/${hash}.jpg`);
         properties.images.push(hash);
-      }
+      });
     }
 
     const result = await addOffer(properties);
@@ -43,7 +41,7 @@ const postOffer = async (req: Request, res: Response) => {
 
 const getAllOffers = async (req: Request, res: Response) => {
   try {
-    const params = queryParams(matchedData(req));
+    const params = queryParams<QueryParams>(matchedData(req));
     const { rows, count } = await findAllOffers(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
@@ -78,4 +76,57 @@ const getOffer = async (req: Request, res: Response) => {
   }
 };
 
-export default { getOffer, postOffer, getAllOffers };
+const putOffer = async (req: Request, res: Response) => {
+  try {
+    const { id, ...properties } = matchedData(req, { includeOptionals: true });
+    let images = req.files?.images;
+    if (images && !isArray(images)) {
+      images = [images];
+    }
+
+    const offer = await findOffer(id);
+    if (isNull(offer)) {
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+      return;
+    }
+
+    if (!properties.images) {
+      properties.images = [];
+    } else if (!isArray(properties.images)) {
+      properties.images = [properties.images];
+    }
+    removeOfferImages(properties.images, offer.images);
+    if (images) {
+      images.forEach((image) => {
+        const hash = nanoid();
+        image.mv(`offer/${hash}.jpg`);
+        properties.images.push(hash);
+      });
+    }
+
+    const result = (await updateOffer(id, properties as UpdateTypeProps))[1].pop();
+    res.status(HttpStatusCode.OK).json(result);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
+const deleteOffer = async (req: Request, res: Response) => {
+  try {
+    const { id } = matchedData(req);
+
+    const offer = await findOffer(id);
+    if (isNull(offer)) {
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+      return;
+    }
+    removeOfferImages(offer.images, offer.images);
+
+    await removeOffer(id);
+    res.status(HttpStatusCode.OK).json(offer);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
+export default { getOffer, postOffer, getAllOffers, putOffer, deleteOffer };

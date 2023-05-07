@@ -25,4 +25,18 @@ offerRouter.get(
   offerController.getOffer,
 );
 
+offerRouter.put(
+  '/:id',
+  offerRules.updateSingle,
+  [verifyToken, checkRequired],
+  offerController.putOffer,
+);
+
+offerRouter.delete(
+  '/:id',
+  offerRules.getSingle,
+  [verifyToken, checkRequired],
+  offerController.deleteOffer,
+);
+
 export default offerRouter;
