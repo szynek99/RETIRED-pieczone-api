@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 import { ApiError } from 'api/utils/Error';
-import { GET_ALL_ATTRIBUTES } from 'constants/order';
+import { GET_ATTRIBUTES } from 'constants/order';
 import Order, { OrderInput, OrderOuput } from 'db/models/order';
 import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
 
@@ -52,7 +52,7 @@ export const getAllOrders = (
         [Op.substring]: status || '',
       },
     },
-    attributes: GET_ALL_ATTRIBUTES,
+    attributes: GET_ATTRIBUTES,
   });
 };
 

@@ -1,39 +1,12 @@
 import { isArray, isString } from 'lodash';
-import { check, query } from 'express-validator';
+import { check } from 'express-validator';
 import { PRIMARY_VALIDATION } from 'constants/common';
-import { BASIC_STRING_RULE } from 'api/validators/common';
-import { GET_ALL_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
+import { GET_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
+import { BASIC_STRING_RULE, GET_ALL_RULES } from 'api/validators/common';
 
 const orderRules = {
   getAll: [
-    query('page')
-      .isInt({ min: 0 })
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    query('pageSize')
-      .isInt({ min: 0 })
-      .optional({ nullable: true })
-      .withMessage('Nieprawidłowa wartość'),
-    check('order')
-      .isString()
-      .optional({ nullable: true })
-      .custom((value) => {
-        if (value === 'ASC' || value === 'DESC') {
-          return true;
-        }
-        return false;
-      })
-      .withMessage('Nieprawidłowa wartość'),
-    check('field')
-      .isString()
-      .optional({ nullable: true })
-      .custom((value) => {
-        if (GET_ALL_ATTRIBUTES.includes(value)) {
-          return true;
-        }
-        return false;
-      })
-      .withMessage('Nieprawidłowa wartość'),
+    ...GET_ALL_RULES(GET_ATTRIBUTES),
     check('search').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
     check('cakeWeight')
       .isNumeric()
