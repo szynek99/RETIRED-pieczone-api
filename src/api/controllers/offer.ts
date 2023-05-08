@@ -1,35 +1,25 @@
-import { isArray } from 'lodash';
-import { nanoid } from 'nanoid';
-import * as dotenv from 'dotenv';
 import isNull from 'lodash/isNull';
-import { ROUTES } from 'constants/routes';
+import { isArray, isNil } from 'lodash';
 import { Request, Response } from 'express';
 import queryParams from 'api/utils/queryParams';
 import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import removeOfferImages from 'api/utils/removeOfferImages';
+import getImages from 'api/utils/offer/getImages';
+import addImages from 'api/utils/offer/addImages';
+import removeOfferImages from 'api/utils/offer/removeImages';
+import processImagesOffer from 'api/utils/offer/processImages';
 import { serverError, requestError } from 'api/utils/Response';
 import { AddOfferInput, QueryParams, UpdateTypeProps } from 'types/offer';
 import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db/services/offer';
 
-dotenv.config();
-const { API_URL } = process.env;
-
 const postOffer = async (req: Request, res: Response) => {
   try {
     const properties = matchedData(req) as AddOfferInput;
-    let images = req.files?.images;
-    if (images && !isArray(images)) {
-      images = [images];
-    }
+    const newImages = getImages(req.files?.images);
 
     properties.images = [];
-    if (images) {
-      images.forEach((image) => {
-        const hash = nanoid();
-        image.mv(`offer/${hash}.jpg`);
-        properties.images.push(hash);
-      });
+    if (newImages) {
+      addImages(newImages, properties.images);
     }
 
     const result = await addOffer(properties);
@@ -56,21 +46,16 @@ const getAllOffers = async (req: Request, res: Response) => {
 const getOffer = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const result = await findOffer(id);
+    const offer = await findOffer(id);
 
-    if (isNull(result)) {
+    if (isNull(offer)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    const processedResult = {
-      ...result,
-      images: result.images.map((imageHash) => ({
-        title: imageHash,
-        src: `${API_URL}${ROUTES.UPLOADS.OFFER}/${imageHash}.jpg`,
-      })),
-    };
 
-    res.status(HttpStatusCode.OK).json(processedResult);
+    const processedOffer = processImagesOffer(offer);
+
+    res.status(HttpStatusCode.OK).json(processedOffer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -79,23 +64,19 @@ const getOffer = async (req: Request, res: Response) => {
 const putOffer = async (req: Request, res: Response) => {
   try {
     const { id, ...properties } = matchedData(req, { includeOptionals: true });
-    let images = req.files?.images;
-    if (images && !isArray(images)) {
-      images = [images];
+    const newImages = getImages(req.files?.images);
+    let { images: oldImages } = properties;
+
+    if (isNil(oldImages)) {
+      oldImages = [];
+    } else if (!isArray(oldImages)) {
+      oldImages = [oldImages];
     }
 
-    if (!properties.images) {
-      properties.images = [];
-    } else if (!isArray(properties.images)) {
-      properties.images = [properties.images];
-    }
     removeOfferImages(properties.images, req.images);
-    if (images) {
-      images.forEach((image) => {
-        const hash = nanoid();
-        image.mv(`offer/${hash}.jpg`);
-        properties.images.push(hash);
-      });
+
+    if (newImages) {
+      addImages(newImages, properties.images);
     }
 
     const result = (await updateOffer(id, properties as UpdateTypeProps))[1].pop();
