@@ -73,6 +73,7 @@ const deleteType = async (req: Request, res: Response) => {
     const { id } = matchedData(req);
 
     await removeCakeType(id);
+
     res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());

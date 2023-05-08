@@ -31,11 +31,6 @@ const putFlavour = async (req: Request, res: Response) => {
   try {
     const { id, ...rest } = matchedData(req);
 
-    const cakeFlavour = await getCakeFlavour(id);
-    if (isNull(cakeFlavour)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
     const result = (await updateCakeFlavour(id, rest as UpdateFlavourProps))[1].pop();
 
     res.status(HttpStatusCode.OK).json(result);
@@ -76,12 +71,7 @@ const getAllFlavours = async (req: Request, res: Response) => {
 const deleteFlavour = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const cakeFlavour = await getCakeFlavour(id);
 
-    if (isNull(cakeFlavour)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
     await removeCakeFlavour(id);
     res.status(HttpStatusCode.OK).json();
   } catch (error) {

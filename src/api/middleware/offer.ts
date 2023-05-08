@@ -10,6 +10,7 @@ export const checkResourceExistance = async (req: Request, res: Response, next: 
   const { id } = matchedData(req);
 
   const offer = await findOffer(id);
+
   if (isNull(offer)) {
     res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
     return;
