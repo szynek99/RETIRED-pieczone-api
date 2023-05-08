@@ -83,7 +83,7 @@ const deleteFlavour = async (req: Request, res: Response) => {
       return;
     }
     await removeCakeFlavour(id);
-    res.status(HttpStatusCode.OK).json(cakeFlavour);
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

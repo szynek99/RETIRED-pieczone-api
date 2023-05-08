@@ -48,19 +48,13 @@ const putOrder = async (req: Request, res: Response) => {
     const { id, ...payload } = matchedData(req, { includeOptionals: true });
     const image = req.files?.image as UploadedFile | undefined;
 
-    const order = await getOrderById(id);
-    if (isNull(order)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
-
     if (!payload.imageAttached) {
-      removeOrderImage(order.hash);
+      removeOrderImage(payload.hash);
       payload.imageAttached = false;
     }
 
     if (image) {
-      image.mv(`uploads/${order.hash}.jpg`);
+      image.mv(`uploads/${payload.hash}.jpg`);
       payload.imageAttached = true;
     }
 
@@ -86,7 +80,7 @@ const getOrder = async (req: Request, res: Response) => {
       image: order.imageAttached
         ? {
             title: order.hash,
-            src: `${API_URL}${ROUTES.UPLOADS.OFFER}/${order.hash}.jpg`,
+            src: `${API_URL}${ROUTES.UPLOADS.ORDER}/${order.hash}.jpg`,
           }
         : undefined,
     };
@@ -130,17 +124,13 @@ const getOrders = async (req: Request, res: Response) => {
 const deleteOrder = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const order = await getOrderById(id);
 
-    if (isNull(order)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
+    if (req.imageAttached) {
+      removeOrderImage(req.hash);
     }
-    if (order.imageAttached) {
-      removeOrderImage(order.hash);
-    }
+
     await removeOrder(id);
-    res.status(HttpStatusCode.OK).json(order);
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -162,7 +152,7 @@ const deleteOrders = async (req: Request, res: Response) => {
     orders.forEach(({ imageAttached, hash }) => imageAttached && removeOrderImage(hash));
     await removeOrder(id);
 
-    res.status(HttpStatusCode.OK).json(orders);
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

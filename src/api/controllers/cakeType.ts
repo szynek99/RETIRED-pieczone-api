@@ -31,11 +31,6 @@ const putType = async (req: Request, res: Response) => {
   try {
     const { id, ...rest } = matchedData(req, { includeOptionals: true });
 
-    const cakeType = await getCakeType(id);
-    if (isNull(cakeType)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
     const result = (await updateCakeType(id, rest as UpdateTypeProps))[1].pop();
 
     res.status(HttpStatusCode.OK).json(result);
@@ -76,14 +71,9 @@ const getAllTypes = async (req: Request, res: Response) => {
 const deleteType = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const cakeType = await getCakeType(id);
 
-    if (isNull(cakeType)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
     await removeCakeType(id);
-    res.status(HttpStatusCode.OK).json(cakeType);
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

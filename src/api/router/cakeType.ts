@@ -4,7 +4,7 @@ import { verifyToken } from 'api/middleware/user';
 import cakeTypeRules from 'api/validators/cakeType';
 import { checkRequired } from 'api/middleware/common';
 import cakeTypeController from 'api/controllers/cakeType';
-import { checkDuplicateValue } from 'api/middleware/cakeType';
+import { checkDuplicateValue, checkResourceExistance } from 'api/middleware/cakeType';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ cakeTypeRouter.get(
 cakeTypeRouter.put(
   '/:id',
   cakeTypeRules.updateSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   cakeTypeController.putType,
 );
 
@@ -41,7 +41,7 @@ cakeTypeRouter.post(
 cakeTypeRouter.delete(
   '/:id',
   cakeTypeRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   cakeTypeController.deleteType,
 );
 

@@ -84,18 +84,12 @@ const putOffer = async (req: Request, res: Response) => {
       images = [images];
     }
 
-    const offer = await findOffer(id);
-    if (isNull(offer)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
-
     if (!properties.images) {
       properties.images = [];
     } else if (!isArray(properties.images)) {
       properties.images = [properties.images];
     }
-    removeOfferImages(properties.images, offer.images);
+    removeOfferImages(properties.images, req.images);
     if (images) {
       images.forEach((image) => {
         const hash = nanoid();
@@ -113,17 +107,12 @@ const putOffer = async (req: Request, res: Response) => {
 
 const deleteOffer = async (req: Request, res: Response) => {
   try {
-    const { id } = matchedData(req);
+    const { id } = matchedData(req, { includeOptionals: true });
 
-    const offer = await findOffer(id);
-    if (isNull(offer)) {
-      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
-      return;
-    }
-    removeOfferImages(offer.images, offer.images);
-
+    removeOfferImages(req.images, req.images);
     await removeOffer(id);
-    res.status(HttpStatusCode.OK).json(offer);
+
+    res.status(HttpStatusCode.OK).json();
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

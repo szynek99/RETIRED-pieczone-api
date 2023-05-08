@@ -4,7 +4,7 @@ import { verifyToken } from 'api/middleware/user';
 import cakeFlavourRules from 'api/validators/cakeFlavour';
 import { checkRequired } from 'api/middleware/common';
 import cakeFlavourController from 'api/controllers/cakeFlavour';
-import { checkDuplicateValue } from 'api/middleware/cakeFlavour';
+import { checkDuplicateValue, checkResourceExistance } from 'api/middleware/cakeFlavour';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ cakeFlavourRouter.get(
 cakeFlavourRouter.put(
   '/:id',
   cakeFlavourRules.updateSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   cakeFlavourController.putFlavour,
 );
 
@@ -41,7 +41,7 @@ cakeFlavourRouter.post(
 cakeFlavourRouter.delete(
   '/:id',
   cakeFlavourRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   cakeFlavourController.deleteFlavour,
 );
 

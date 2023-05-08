@@ -1,11 +1,11 @@
-import { matchedData } from 'express-validator';
+import isNull from 'lodash/isNull';
 import { AddTypeInput } from 'types/cakeType';
+import { matchedData } from 'express-validator';
 import { HttpStatusCode } from 'constants/common';
-import { singleFieldError } from 'api/utils/Response';
 import { NextFunction, Request, Response } from 'express';
-import { getCakeTypeByValue } from 'db/services/cakeType';
+import { requestError, singleFieldError } from 'api/utils/Response';
+import { getCakeType, getCakeTypeByValue } from 'db/services/cakeType';
 
-// eslint-disable-next-line import/prefer-default-export
 export const checkDuplicateValue = async (
   req: Request,
   res: Response,
@@ -18,6 +18,21 @@ export const checkDuplicateValue = async (
     res
       .status(HttpStatusCode.UNPROCESSABLE)
       .json(singleFieldError('value', 'Wartość jest już zajęta'));
+    return;
+  }
+  next();
+};
+
+export const checkResourceExistance = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { id } = matchedData(req);
+  const cakeType = await getCakeType(id);
+
+  if (isNull(cakeType)) {
+    res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
     return;
   }
   next();

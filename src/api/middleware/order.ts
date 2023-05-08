@@ -1,12 +1,13 @@
 import { isNil } from 'lodash';
+import isNull from 'lodash/isNull';
 import { OrderInput } from 'db/models/order';
 import { matchedData } from 'express-validator';
+import { getOrderById } from 'db/services/order';
 import { HttpStatusCode } from 'constants/common';
-import { singleFieldError } from 'api/utils/Response';
 import { getCakeTypeByValue } from 'db/services/cakeType';
 import { NextFunction, Request, Response } from 'express';
+import { singleFieldError, requestError } from 'api/utils/Response';
 
-// eslint-disable-next-line import/prefer-default-export
 export const checkValidFlavour = async (
   req: Request,
   res: Response,
@@ -26,6 +27,20 @@ export const checkValidFlavour = async (
     res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagany'));
     return;
   }
+
+  next();
+};
+
+export const checkResourceExistance = async (req: Request, res: Response, next: NextFunction) => {
+  const { id, hash, imageAttached } = matchedData(req);
+  const order = await getOrderById(id);
+
+  if (isNull(order)) {
+    res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+    return;
+  }
+  req.hash = hash;
+  req.imageAttached = imageAttached;
 
   next();
 };

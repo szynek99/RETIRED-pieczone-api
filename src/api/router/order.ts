@@ -4,7 +4,7 @@ import orderRules from 'api/validators/order';
 import { verifyToken } from 'api/middleware/user';
 import orderController from 'api/controllers/order';
 import { checkRequired } from 'api/middleware/common';
-import { checkValidFlavour } from 'api/middleware/order';
+import { checkResourceExistance, checkValidFlavour } from 'api/middleware/order';
 
 dotenv.config();
 
@@ -36,7 +36,7 @@ orderRouter.get(
 orderRouter.put(
   '/:id',
   orderRules.updateSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   orderController.putOrder,
 );
 
@@ -50,7 +50,7 @@ orderRouter.delete(
 orderRouter.delete(
   '/:id',
   orderRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   orderController.deleteOrder,
 );
 
