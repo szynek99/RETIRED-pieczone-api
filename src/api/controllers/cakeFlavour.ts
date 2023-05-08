@@ -20,8 +20,9 @@ const postFlavour = async (req: Request, res: Response) => {
   try {
     const properties = matchedData(req) as AddFlavourInput;
 
-    const result = await addCakeFlavour(properties);
-    res.status(HttpStatusCode.OK).json(result);
+    const cakeFlavour = await addCakeFlavour(properties);
+
+    res.status(HttpStatusCode.OK).json(cakeFlavour);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -29,11 +30,11 @@ const postFlavour = async (req: Request, res: Response) => {
 
 const putFlavour = async (req: Request, res: Response) => {
   try {
-    const { id, ...rest } = matchedData(req);
+    const { id, ...props } = matchedData(req);
 
-    const result = (await updateCakeFlavour(id, rest as UpdateFlavourProps))[1].pop();
+    const cakeFlavour = (await updateCakeFlavour(id, props as UpdateFlavourProps))[1].pop();
 
-    res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(cakeFlavour);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -42,13 +43,13 @@ const putFlavour = async (req: Request, res: Response) => {
 const getFlavour = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const result = await getCakeFlavour(id);
+    const cakeFlavour = await getCakeFlavour(id);
 
-    if (isNull(result)) {
+    if (isNull(cakeFlavour)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(cakeFlavour);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -57,12 +58,12 @@ const getFlavour = async (req: Request, res: Response) => {
 const getAllFlavours = async (req: Request, res: Response) => {
   try {
     const params = queryParams(matchedData(req));
-    const { rows, count } = await getAllCakeFlavours(params);
+    const { rows: cakeFlavours, count } = await getAllCakeFlavours(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
     res.append('Content-Count', count.toString());
 
-    res.status(HttpStatusCode.OK).json(rows);
+    res.status(HttpStatusCode.OK).json(cakeFlavours);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

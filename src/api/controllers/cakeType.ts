@@ -20,8 +20,9 @@ const postType = async (req: Request, res: Response) => {
   try {
     const properties = matchedData(req) as AddTypeInput;
 
-    const result = await addCakeType(properties);
-    res.status(HttpStatusCode.OK).json(result);
+    const cakeType = await addCakeType(properties);
+
+    res.status(HttpStatusCode.OK).json(cakeType);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -29,11 +30,11 @@ const postType = async (req: Request, res: Response) => {
 
 const putType = async (req: Request, res: Response) => {
   try {
-    const { id, ...rest } = matchedData(req, { includeOptionals: true });
+    const { id, ...props } = matchedData(req, { includeOptionals: true });
 
-    const result = (await updateCakeType(id, rest as UpdateTypeProps))[1].pop();
+    const cakeType = (await updateCakeType(id, props as UpdateTypeProps))[1].pop();
 
-    res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(cakeType);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -42,13 +43,13 @@ const putType = async (req: Request, res: Response) => {
 const getType = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const result = await getCakeType(id);
+    const cakeType = await getCakeType(id);
 
-    if (isNull(result)) {
+    if (isNull(cakeType)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(cakeType);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -57,12 +58,12 @@ const getType = async (req: Request, res: Response) => {
 const getAllTypes = async (req: Request, res: Response) => {
   try {
     const params = queryParams(matchedData(req));
-    const { rows, count } = await getAllCakeTypes(params);
+    const { rows: cakeTypes, count } = await getAllCakeTypes(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
     res.append('Content-Count', count.toString());
 
-    res.status(HttpStatusCode.OK).json(rows);
+    res.status(HttpStatusCode.OK).json(cakeTypes);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

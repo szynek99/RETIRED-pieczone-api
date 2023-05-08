@@ -8,36 +8,32 @@ import {
   getOrderByHash,
 } from 'db/services/order';
 import { nanoid } from 'nanoid';
-import * as dotenv from 'dotenv';
-import { ROUTES } from 'constants/routes';
 import { isNull, isString } from 'lodash';
 import { Request, Response } from 'express';
 import { OrderInput } from 'db/models/order';
 import queryParams from 'api/utils/queryParams';
+import addImage from 'api/utils/order/addImage';
 import { matchedData } from 'express-validator';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
-import removeOrderImage from 'api/utils/removeOrderImage';
+import processImage from 'api/utils/order/processImage';
+import removeOrderImage from 'api/utils/order/removeImage';
 import { QueryParams, UpdateOrderProps } from 'types/order';
 import { requestError, serverError } from 'api/utils/Response';
-
-dotenv.config();
-const { API_URL } = process.env;
 
 const postOrder = async (req: Request, res: Response) => {
   try {
     const hash = nanoid();
     const payload = matchedData(req) as OrderInput;
-    const image = req.files?.image as UploadedFile | undefined;
+    const newImage = req.files?.image as UploadedFile | undefined;
     payload.hash = hash;
 
-    if (image) {
-      image.mv(`uploads/${hash}.jpg`);
-      payload.imageAttached = true;
+    if (newImage) {
+      addImage(newImage, payload);
     }
 
-    const result = await addOrder({ ...payload, hash });
-    res.status(HttpStatusCode.OK).json(result);
+    const order = await addOrder(payload);
+    res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -46,20 +42,19 @@ const postOrder = async (req: Request, res: Response) => {
 const putOrder = async (req: Request, res: Response) => {
   try {
     const { id, ...payload } = matchedData(req, { includeOptionals: true });
-    const image = req.files?.image as UploadedFile | undefined;
+    const newImage = req.files?.image as UploadedFile | undefined;
 
     if (!payload.imageAttached) {
       removeOrderImage(payload.hash);
       payload.imageAttached = false;
     }
 
-    if (image) {
-      image.mv(`uploads/${payload.hash}.jpg`);
-      payload.imageAttached = true;
+    if (newImage) {
+      addImage(newImage, payload);
     }
 
-    const result = (await updateOrder(id, payload as UpdateOrderProps))[1].pop();
-    res.status(HttpStatusCode.OK).json(result);
+    const order = (await updateOrder(id, payload as UpdateOrderProps))[1].pop();
+    res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -75,17 +70,9 @@ const getOrder = async (req: Request, res: Response) => {
       return;
     }
 
-    const processedResult = {
-      ...order,
-      image: order.imageAttached
-        ? {
-            title: order.hash,
-            src: `${API_URL}${ROUTES.UPLOADS.ORDER}/${order.hash}.jpg`,
-          }
-        : undefined,
-    };
+    const processedOrder = processImage(order);
 
-    res.status(HttpStatusCode.OK).json(processedResult);
+    res.status(HttpStatusCode.OK).json(processedOrder);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -94,14 +81,14 @@ const getOrder = async (req: Request, res: Response) => {
 const getOrderPublic = async (req: Request, res: Response) => {
   try {
     const { hash } = req.params;
-    const result = await getOrderByHash(hash);
+    const order = await getOrderByHash(hash);
 
-    if (isNull(result)) {
+    if (isNull(order)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
 
-    res.status(HttpStatusCode.OK).json(result);
+    res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -110,12 +97,12 @@ const getOrderPublic = async (req: Request, res: Response) => {
 const getOrders = async (req: Request, res: Response) => {
   try {
     const params = queryParams<QueryParams>(matchedData(req));
-    const { rows, count } = await getAllOrders(params);
+    const { rows: orders, count } = await getAllOrders(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
     res.append('Content-Count', count.toString());
 
-    res.status(HttpStatusCode.OK).json(rows);
+    res.status(HttpStatusCode.OK).json(orders);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }

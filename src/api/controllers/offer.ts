@@ -22,8 +22,8 @@ const postOffer = async (req: Request, res: Response) => {
       addImages(newImages, properties.images);
     }
 
-    const result = await addOffer(properties);
-    res.status(HttpStatusCode.OK).json(result);
+    const offer = await addOffer(properties);
+    res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -32,12 +32,12 @@ const postOffer = async (req: Request, res: Response) => {
 const getAllOffers = async (req: Request, res: Response) => {
   try {
     const params = queryParams<QueryParams>(matchedData(req));
-    const { rows, count } = await findAllOffers(params);
+    const { rows: offers, count } = await findAllOffers(params);
 
     res.append('Access-Control-Expose-Headers', 'Content-Count');
     res.append('Content-Count', count.toString());
 
-    res.status(HttpStatusCode.OK).json(rows);
+    res.status(HttpStatusCode.OK).json(offers);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -74,13 +74,12 @@ const putOffer = async (req: Request, res: Response) => {
     }
 
     removeOfferImages(properties.images, req.images);
-
     if (newImages) {
       addImages(newImages, properties.images);
     }
 
-    const result = (await updateOffer(id, properties as UpdateTypeProps))[1].pop();
-    res.status(HttpStatusCode.OK).json(result);
+    const offer = (await updateOffer(id, properties as UpdateTypeProps))[1].pop();
+    res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
