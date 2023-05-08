@@ -7,7 +7,8 @@ import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
 export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
   await Order.create(payload);
 
-export const getOrderById = (id: string): Promise<OrderOuput | null> => Order.findByPk(id);
+export const getOrderById = (id: string): Promise<OrderOuput | null> =>
+  Order.findByPk(id, { raw: true });
 
 export const getOrdersByIds = (ids: string[]): Promise<OrderOuput[] | null> =>
   Order.findAll({

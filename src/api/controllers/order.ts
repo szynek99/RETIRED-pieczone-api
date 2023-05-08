@@ -33,7 +33,7 @@ const postOrder = async (req: Request, res: Response) => {
 
     if (image) {
       image.mv(`uploads/${hash}.jpg`);
-      payload.imageUrl = `${API_URL}${ROUTES.UPLOADS.ORDER}/${hash}.jpg`;
+      payload.imageAttached = true;
     }
 
     const result = await addOrder({ ...payload, hash });
@@ -45,7 +45,8 @@ const postOrder = async (req: Request, res: Response) => {
 
 const putOrder = async (req: Request, res: Response) => {
   try {
-    const { id, ...rest } = matchedData(req, { includeOptionals: true });
+    const { id, ...payload } = matchedData(req, { includeOptionals: true });
+    const image = req.files?.image as UploadedFile | undefined;
 
     const order = await getOrderById(id);
     if (isNull(order)) {
@@ -53,7 +54,17 @@ const putOrder = async (req: Request, res: Response) => {
       return;
     }
 
-    const result = (await updateOrder(id, rest as UpdateOrderProps))[1].pop();
+    if (!payload.imageAttached) {
+      removeOrderImage(order.hash);
+      payload.imageAttached = false;
+    }
+
+    if (image) {
+      image.mv(`uploads/${order.hash}.jpg`);
+      payload.imageAttached = true;
+    }
+
+    const result = (await updateOrder(id, payload as UpdateOrderProps))[1].pop();
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
@@ -63,9 +74,24 @@ const putOrder = async (req: Request, res: Response) => {
 const getOrder = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const result = await getOrderById(id);
+    const order = await getOrderById(id);
 
-    res.status(HttpStatusCode.OK).json(result);
+    if (isNull(order)) {
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+      return;
+    }
+
+    const processedResult = {
+      ...order,
+      image: order.imageAttached
+        ? {
+            title: order.hash,
+            src: `${API_URL}${ROUTES.UPLOADS.OFFER}/${order.hash}.jpg`,
+          }
+        : undefined,
+    };
+
+    res.status(HttpStatusCode.OK).json(processedResult);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -75,6 +101,11 @@ const getOrderPublic = async (req: Request, res: Response) => {
   try {
     const { hash } = req.params;
     const result = await getOrderByHash(hash);
+
+    if (isNull(result)) {
+      res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
+      return;
+    }
 
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
@@ -105,7 +136,9 @@ const deleteOrder = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    removeOrderImage(order.hash);
+    if (order.imageAttached) {
+      removeOrderImage(order.hash);
+    }
     await removeOrder(id);
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
@@ -125,8 +158,10 @@ const deleteOrders = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-    orders.forEach(({ hash }) => removeOrderImage(hash));
+
+    orders.forEach(({ imageAttached, hash }) => imageAttached && removeOrderImage(hash));
     await removeOrder(id);
+
     res.status(HttpStatusCode.OK).json(orders);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());

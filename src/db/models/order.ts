@@ -1,6 +1,6 @@
 import sequelize from 'db/connection';
-import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 
 export type OrderInput = Optional<OrderAttributes, 'id' | 'status' | 'createdAt' | 'updatedAt'>;
 
@@ -37,7 +37,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 
   public commentsToOrder!: string | null;
 
-  public imageUrl!: string | null;
+  public imageAttached!: boolean;
 
   public createdAt!: Date;
 
@@ -109,9 +109,10 @@ Order.init(
       type: STRING,
       allowNull: true,
     },
-    imageUrl: {
-      type: STRING,
-      allowNull: true,
+    imageAttached: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     createdAt: {
       type: DATE,

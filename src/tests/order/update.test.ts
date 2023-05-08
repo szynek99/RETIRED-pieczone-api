@@ -45,7 +45,7 @@ describe('Order: update', () => {
   });
 
   it('correct single update', async () => {
-    const addedOrder = await addOrder(SAMPLE_ORDER as OrderInput);
+    const addedOrder = await addOrder(SAMPLE_ORDER as any);
     const NEW_BODY = {
       hash: nanoid(),
       firstname: 'Mick',
@@ -81,7 +81,6 @@ describe('Order: update', () => {
     expect(body).toHaveProperty('alcoholAllowed', NEW_BODY.alcoholAllowed);
     expect(body).toHaveProperty('cakeInscription', NEW_BODY.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', NEW_BODY.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', null);
     expect(body).toHaveProperty('occasion', NEW_BODY.occasion);
     expect(body).toHaveProperty('status', NEW_BODY.status);
     expect(body).toHaveProperty('createdAt');

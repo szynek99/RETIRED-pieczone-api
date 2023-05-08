@@ -8,7 +8,7 @@ export const addCakeType = (payload: CakeTypeInput): Promise<CakeTypeAttributes>
   CakeType.create(payload);
 
 export const getCakeType = (id: number): Promise<CakeTypeAttributes | null> =>
-  CakeType.findByPk(id);
+  CakeType.findByPk(id, { raw: true });
 
 export const getAllCakeTypes = (
   queryParams: QueryParams,

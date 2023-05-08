@@ -4,7 +4,7 @@ import request from 'supertest';
 import { nanoid } from 'nanoid';
 import { ROUTES } from 'constants/routes';
 import { HttpStatusCode } from 'constants/common';
-import { OrderInput, OrderOuput } from 'db/models/order';
+import { OrderOuput } from 'db/models/order';
 import { addOrder, resetOrder } from 'db/services/order';
 import { NextFunction, Request, Response } from 'express';
 
@@ -27,7 +27,6 @@ const SAMPLE_ORDER = {
   occasion: 'Anniversary',
   cakeInscription: 'Be happy',
   commentsToOrder: 'wedding style',
-  imageUrl: null,
 };
 
 describe('Order: get', () => {
@@ -49,10 +48,9 @@ describe('Order: get', () => {
         cakeInscription: null,
         commentsToOrder: null,
         occasion: null,
-        imageUrl: null,
-      });
+      } as any);
     }
-    sampleOrderOutput = await addOrder(SAMPLE_ORDER as OrderInput);
+    sampleOrderOutput = await addOrder(SAMPLE_ORDER as any);
   });
 
   beforeEach(() => {
@@ -108,7 +106,6 @@ describe('Order: get', () => {
     expect(body).toHaveProperty('updatedAt');
     expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', sampleOrderOutput.imageUrl);
     expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
   });
 
@@ -137,7 +134,6 @@ describe('Order: get', () => {
     expect(body).toHaveProperty('updatedAt');
     expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', sampleOrderOutput.imageUrl);
     expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
   });
 
@@ -168,7 +164,6 @@ describe('Order: get', () => {
     expect(body).toHaveProperty('updatedAt');
     expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', sampleOrderOutput.imageUrl);
     expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
   });
 });

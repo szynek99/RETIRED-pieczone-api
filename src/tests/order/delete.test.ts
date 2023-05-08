@@ -60,7 +60,6 @@ describe('Order: delete', () => {
     expect(body).toHaveProperty('alcoholAllowed', addedOrder.alcoholAllowed);
     expect(body).toHaveProperty('cakeInscription', addedOrder.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', addedOrder.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', addedOrder.imageUrl);
     expect(body).toHaveProperty('occasion', addedOrder.occasion);
     expect(body).toHaveProperty('status', 'pending');
     expect(body).toHaveProperty('createdAt');

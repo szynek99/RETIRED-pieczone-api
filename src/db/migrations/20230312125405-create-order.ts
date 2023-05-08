@@ -67,9 +67,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      imageUrl: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      imageAttached: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         type: DataTypes.DATE,

@@ -99,7 +99,7 @@ describe('Order: add', () => {
     expect(body).toHaveProperty('updatedAt');
     expect(body).toHaveProperty('cakeInscription', null);
     expect(body).toHaveProperty('commentsToOrder', null);
-    expect(body).toHaveProperty('imageUrl', null);
+    expect(body).toHaveProperty('image', null);
     expect(body).toHaveProperty('occasion', null);
   });
 
@@ -123,7 +123,7 @@ describe('Order: add', () => {
     expect(body).toHaveProperty('updatedAt');
     expect(body).toHaveProperty('cakeInscription', SAMPLE_ORDER_2.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', SAMPLE_ORDER_2.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', null);
+    expect(body).toHaveProperty('image', false);
     expect(body).toHaveProperty('occasion', SAMPLE_ORDER_2.occasion);
   });
 });

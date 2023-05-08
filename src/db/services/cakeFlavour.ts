@@ -8,7 +8,7 @@ export const addCakeFlavour = (payload: CakeFlavourInput): Promise<CakeFlavourAt
   CakeFlavour.create(payload);
 
 export const getCakeFlavour = (id: number): Promise<CakeFlavourAttributes | null> =>
-  CakeFlavour.findByPk(id);
+  CakeFlavour.findByPk(id, { raw: true });
 
 export const getAllCakeFlavours = (
   queryParams: QueryParams,
