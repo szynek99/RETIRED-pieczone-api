@@ -5,7 +5,7 @@ import Order, { OrderInput, OrderOuput } from 'db/models/order';
 import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
 
 export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
-  await Order.create(payload);
+  await Order.create(payload, { raw: true });
 
 export const getOrderById = (id: string): Promise<OrderOuput | null> =>
   Order.findByPk(id, { raw: true });
@@ -15,10 +15,11 @@ export const getOrdersByIds = (ids: string[]): Promise<OrderOuput[] | null> =>
     where: {
       id: { [Op.in]: ids },
     },
+    raw: true,
   });
 
 export const getOrderByHash = (hash: string): Promise<OrderOuput | null> =>
-  Order.findOne({ where: { hash } });
+  Order.findOne({ where: { hash }, raw: true });
 
 export const updateOrder = (
   id: string,
@@ -54,6 +55,7 @@ export const getAllOrders = (
       },
     },
     attributes: GET_ATTRIBUTES,
+    raw: true,
   });
 };
 

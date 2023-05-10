@@ -3,8 +3,5 @@ import fileUpload from 'express-fileupload';
 
 dotenv.config();
 
-export default (newImage: fileUpload.UploadedFile, payload: any) => {
-  newImage.mv(`uploads/${payload.hash}.jpg`);
-  // eslint-disable-next-line no-param-reassign
-  payload.imageAttached = true;
-};
+export default (newImage: fileUpload.UploadedFile, hash: string) =>
+  newImage.mv(`uploads/${hash}.jpg`);

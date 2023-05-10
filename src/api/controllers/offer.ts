@@ -14,7 +14,7 @@ import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db
 
 const postOffer = async (req: Request, res: Response) => {
   try {
-    const properties = matchedData(req) as AddOfferInput;
+    const properties = matchedData(req);
     const newImages = getImages(req.files?.images);
 
     properties.images = [];
@@ -22,7 +22,8 @@ const postOffer = async (req: Request, res: Response) => {
       addImages(newImages, properties.images);
     }
 
-    const offer = await addOffer(properties);
+    const offer = await addOffer(properties as AddOfferInput);
+
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
@@ -53,9 +54,9 @@ const getOffer = async (req: Request, res: Response) => {
       return;
     }
 
-    const processedOffer = processImagesOffer(offer);
+    processImagesOffer(offer);
 
-    res.status(HttpStatusCode.OK).json(processedOffer);
+    res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -72,13 +73,15 @@ const putOffer = async (req: Request, res: Response) => {
     } else if (!isArray(oldImages)) {
       oldImages = [oldImages];
     }
-
     removeOfferImages(properties.images, req.images);
+
     if (newImages) {
       addImages(newImages, properties.images);
     }
 
-    const offer = (await updateOffer(id, properties as UpdateTypeProps))[1].pop();
+    const offer = (await updateOffer(id, properties as UpdateTypeProps))[1][0].dataValues;
+    processImagesOffer(offer);
+
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());

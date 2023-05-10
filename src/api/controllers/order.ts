@@ -24,15 +24,18 @@ import { requestError, serverError } from 'api/utils/Response';
 const postOrder = async (req: Request, res: Response) => {
   try {
     const hash = nanoid();
-    const payload = matchedData(req) as OrderInput;
+    const payload = matchedData(req);
     const newImage = req.files?.image as UploadedFile | undefined;
     payload.hash = hash;
 
     if (newImage) {
-      addImage(newImage, payload);
+      addImage(newImage, hash);
+      payload.imageAttached = true;
     }
 
-    const order = await addOrder(payload);
+    const order = await addOrder(payload as OrderInput);
+    processImage(order);
+
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
@@ -44,16 +47,19 @@ const putOrder = async (req: Request, res: Response) => {
     const { id, ...payload } = matchedData(req, { includeOptionals: true });
     const newImage = req.files?.image as UploadedFile | undefined;
 
-    if (!payload.imageAttached) {
-      removeOrderImage(payload.hash);
+    if (!payload.image) {
+      await removeOrderImage(req.hash);
       payload.imageAttached = false;
     }
 
     if (newImage) {
-      addImage(newImage, payload);
+      addImage(newImage, req.hash);
+      payload.imageAttached = true;
     }
 
-    const order = (await updateOrder(id, payload as UpdateOrderProps))[1].pop();
+    const order = (await updateOrder(id, payload as UpdateOrderProps))[1][0].dataValues;
+    processImage(order);
+
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
@@ -70,9 +76,9 @@ const getOrder = async (req: Request, res: Response) => {
       return;
     }
 
-    const processedOrder = processImage(order);
+    processImage(order);
 
-    res.status(HttpStatusCode.OK).json(processedOrder);
+    res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
@@ -87,6 +93,8 @@ const getOrderPublic = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
+
+    processImage(order);
 
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {

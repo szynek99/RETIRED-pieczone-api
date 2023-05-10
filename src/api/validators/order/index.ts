@@ -46,7 +46,36 @@ const orderRules = {
       })
       .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
   ],
-  updateSingle: [...PRIMARY_VALIDATION, ID_RULE, ARRAY_BELONING_RULE('status', ORDER_STATUS)],
+  updateSingle: [
+    ...PRIMARY_VALIDATION,
+    ID_RULE,
+    ARRAY_BELONING_RULE('status', ORDER_STATUS),
+    check('image')
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (isArray(files.image)) {
+            return false;
+          }
+          if (!files.image.mimetype.startsWith('image')) {
+            return false;
+          }
+          return true;
+        }
+        return true;
+      })
+      .withMessage('Dozwolone jest tylko jeden plik graficzny')
+      .bail()
+      .custom((_, { req: { files } }) => {
+        if (files && files.image) {
+          if (files.image.size < 5000000) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      })
+      .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
+  ],
   getSingle: [ID_RULE],
   getMany: [
     query('id')

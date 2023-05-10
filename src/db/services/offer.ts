@@ -3,7 +3,8 @@ import { GET_ATTRIBUTES } from 'constants/offer';
 import Offer, { OfferInput } from 'db/models/offer';
 import { OfferAttributes, QueryParams, UpdateTypeProps } from 'types/offer';
 
-export const addOffer = (payload: OfferInput): Promise<OfferAttributes> => Offer.create(payload);
+export const addOffer = (payload: OfferInput): Promise<OfferAttributes> =>
+  Offer.create(payload, { raw: true });
 
 export const findOffer = (id: number): Promise<OfferAttributes | null> =>
   Offer.findByPk(id, { raw: true });
@@ -23,6 +24,7 @@ export const findAllOffers = (
       },
     },
     attributes: GET_ATTRIBUTES,
+    raw: true,
   });
 };
 

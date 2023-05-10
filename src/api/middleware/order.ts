@@ -32,15 +32,15 @@ export const checkValidFlavour = async (
 };
 
 export const checkResourceExistance = async (req: Request, res: Response, next: NextFunction) => {
-  const { id, hash, imageAttached } = matchedData(req);
+  const { id } = matchedData(req);
   const order = await getOrderById(id);
 
   if (isNull(order)) {
     res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
     return;
   }
-  req.hash = hash;
-  req.imageAttached = imageAttached;
+  req.hash = order.hash;
+  req.imageAttached = order.imageAttached;
 
   next();
 };
