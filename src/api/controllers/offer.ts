@@ -14,15 +14,17 @@ import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db
 
 const postOffer = async (req: Request, res: Response) => {
   try {
-    const properties = matchedData(req);
+    const payload = matchedData(req);
+    console.debug(req.files);
     const newImages = getImages(req.files?.images);
 
-    properties.images = [];
+    payload.images = [];
     if (newImages) {
-      addImages(newImages, properties.images);
+      addImages(newImages, payload);
     }
 
-    const offer = await addOffer(properties as AddOfferInput);
+    const offer = await addOffer(payload as AddOfferInput);
+    processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
@@ -73,10 +75,11 @@ const putOffer = async (req: Request, res: Response) => {
     } else if (!isArray(oldImages)) {
       oldImages = [oldImages];
     }
+
     removeOfferImages(properties.images, req.images);
 
     if (newImages) {
-      addImages(newImages, properties.images);
+      addImages(newImages, properties);
     }
 
     const offer = (await updateOffer(id, properties as UpdateTypeProps))[1][0].dataValues;
