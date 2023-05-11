@@ -36,7 +36,7 @@ orderRouter.get(
 orderRouter.put(
   '/:id',
   orderRules.updateSingle,
-  [verifyToken, checkRequired, checkResourceExistance],
+  [verifyToken, checkRequired, checkResourceExistance, checkValidFlavour],
   orderController.putOrder,
 );
 

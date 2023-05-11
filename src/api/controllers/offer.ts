@@ -15,7 +15,6 @@ import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db
 const postOffer = async (req: Request, res: Response) => {
   try {
     const payload = matchedData(req);
-    console.debug(req.files);
     const newImages = getImages(req.files?.images);
 
     payload.images = [];

@@ -80,10 +80,18 @@ Order.init(
     cakeType: {
       type: STRING,
       allowNull: false,
+      references: {
+        model: 'CakeType',
+        key: 'value',
+      },
     },
     cakeFlavour: {
       type: STRING,
       allowNull: true,
+      references: {
+        model: 'CakeFlavour',
+        key: 'value',
+      },
     },
     spongeColour: {
       type: STRING,

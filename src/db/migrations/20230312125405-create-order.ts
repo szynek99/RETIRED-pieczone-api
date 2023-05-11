@@ -38,10 +38,18 @@ module.exports = {
       cakeType: {
         type: DataTypes.STRING,
         allowNull: false,
+        references: {
+          model: 'CakeType',
+          key: 'value',
+        },
       },
       cakeFlavour: {
         type: DataTypes.STRING,
         allowNull: true,
+        references: {
+          model: 'CakeFlavour',
+          key: 'value',
+        },
       },
       spongeColour: {
         type: DataTypes.STRING,

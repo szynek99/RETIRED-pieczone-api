@@ -28,6 +28,10 @@ const postOrder = async (req: Request, res: Response) => {
     const newImage = req.files?.image as UploadedFile | undefined;
     payload.hash = hash;
 
+    if (req.clearFlavour) {
+      payload.cakeFlavour = undefined;
+    }
+
     if (newImage) {
       addImage(newImage, hash);
       payload.imageAttached = true;
@@ -46,6 +50,10 @@ const putOrder = async (req: Request, res: Response) => {
   try {
     const { id, ...payload } = matchedData(req, { includeOptionals: true });
     const newImage = req.files?.image as UploadedFile | undefined;
+
+    if (req.clearFlavour) {
+      payload.cakeFlavour = undefined;
+    }
 
     if (!payload.image) {
       await removeOrderImage(req.hash);

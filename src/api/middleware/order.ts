@@ -6,6 +6,7 @@ import { getOrderById } from 'db/services/order';
 import { HttpStatusCode } from 'constants/common';
 import { getCakeTypeByValue } from 'db/services/cakeType';
 import { NextFunction, Request, Response } from 'express';
+import { getCakeFlavourByValue } from 'db/services/cakeFlavour';
 import { singleFieldError, requestError } from 'api/utils/Response';
 
 export const checkValidFlavour = async (
@@ -23,9 +24,17 @@ export const checkValidFlavour = async (
     return;
   }
 
-  if (cakeType.customizable && isNil(cakeFlavourValue)) {
-    res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagany'));
-    return;
+  if (cakeType.customizable) {
+    const cakeFlavour = await getCakeFlavourByValue(cakeFlavourValue!);
+
+    if (isNil(cakeFlavour)) {
+      res
+        .status(HttpStatusCode.UNPROCESSABLE)
+        .json(singleFieldError('cakeFlavour', 'Nieprawidłowa wartość'));
+      return;
+    }
+  } else {
+    req.clearFlavour = true;
   }
 
   next();

@@ -7,6 +7,7 @@ declare global {
       hash: string;
       imageAttached?: boolean;
       images: string[];
+      clearFlavour?: boolean;
     }
   }
 }
