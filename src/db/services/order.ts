@@ -1,16 +1,13 @@
 import { Op } from 'sequelize';
-import { ApiError } from 'api/utils/Error';
 import { GET_ATTRIBUTES } from 'constants/order';
-import Order, { OrderInput, OrderOuput } from 'db/models/order';
+import Order, { OrderInput } from 'db/models/order';
 import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
 
-export const addOrder = async (payload: OrderInput): Promise<OrderOuput> =>
-  await Order.create(payload, { raw: true });
+export const addOrder = async (payload: OrderInput) => await Order.create(payload, { raw: true });
 
-export const getOrderById = (id: string): Promise<OrderOuput | null> =>
-  Order.findByPk(id, { raw: true });
+export const getOrderById = (id: string) => Order.findByPk(id, { raw: true });
 
-export const getOrdersByIds = (ids: string[]): Promise<OrderOuput[] | null> =>
+export const getOrdersByIds = (ids: string[]) =>
   Order.findAll({
     where: {
       id: { [Op.in]: ids },
@@ -18,18 +15,12 @@ export const getOrdersByIds = (ids: string[]): Promise<OrderOuput[] | null> =>
     raw: true,
   });
 
-export const getOrderByHash = (hash: string): Promise<OrderOuput | null> =>
-  Order.findOne({ where: { hash }, raw: true });
+export const getOrderByHash = (hash: string) => Order.findOne({ where: { hash }, raw: true });
 
-export const updateOrder = (
-  id: string,
-  props: UpdateOrderProps,
-): Promise<[affectedCount: number, affectedRows: Order[]]> =>
+export const updateOrder = (id: string, props: UpdateOrderProps) =>
   Order.update(props, { where: { id }, returning: true });
 
-export const getAllOrders = (
-  queryParams: QueryParams,
-): Promise<{ rows: OrderAttributes[]; count: number }> => {
+export const getAllOrders = (queryParams: QueryParams) => {
   const { offset, pageSize, field, order, firstname, surname, cakeWeight, createdAt, status } =
     queryParams;
 
@@ -59,14 +50,6 @@ export const getAllOrders = (
   });
 };
 
-export const removeOrder = (id: string | string[]): Promise<number> =>
-  Order.destroy({ where: { id } });
+export const removeOrder = (id: string | string[]) => Order.destroy({ where: { id } });
 
-export const resetOrder = async (): Promise<void> => {
-  try {
-    await Order.truncate();
-    return;
-  } catch (error) {
-    throw new ApiError('Order clear');
-  }
-};
+export const resetOrder = () => Order.truncate();

@@ -1,18 +1,13 @@
 import { QueryParams } from 'types/common';
-import { ApiError } from 'api/utils/Error';
+import { UpdateTypeProps } from 'types/cakeType';
 import { GET_ATTRIBUTES } from 'constants/cakeType';
 import CakeType, { CakeTypeInput } from 'db/models/cakeType';
-import { CakeTypeAttributes, UpdateTypeProps } from 'types/cakeType';
 
-export const addCakeType = (payload: CakeTypeInput): Promise<CakeTypeAttributes> =>
-  CakeType.create(payload);
+export const addCakeType = (payload: CakeTypeInput) => CakeType.create(payload);
 
-export const getCakeType = (id: number): Promise<CakeTypeAttributes | null> =>
-  CakeType.findByPk(id, { raw: true });
+export const getCakeType = (id: number) => CakeType.findByPk(id, { raw: true });
 
-export const getAllCakeTypes = (
-  queryParams: QueryParams,
-): Promise<{ rows: CakeTypeAttributes[]; count: number }> => {
+export const getAllCakeTypes = (queryParams: QueryParams) => {
   const { offset, pageSize, field, order } = queryParams;
 
   return CakeType.findAndCountAll({
@@ -23,22 +18,11 @@ export const getAllCakeTypes = (
   });
 };
 
-export const removeCakeType = (id: number): Promise<number> => CakeType.destroy({ where: { id } });
+export const removeCakeType = (id: number) => CakeType.destroy({ where: { id } });
 
-export const getCakeTypeByValue = (value: string): Promise<CakeTypeAttributes | null> =>
-  CakeType.findOne({ where: { value } });
+export const getCakeTypeByValue = (value: string) => CakeType.findOne({ where: { value } });
 
-export const updateCakeType = (
-  id: number,
-  props: UpdateTypeProps,
-): Promise<[affectedCount: number, affectedRows: CakeType[]]> =>
+export const updateCakeType = (id: number, props: UpdateTypeProps) =>
   CakeType.update(props, { where: { id }, returning: true });
 
-export const resetCakeType = async (): Promise<void> => {
-  try {
-    await CakeType.truncate();
-    return;
-  } catch (error) {
-    throw new ApiError('CakeType clear');
-  }
-};
+export const resetCakeType = async () => CakeType.truncate();

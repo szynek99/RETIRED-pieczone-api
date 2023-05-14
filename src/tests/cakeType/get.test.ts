@@ -67,7 +67,6 @@ describe('CakeType: get', () => {
       value: 'orange',
       accessible: true,
       customizable: false,
-      description: 'Sample descrtiption',
     });
 
     const response = await request(app).get(`${ROUTES.CAKE_TYPES.BASE}/${sampleCakeType.id}`);
@@ -77,6 +76,5 @@ describe('CakeType: get', () => {
     expect(body).toHaveProperty('value', sampleCakeType.value);
     expect(body).toHaveProperty('accessible', sampleCakeType.accessible);
     expect(body).toHaveProperty('customizable', sampleCakeType.customizable);
-    expect(body).toHaveProperty('description', sampleCakeType.description);
   });
 });

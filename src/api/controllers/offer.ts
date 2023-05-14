@@ -65,9 +65,9 @@ const getOffer = async (req: Request, res: Response) => {
 
 const putOffer = async (req: Request, res: Response) => {
   try {
-    const { id, ...properties } = matchedData(req, { includeOptionals: true });
+    const { id, ...payload } = matchedData(req, { includeOptionals: true });
     const newImages = getImages(req.files?.images);
-    let { images: oldImages } = properties;
+    let { images: oldImages } = payload;
 
     if (isNil(oldImages)) {
       oldImages = [];
@@ -75,13 +75,18 @@ const putOffer = async (req: Request, res: Response) => {
       oldImages = [oldImages];
     }
 
-    removeOfferImages(properties.images, req.images);
-
-    if (newImages) {
-      addImages(newImages, properties);
+    if (isNil(payload.images)) {
+      payload.images = [];
+    } else if (!isArray(payload.images)) {
+      payload.images = [payload.images];
     }
 
-    const offer = (await updateOffer(id, properties as UpdateTypeProps))[1][0].dataValues;
+    removeOfferImages(payload, req.images);
+    if (newImages) {
+      addImages(newImages, payload);
+    }
+
+    const offer = (await updateOffer(id, payload as UpdateTypeProps))[1][0].dataValues;
     processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);

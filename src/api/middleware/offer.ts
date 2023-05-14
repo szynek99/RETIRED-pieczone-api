@@ -15,7 +15,7 @@ export const checkResourceExistance = async (req: Request, res: Response, next: 
     res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
     return;
   }
-  req.images = offer.images;
+  req.images = offer.images || [];
 
   next();
 };

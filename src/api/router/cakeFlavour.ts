@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import { Router } from 'express';
-import { verifyToken } from 'api/middleware/user';
-import cakeFlavourRules from 'api/validators/cakeFlavour';
 import { checkRequired } from 'api/middleware/common';
+import cakeFlavourRules from 'api/validators/cakeFlavour';
+import { isAdmin, verifyToken } from 'api/middleware/user';
 import cakeFlavourController from 'api/controllers/cakeFlavour';
 import { checkDuplicateValue, checkResourceExistance } from 'api/middleware/cakeFlavour';
 
@@ -13,28 +13,28 @@ const cakeFlavourRouter = Router();
 cakeFlavourRouter.get(
   '/',
   cakeFlavourRules.getAll,
-  [verifyToken, checkRequired],
+  [verifyToken, isAdmin, checkRequired],
   cakeFlavourController.getAllFlavours,
 );
 
 cakeFlavourRouter.get(
   '/:id',
   cakeFlavourRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, isAdmin, checkRequired],
   cakeFlavourController.getFlavour,
 );
 
 cakeFlavourRouter.put(
   '/:id',
   cakeFlavourRules.updateSingle,
-  [verifyToken, checkRequired, checkResourceExistance],
+  [verifyToken, isAdmin, checkRequired, checkResourceExistance],
   cakeFlavourController.putFlavour,
 );
 
 cakeFlavourRouter.post(
   '/',
   cakeFlavourRules.addSingle,
-  [verifyToken, checkRequired, checkDuplicateValue],
+  [verifyToken, isAdmin, checkRequired, checkDuplicateValue],
   cakeFlavourController.postFlavour,
 );
 
