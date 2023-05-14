@@ -38,6 +38,7 @@ describe('Cake flavour model', () => {
         value: {
           type: DataTypes.STRING,
           allowNull: false,
+          unique: true,
         },
         accessible: {
           type: DataTypes.BOOLEAN,

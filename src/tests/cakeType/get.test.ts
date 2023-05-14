@@ -8,6 +8,7 @@ import { addCakeType, resetCakeType } from 'db/services/cakeType';
 
 jest.mock('api/middleware/user', () => ({
   verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
+  isAdmin: (_: Request, __: Response, next: NextFunction) => next(),
   checkDuplicateUsername: (_: Request, __: Response, next: NextFunction) => next(),
 }));
 

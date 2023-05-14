@@ -3,13 +3,14 @@ import app from 'api/app';
 import request from 'supertest';
 import { nanoid } from 'nanoid';
 import { ROUTES } from 'constants/routes';
-import { HttpStatusCode } from 'constants/common';
 import { OrderOuput } from 'db/models/order';
+import { HttpStatusCode } from 'constants/common';
 import { addOrder, resetOrder } from 'db/services/order';
 import { NextFunction, Request, Response } from 'express';
 
 jest.mock('api/middleware/user', () => ({
   verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
+  isAdmin: (_: Request, __: Response, next: NextFunction) => next(),
   checkDuplicateUsername: (_: Request, __: Response, next: NextFunction) => next(),
 }));
 
