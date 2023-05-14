@@ -10,7 +10,6 @@ const modelStaticMethodMocks = {
 
 jest.mock('sequelize', () => {
   class MockModel {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static init(attributes: any, options: any) {
       modelStaticMethodMocks.init(attributes, options);
     }
@@ -60,10 +59,18 @@ describe('Order model', () => {
         cakeType: {
           type: DataTypes.STRING,
           allowNull: false,
+          references: {
+            model: 'CakeType',
+            key: 'value',
+          },
         },
         cakeFlavour: {
           type: DataTypes.STRING,
           allowNull: true,
+          references: {
+            model: 'CakeFlavour',
+            key: 'value',
+          },
         },
         spongeColour: {
           type: DataTypes.STRING,
