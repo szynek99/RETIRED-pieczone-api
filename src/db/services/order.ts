@@ -50,6 +50,10 @@ export const getAllOrders = (queryParams: QueryParams) => {
   });
 };
 
+export const countByCakeType = (cakeType: string) => Order.count({ where: { cakeType } });
+
+export const countByCakeFlavour = (cakeFlavour: string) => Order.count({ where: { cakeFlavour } });
+
 export const removeOrder = (id: string | string[]) => Order.destroy({ where: { id } });
 
 export const resetOrder = () => Order.truncate();
