@@ -3,9 +3,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const removeOfferImages = (payload: any, oldHashes: string[]) => {
-  const removedHashes = oldHashes.filter((hash) => !payload.images.includes(hash));
-
+const removeOfferImages = (newHashes: string[], oldHashes: string[]) => {
+  const removedHashes = oldHashes.filter((hash) => !newHashes.includes(hash));
+  console.debug(removedHashes);
   removedHashes.forEach((individualHash) => {
     fs.unlink(`offer/${individualHash}.jpg`, (err) => {
       if (process.env.ENVIROMENT !== 'TEST') {

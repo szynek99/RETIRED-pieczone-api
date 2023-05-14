@@ -81,7 +81,7 @@ const putOffer = async (req: Request, res: Response) => {
       payload.images = [payload.images];
     }
 
-    removeOfferImages(payload, req.images);
+    removeOfferImages(payload.images, req.images);
     if (newImages) {
       addImages(newImages, payload);
     }
@@ -99,11 +99,12 @@ const deleteOffer = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req, { includeOptionals: true });
 
-    removeOfferImages(req.images, req.images);
+    removeOfferImages([], req.images);
     await removeOffer(id);
 
     res.status(HttpStatusCode.OK).json();
   } catch (error) {
+    console.debug(error);
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };
