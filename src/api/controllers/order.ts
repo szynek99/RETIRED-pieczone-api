@@ -16,6 +16,7 @@ import addImage from 'api/utils/order/addImage';
 import { matchedData } from 'express-validator';
 import { UploadedFile } from 'express-fileupload';
 import { HttpStatusCode } from 'constants/common';
+import { PUBLIC_GET_ATTRIBUTES } from 'constants/order';
 import processImage from 'api/utils/order/processImage';
 import removeOrderImage from 'api/utils/order/removeImage';
 import { QueryParams, UpdateOrderProps } from 'types/order';
@@ -95,7 +96,7 @@ const getOrder = async (req: Request, res: Response) => {
 const getOrderPublic = async (req: Request, res: Response) => {
   try {
     const { hash } = req.params;
-    const order = await getOrderByHash(hash);
+    const order = await getOrderByHash(hash, PUBLIC_GET_ATTRIBUTES);
 
     if (isNull(order)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));

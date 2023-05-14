@@ -12,3 +12,4 @@ export const GET_ATTRIBUTES = [
   'updatedAt',
   'hash',
 ];
+export const PUBLIC_GET_ATTRIBUTES = ['status', 'hash'];

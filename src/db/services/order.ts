@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { GET_ATTRIBUTES } from 'constants/order';
 import Order, { OrderInput } from 'db/models/order';
-import { QueryParams, OrderAttributes, UpdateOrderProps } from 'types/order';
+import { QueryParams, UpdateOrderProps } from 'types/order';
 
 export const addOrder = async (payload: OrderInput) => await Order.create(payload, { raw: true });
 
@@ -15,7 +15,8 @@ export const getOrdersByIds = (ids: string[]) =>
     raw: true,
   });
 
-export const getOrderByHash = (hash: string) => Order.findOne({ where: { hash }, raw: true });
+export const getOrderByHash = (hash: string, attributes?: string[]) =>
+  Order.findOne({ where: { hash }, raw: true, attributes });
 
 export const updateOrder = (id: string, props: UpdateOrderProps) =>
   Order.update(props, { where: { id }, returning: true });
