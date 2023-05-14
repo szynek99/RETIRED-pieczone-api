@@ -25,4 +25,4 @@ export const getCakeTypeByValue = (value: string) => CakeType.findOne({ where: {
 export const updateCakeType = (id: number, props: UpdateTypeProps) =>
   CakeType.update(props, { where: { id }, returning: true });
 
-export const resetCakeType = async () => CakeType.truncate();
+export const resetCakeType = async () => CakeType.truncate({ cascade: true });

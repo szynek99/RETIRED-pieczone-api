@@ -47,7 +47,7 @@ export const checkResourceUsage = async (
   const { id } = matchedData(req);
 
   const cakeType = await getCakeType(id);
-  console.debug(cakeType);
+
   const isFlavourUsed = await countByCakeType(cakeType!.value);
 
   if (isFlavourUsed !== 0) {

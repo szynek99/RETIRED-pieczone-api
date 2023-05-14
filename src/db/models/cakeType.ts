@@ -16,6 +16,8 @@ class CakeType extends Model<CakeTypeAttributes, CakeTypeInput> implements CakeT
   public accessible!: boolean;
 
   public customizable!: boolean;
+
+  public description!: string | undefined;
 }
 
 CakeType.init(

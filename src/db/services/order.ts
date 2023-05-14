@@ -57,4 +57,4 @@ export const countByCakeFlavour = (cakeFlavour: string) => Order.count({ where: 
 
 export const removeOrder = (id: string | string[]) => Order.destroy({ where: { id } });
 
-export const resetOrder = () => Order.truncate();
+export const resetOrder = () => Order.truncate({ cascade: true });

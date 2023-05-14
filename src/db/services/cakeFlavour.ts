@@ -3,7 +3,8 @@ import { GET_ATTRIBUTES } from 'constants/cakeFlavour';
 import { UpdateFlavourProps } from 'types/cakeFlavour';
 import CakeFlavour, { CakeFlavourInput } from 'db/models/cakeFlavour';
 
-export const addCakeFlavour = (payload: CakeFlavourInput) => CakeFlavour.create(payload);
+export const addCakeFlavour = (payload: CakeFlavourInput) =>
+  CakeFlavour.create(payload, { raw: true });
 
 export const getCakeFlavour = (id: number) => CakeFlavour.findByPk(id, { raw: true });
 
@@ -25,4 +26,4 @@ export const getCakeFlavourByValue = (value: string) => CakeFlavour.findOne({ wh
 export const updateCakeFlavour = (id: number, props: UpdateFlavourProps) =>
   CakeFlavour.update(props, { where: { id }, returning: true });
 
-export const resetCakeFlavour = () => CakeFlavour.truncate();
+export const resetCakeFlavour = () => CakeFlavour.truncate({ cascade: true });
