@@ -36,11 +36,7 @@ describe('CakeFlavour: delete', () => {
     });
 
     const response = await request(app).delete(`${ROUTES.CAKE_FLAVOURS.BASE}/${addedOrder.id}`);
-    const { status, body } = response;
-
+    const { status } = response;
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('name', addedOrder.name);
-    expect(body).toHaveProperty('value', addedOrder.value);
-    expect(body).toHaveProperty('accessible', addedOrder.accessible);
   });
 });

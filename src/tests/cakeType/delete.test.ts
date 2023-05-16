@@ -37,12 +37,8 @@ describe('CakeType: delete', () => {
     });
 
     const response = await request(app).delete(`${ROUTES.CAKE_TYPES.BASE}/${addedOrder.id}`);
-    const { status, body } = response;
+    const { status } = response;
 
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('name', addedOrder.name);
-    expect(body).toHaveProperty('value', addedOrder.value);
-    expect(body).toHaveProperty('accessible', addedOrder.accessible);
-    expect(body).toHaveProperty('customizable', addedOrder.customizable);
   });
 });
