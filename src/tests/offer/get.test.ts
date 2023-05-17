@@ -73,6 +73,7 @@ describe('Offer: get', () => {
 
     const response = await request(app).get(`${ROUTES.OFFER.BASE}/${offer.id}`);
     const { status, body } = response;
+
     expect(status).toBe(HttpStatusCode.OK);
     expect(body).toHaveProperty('title', `best title ever`);
     expect(body).toHaveProperty('placement', 5);

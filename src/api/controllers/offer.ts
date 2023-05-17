@@ -54,7 +54,9 @@ const getOffer = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-
+    if (isNil(offer.images)) {
+      offer.images = [];
+    }
     processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);
