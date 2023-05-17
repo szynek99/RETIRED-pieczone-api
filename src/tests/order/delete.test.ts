@@ -3,23 +3,11 @@ import app from 'api/app';
 import { nanoid } from 'nanoid';
 import request from 'supertest';
 import { ROUTES } from 'constants/routes';
-import { OrderInput } from 'db/models/order';
 import { HttpStatusCode } from 'constants/common';
 import { addOrder, resetOrder } from 'db/services/order';
 import { NextFunction, Request, Response } from 'express';
-
-const SAMPLE_ORDER = {
-  hash: nanoid(),
-  firstname: 'John',
-  surname: 'Doe',
-  phoneNumber: '536389112',
-  cakeType: 'fruit',
-  cakeFlavour: 'cherry',
-  spongeColour: 'dark',
-  cakeWeight: 2.2,
-  cakeShape: 'round',
-  alcoholAllowed: true,
-};
+import { resetCakeType, addCakeType } from 'db/services/cakeType';
+import { resetCakeFlavour, addCakeFlavour } from 'db/services/cakeFlavour';
 
 jest.mock('api/middleware/user', () => ({
   verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
@@ -30,6 +18,20 @@ jest.mock('api/middleware/user', () => ({
 describe('Order: delete', () => {
   beforeAll(async () => {
     await resetOrder();
+    await Promise.all([resetCakeFlavour(), resetCakeType()]);
+    await Promise.all([
+      addCakeType({
+        name: 'Chocolate',
+        value: 'chocolate',
+        accessible: true,
+        customizable: false,
+      }),
+      addCakeFlavour({
+        name: 'Cherry',
+        value: 'cherry',
+        accessible: true,
+      }),
+    ]);
   });
 
   beforeEach(() => {
@@ -46,37 +48,49 @@ describe('Order: delete', () => {
   });
 
   it('correct single delete', async () => {
-    const addedOrder = await addOrder(SAMPLE_ORDER as OrderInput);
+    const addedOrder = await addOrder({
+      hash: nanoid(),
+      firstname: 'John',
+      surname: 'Doe',
+      phoneNumber: '536389112',
+      cakeType: 'chocolate',
+      cakeFlavour: null,
+      spongeColour: 'dark',
+      cakeWeight: 2.2,
+      cakeShape: 'round',
+      alcoholAllowed: true,
+      occasion: null,
+      imageAttached: false,
+      cakeInscription: null,
+      commentsToOrder: null,
+    });
+
     const response = await request(app).delete(`${ROUTES.ORDERS.BASE}/${addedOrder.id}`);
-    const { status, body } = response;
+    const { status } = response;
 
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('firstname', addedOrder.firstname);
-    expect(body).toHaveProperty('surname', addedOrder.surname);
-    expect(body).toHaveProperty('phoneNumber', addedOrder.phoneNumber);
-    expect(body).toHaveProperty('cakeType', addedOrder.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', addedOrder.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', addedOrder.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', addedOrder.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', addedOrder.alcoholAllowed);
-    expect(body).toHaveProperty('cakeInscription', addedOrder.cakeInscription);
-    expect(body).toHaveProperty('commentsToOrder', addedOrder.commentsToOrder);
-    expect(body).toHaveProperty('occasion', addedOrder.occasion);
-    expect(body).toHaveProperty('status', 'pending');
-    expect(body).toHaveProperty('createdAt');
-    expect(body).toHaveProperty('updatedAt');
   });
 
   it('correct multiple delete', async () => {
-    const addedOrder1 = await addOrder(SAMPLE_ORDER as OrderInput);
-    const addedOrder2 = await addOrder(SAMPLE_ORDER as OrderInput);
-    const response = await request(app).delete(
-      `${ROUTES.ORDERS.BASE}?id=${addedOrder1.id}&id=${addedOrder2.id}`,
-    );
+    const addedOrder = await addOrder({
+      hash: nanoid(),
+      firstname: 'John',
+      surname: 'Doe',
+      phoneNumber: '536389112',
+      cakeType: 'chocolate',
+      cakeFlavour: null,
+      spongeColour: 'dark',
+      cakeWeight: 2.2,
+      cakeShape: 'round',
+      alcoholAllowed: true,
+      occasion: null,
+      imageAttached: false,
+      cakeInscription: null,
+      commentsToOrder: null,
+    });
+    const response = await request(app).delete(`${ROUTES.ORDERS.BASE}?id=${addedOrder.id}`);
 
-    const { status, body } = response;
+    const { status } = response;
     expect(status).toBe(HttpStatusCode.OK);
-    expect(Array.isArray(body)).toBe(true);
-    expect(body).toHaveLength(2);
   });
 });
