@@ -4,17 +4,19 @@ import { ROUTES } from 'constants/routes';
 dotenv.config();
 const { API_URL } = process.env;
 
-export default (formData: any) => {
-  if (formData.imageAttached) {
+export default (payload: any) => {
+  const newPayload = { ...payload };
+  if (payload.imageAttached) {
     // eslint-disable-next-line no-param-reassign
-    formData.image = {
-      title: formData.hash,
-      src: `${API_URL}${ROUTES.UPLOADS.ORDER}/${formData.hash}.jpg`,
+    newPayload.image = {
+      title: payload.hash,
+      src: `${API_URL}${ROUTES.UPLOADS.ORDER}/${payload.hash}.jpg`,
     };
   } else {
     // eslint-disable-next-line no-param-reassign
-    formData.image = null;
+    newPayload.image = null;
   }
   // eslint-disable-next-line no-param-reassign
-  delete formData.imageAttached;
+  delete newPayload.imageAttached;
+  return newPayload;
 };

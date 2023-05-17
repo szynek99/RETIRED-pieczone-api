@@ -38,8 +38,8 @@ const postOrder = async (req: Request, res: Response) => {
       payload.imageAttached = true;
     }
 
-    const order = await addOrder(payload as OrderInput);
-    processImage(order);
+    let order = (await addOrder(payload as OrderInput)).dataValues;
+    order = processImage(order);
 
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
@@ -66,8 +66,8 @@ const putOrder = async (req: Request, res: Response) => {
       payload.imageAttached = true;
     }
 
-    const order = (await updateOrder(id, payload as UpdateOrderProps))[1][0].dataValues;
-    processImage(order);
+    let order = (await updateOrder(id, payload as UpdateOrderProps))[1][0].dataValues;
+    order = processImage(order);
 
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
@@ -78,14 +78,14 @@ const putOrder = async (req: Request, res: Response) => {
 const getOrder = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const order = await getOrderById(id);
+    let order = await getOrderById(id);
 
     if (isNull(order)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
 
-    processImage(order);
+    order = processImage(order);
 
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
@@ -102,8 +102,6 @@ const getOrderPublic = async (req: Request, res: Response) => {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
       return;
     }
-
-    processImage(order);
 
     res.status(HttpStatusCode.OK).json(order);
   } catch (error) {
