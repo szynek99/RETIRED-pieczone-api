@@ -7,6 +7,8 @@ import { OrderOuput } from 'db/models/order';
 import { HttpStatusCode } from 'constants/common';
 import { addOrder, resetOrder } from 'db/services/order';
 import { NextFunction, Request, Response } from 'express';
+import { addCakeType, resetCakeType } from 'db/services/cakeType';
+import { addCakeFlavour, resetCakeFlavour } from 'db/services/cakeFlavour';
 
 jest.mock('api/middleware/user', () => ({
   verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
@@ -14,33 +16,38 @@ jest.mock('api/middleware/user', () => ({
   checkDuplicateUsername: (_: Request, __: Response, next: NextFunction) => next(),
 }));
 
-const SAMPLE_ORDER = {
-  hash: nanoid(),
-  firstname: 'John',
-  surname: 'Vetto',
-  phoneNumber: `536389111`,
-  cakeType: 'cream',
-  cakeFlavour: 'cranberry',
-  spongeColour: 'dark',
-  cakeWeight: 4.5,
-  cakeShape: 'round',
-  alcoholAllowed: true,
-  occasion: 'Anniversary',
-  cakeInscription: 'Be happy',
-  commentsToOrder: 'wedding style',
-};
-
 describe('Order: get', () => {
   let sampleOrderOutput: OrderOuput;
   beforeAll(async () => {
     await resetOrder();
+    await Promise.all([resetCakeFlavour(), resetCakeType()]);
+    await Promise.all([
+      addCakeType({
+        name: 'Cream',
+        value: 'cream',
+        accessible: true,
+        customizable: true,
+      }),
+      addCakeType({
+        name: 'Chocolate',
+        value: 'chocolate',
+        accessible: true,
+        customizable: false,
+      }),
+      addCakeFlavour({
+        name: 'Cherry',
+        value: 'cherry',
+        accessible: true,
+      }),
+    ]);
+
     for (let i = 1; i <= 9; i += 1) {
       addOrder({
         hash: nanoid(),
         firstname: 'Mark',
         surname: 'Dollitle',
         phoneNumber: `5463091${i}2`,
-        cakeType: 'vanilla',
+        cakeType: 'cream',
         cakeFlavour: 'cherry',
         spongeColour: 'dark',
         cakeWeight: i,
@@ -49,9 +56,25 @@ describe('Order: get', () => {
         cakeInscription: null,
         commentsToOrder: null,
         occasion: null,
-      } as any);
+        imageAttached: false,
+      });
     }
-    sampleOrderOutput = await addOrder(SAMPLE_ORDER as any);
+    sampleOrderOutput = await addOrder({
+      hash: nanoid(),
+      firstname: 'John',
+      surname: 'Vetto',
+      phoneNumber: `536389111`,
+      cakeType: 'chocolate',
+      spongeColour: 'dark',
+      cakeWeight: 4.5,
+      cakeShape: 'round',
+      alcoholAllowed: true,
+      occasion: 'Anniversary',
+      cakeInscription: 'Be happy',
+      commentsToOrder: 'wedding style',
+      imageAttached: false,
+      cakeFlavour: null,
+    });
   });
 
   beforeEach(() => {
@@ -152,19 +175,19 @@ describe('Order: get', () => {
     );
     const { status, body } = response;
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('firstname', sampleOrderOutput.firstname);
-    expect(body).toHaveProperty('surname', sampleOrderOutput.surname);
-    expect(body).toHaveProperty('phoneNumber', sampleOrderOutput.phoneNumber);
-    expect(body).toHaveProperty('cakeType', sampleOrderOutput.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', sampleOrderOutput.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', sampleOrderOutput.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', sampleOrderOutput.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', sampleOrderOutput.alcoholAllowed);
+    expect(body.firstname).toBeUndefined();
+    expect(body.surname).toBeUndefined();
+    expect(body.phoneNumber).toBeUndefined();
+    expect(body.cakeType).toBeUndefined();
+    expect(body.cakeFlavour).toBeUndefined();
+    expect(body.cakeWeight).toBeUndefined();
+    expect(body.cakeShape).toBeUndefined();
+    expect(body).toHaveProperty('hash', sampleOrderOutput.hash);
     expect(body).toHaveProperty('status', 'pending');
-    expect(body).toHaveProperty('createdAt');
-    expect(body).toHaveProperty('updatedAt');
-    expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
-    expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
+    expect(body.createdAt).toBeUndefined();
+    expect(body.updatedAt).toBeUndefined();
+    expect(body.cakeInscription).toBeUndefined();
+    expect(body.commentsToOrder).toBeUndefined();
+    expect(body.occasion).toBeUndefined();
   });
 });

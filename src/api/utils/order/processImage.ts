@@ -11,5 +11,10 @@ export default (formData: any) => {
       title: formData.hash,
       src: `${API_URL}${ROUTES.UPLOADS.ORDER}/${formData.hash}.jpg`,
     };
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    formData.image = null;
   }
+  // eslint-disable-next-line no-param-reassign
+  delete formData.imageAttached;
 };

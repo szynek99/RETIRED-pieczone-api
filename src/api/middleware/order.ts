@@ -25,7 +25,11 @@ export const checkValidFlavour = async (
   }
 
   if (cakeType.customizable) {
-    const cakeFlavour = await getCakeFlavourByValue(cakeFlavourValue!);
+    if (!cakeFlavourValue) {
+      res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagane'));
+      return;
+    }
+    const cakeFlavour = await getCakeFlavourByValue(cakeFlavourValue);
 
     if (isNil(cakeFlavour)) {
       res
