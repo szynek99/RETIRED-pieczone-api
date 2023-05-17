@@ -104,7 +104,6 @@ const deleteOffer = async (req: Request, res: Response) => {
 
     res.status(HttpStatusCode.OK).json();
   } catch (error) {
-    console.debug(error);
     res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
   }
 };

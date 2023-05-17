@@ -29,13 +29,13 @@ describe('CakeFlavour: delete', () => {
   });
 
   it('correct single delete', async () => {
-    const addedOrder = await addCakeFlavour({
+    const addedFlavour = await addCakeFlavour({
       name: 'Cherry',
       value: 'cherry',
       accessible: true,
     });
 
-    const response = await request(app).delete(`${ROUTES.CAKE_FLAVOURS.BASE}/${addedOrder.id}`);
+    const response = await request(app).delete(`${ROUTES.CAKE_FLAVOURS.BASE}/${addedFlavour.id}`);
     const { status } = response;
     expect(status).toBe(HttpStatusCode.OK);
   });

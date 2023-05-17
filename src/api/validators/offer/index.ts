@@ -58,7 +58,7 @@ const offerRules = {
     param('id').isNumeric().withMessage('Nieprawidłowa wartość'),
     BASIC_STRING_RULE('title'),
     check('placement').isNumeric().withMessage('Nieprawidłowa wartość'),
-    BASIC_STRING_RULE('visible'),
+    check('visible').isBoolean().withMessage('Nieprawidłowa wartość'),
     ARRAY_BELONING_RULE('category', OFFER_CATEGORIES),
     check('description')
       .isString()

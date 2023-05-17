@@ -29,7 +29,7 @@ describe('CakeType: update', () => {
   });
 
   it('correct single update', async () => {
-    const addedOrder = await addCakeType({
+    const addedType = await addCakeType({
       name: 'Cherry',
       value: 'cherry',
       accessible: true,
@@ -44,14 +44,14 @@ describe('CakeType: update', () => {
     };
 
     const response = await request(app)
-      .put(`${ROUTES.CAKE_TYPES.BASE}/${addedOrder.id}`)
+      .put(`${ROUTES.CAKE_TYPES.BASE}/${addedType.id}`)
       .send(NEW_BODY);
     const { status, body } = response;
 
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('id', addedOrder.id);
+    expect(body).toHaveProperty('id', addedType.id);
     expect(body).toHaveProperty('name', NEW_BODY.name);
-    expect(body).toHaveProperty('value', addedOrder.value);
+    expect(body).toHaveProperty('value', addedType.value);
     expect(body).toHaveProperty('accessible', NEW_BODY.accessible);
     expect(body).toHaveProperty('customizable', NEW_BODY.customizable);
     expect(body).toHaveProperty('description', NEW_BODY.description);

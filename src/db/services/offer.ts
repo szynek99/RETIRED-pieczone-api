@@ -28,3 +28,5 @@ export const updateOffer = (id: number, props: UpdateTypeProps) =>
   Offer.update(props, { where: { id }, returning: true });
 
 export const removeOffer = (id: number) => Offer.destroy({ where: { id } });
+
+export const resetOffer = async () => Offer.truncate({ cascade: true });
