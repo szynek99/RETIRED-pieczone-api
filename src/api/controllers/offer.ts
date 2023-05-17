@@ -14,16 +14,16 @@ import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db
 
 const postOffer = async (req: Request, res: Response) => {
   try {
-    const payload = matchedData(req);
     const newImages = getImages(req.files?.images);
-
+    let payload = matchedData(req);
     payload.images = [];
+
     if (newImages) {
-      addImages(newImages, payload);
+      payload = addImages(newImages, payload);
     }
 
-    const offer = await addOffer(payload as AddOfferInput);
-    processImagesOffer(offer);
+    let offer = (await addOffer(payload as AddOfferInput)).dataValues;
+    offer = processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
@@ -48,7 +48,7 @@ const getAllOffers = async (req: Request, res: Response) => {
 const getOffer = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
-    const offer = await findOffer(id);
+    let offer = await findOffer(id);
 
     if (isNull(offer)) {
       res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
@@ -57,7 +57,7 @@ const getOffer = async (req: Request, res: Response) => {
     if (isNil(offer.images)) {
       offer.images = [];
     }
-    processImagesOffer(offer);
+    offer = processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
@@ -67,7 +67,7 @@ const getOffer = async (req: Request, res: Response) => {
 
 const putOffer = async (req: Request, res: Response) => {
   try {
-    const { id, ...payload } = matchedData(req, { includeOptionals: true });
+    let payload = matchedData(req, { includeOptionals: true });
     const newImages = getImages(req.files?.images);
     let { images: oldImages } = payload;
 
@@ -85,11 +85,11 @@ const putOffer = async (req: Request, res: Response) => {
 
     removeOfferImages(payload.images, req.images);
     if (newImages) {
-      addImages(newImages, payload);
+      payload = addImages(newImages, payload);
     }
 
-    const offer = (await updateOffer(id, payload as UpdateTypeProps))[1][0].dataValues;
-    processImagesOffer(offer);
+    let offer = (await updateOffer(payload.id, payload as UpdateTypeProps))[1][0].dataValues;
+    offer = processImagesOffer(offer);
 
     res.status(HttpStatusCode.OK).json(offer);
   } catch (error) {
