@@ -22,8 +22,18 @@ export const updateOrder = (id: string, props: UpdateOrderProps) =>
   Order.update(props, { where: { id }, returning: true });
 
 export const getAllOrders = (queryParams: QueryParams) => {
-  const { offset, pageSize, field, order, firstname, surname, cakeWeight, createdAt, status } =
-    queryParams;
+  const {
+    offset,
+    pageSize,
+    field,
+    order,
+    firstname,
+    surname,
+    cakeWeight,
+    createdAt,
+    pickupDate,
+    status,
+  } = queryParams;
 
   return Order.findAndCountAll({
     limit: pageSize,
@@ -32,6 +42,9 @@ export const getAllOrders = (queryParams: QueryParams) => {
     where: {
       createdAt: {
         [Op.gte]: createdAt || '2000-01-01 00:00:00.000',
+      },
+      pickupDate: {
+        [Op.gte]: pickupDate || '2000-01-01 00:00:00.000',
       },
       firstname: {
         [Op.substring]: firstname || '',

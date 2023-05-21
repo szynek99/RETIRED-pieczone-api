@@ -39,6 +39,10 @@ describe('Order model', () => {
           type: DataTypes.STRING,
           allowNull: false,
         },
+        pickupDate: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
         surname: {
           type: DataTypes.STRING,
           allowNull: false,

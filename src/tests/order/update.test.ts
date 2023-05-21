@@ -69,6 +69,7 @@ describe('Order: update', () => {
       commentsToOrder: null,
       occasion: null,
       imageAttached: false,
+      pickupDate: new Date(),
     });
 
     const response = await request(app).put(`${ROUTES.ORDERS.BASE}/${addedOrder.id}`).send({
@@ -86,6 +87,7 @@ describe('Order: update', () => {
       cakeInscription: 'sample inscription',
       commentsToOrder: 'be nice',
       occasion: 'birthday',
+      pickupDate: new Date(),
     });
 
     const { status, body } = response;
@@ -108,5 +110,6 @@ describe('Order: update', () => {
     expect(body).toHaveProperty('status', 'finished');
     expect(body).toHaveProperty('createdAt');
     expect(body).toHaveProperty('updatedAt');
+    expect(body).toHaveProperty('pickupDate');
   });
 });

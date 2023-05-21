@@ -13,6 +13,8 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 
   public firstname!: string;
 
+  public pickupDate!: Date;
+
   public surname!: string;
 
   public status!: OrderStatus;
@@ -58,6 +60,10 @@ Order.init(
     },
     firstname: {
       type: STRING,
+      allowNull: false,
+    },
+    pickupDate: {
+      type: DATE,
       allowNull: false,
     },
     surname: {

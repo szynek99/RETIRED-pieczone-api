@@ -11,6 +11,7 @@ type SpongeTuple = typeof SPONGE_COLOUR;
 export type SpongeColour = SpongeTuple[number];
 
 interface CakeAttributes {
+  pickupDate: Date;
   cakeType: string;
   cakeFlavour: string?;
   spongeColour: SpongeColour;
@@ -48,4 +49,5 @@ export interface QueryParams extends BasicQueryParams {
   surname: string?;
   createdAt: string?;
   status: OrderStatus?;
+  pickupDate: Date?;
 }

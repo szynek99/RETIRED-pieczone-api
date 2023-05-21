@@ -1,9 +1,8 @@
 import { isArray, isString } from 'lodash';
 import { check, param, query } from 'express-validator';
-import { PRIMARY_VALIDATION } from 'constants/common';
 import { GET_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
 import { ARRAY_BELONING_RULE, GET_ALL_RULES } from 'api/validators/common';
-import { ID_RULE } from './constants';
+import { ID_RULE, PRIMARY_VALIDATION } from './constants';
 
 const orderRules = {
   getAll: [
@@ -17,9 +16,26 @@ const orderRules = {
     query('status').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
     query('firstname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
     query('surname').isString().optional({ nullable: true }).withMessage('Nieprawidłowa wartość'),
+    query('pickupDate')
+      .isString()
+      .optional({ nullable: true })
+      .withMessage('Nieprawidłowa wartość'),
   ],
   addSingle: [
     ...PRIMARY_VALIDATION,
+    check('pickupDate')
+      .isDate()
+      .withMessage('Nieprawidłowa wartość')
+      .bail()
+      .custom((value) => {
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+        if (todayDate > new Date(value)) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Odbiór nie może być w przeszłości'),
     check('image')
       .custom((_, { req: { files } }) => {
         if (files && files.image) {
@@ -50,6 +66,7 @@ const orderRules = {
     ...PRIMARY_VALIDATION,
     ID_RULE,
     ARRAY_BELONING_RULE('status', ORDER_STATUS),
+    check('pickupDate').isDate().withMessage('Nieprawidłowa wartość'),
     check('image')
       .custom((_, { req: { files } }) => {
         if (files && files.image) {

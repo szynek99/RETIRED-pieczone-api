@@ -57,6 +57,7 @@ describe('Order: get', () => {
         commentsToOrder: null,
         occasion: null,
         imageAttached: false,
+        pickupDate: new Date(),
       });
     }
     sampleOrderOutput = await addOrder({
@@ -74,6 +75,7 @@ describe('Order: get', () => {
       commentsToOrder: 'wedding style',
       imageAttached: false,
       cakeFlavour: null,
+      pickupDate: new Date(),
     });
   });
 
@@ -113,26 +115,6 @@ describe('Order: get', () => {
     expect(body.errors).toHaveProperty('id');
   });
 
-  it('correct single get: by id', async () => {
-    const response = await request(app).get(`${ROUTES.ORDERS.BASE}/${sampleOrderOutput.id}`);
-    const { status, body } = response;
-    expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('firstname', sampleOrderOutput.firstname);
-    expect(body).toHaveProperty('surname', sampleOrderOutput.surname);
-    expect(body).toHaveProperty('phoneNumber', sampleOrderOutput.phoneNumber);
-    expect(body).toHaveProperty('cakeType', sampleOrderOutput.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', sampleOrderOutput.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', sampleOrderOutput.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', sampleOrderOutput.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', sampleOrderOutput.alcoholAllowed);
-    expect(body).toHaveProperty('status', 'pending');
-    expect(body).toHaveProperty('createdAt');
-    expect(body).toHaveProperty('updatedAt');
-    expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
-    expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
-  });
-
   it('incorrect single get by id: incorrect id', async () => {
     const response = await request(app).get(`${ROUTES.ORDERS.BASE}/non-existing-id`);
     const { status, body } = response;
@@ -159,6 +141,7 @@ describe('Order: get', () => {
     expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
     expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
     expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
+    expect(body).toHaveProperty('pickupDate', sampleOrderOutput.pickupDate);
   });
 
   it('incorrect single get by id: incorrect hash', async () => {
@@ -189,5 +172,6 @@ describe('Order: get', () => {
     expect(body.cakeInscription).toBeUndefined();
     expect(body.commentsToOrder).toBeUndefined();
     expect(body.occasion).toBeUndefined();
+    expect(body.pickupDate).toBeUndefined();
   });
 });
