@@ -27,6 +27,7 @@ const postOrder = async (req: Request, res: Response) => {
     const hash = nanoid();
     const payload = matchedData(req);
     const newImage = req.files?.image as UploadedFile | undefined;
+    payload.pickupDate = new Date(payload.pickupDate);
     payload.hash = hash;
 
     if (req.clearFlavour) {
@@ -51,6 +52,7 @@ const putOrder = async (req: Request, res: Response) => {
   try {
     const { id, ...payload } = matchedData(req, { includeOptionals: true });
     const newImage = req.files?.image as UploadedFile | undefined;
+    payload.pickupDate = new Date(payload.pickupDate);
 
     if (req.clearFlavour) {
       payload.cakeFlavour = undefined;

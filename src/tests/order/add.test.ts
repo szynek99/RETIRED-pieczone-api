@@ -57,6 +57,7 @@ describe('Order: add', () => {
     expect(body.errors).toHaveProperty('cakeWeight');
     expect(body.errors).toHaveProperty('cakeShape');
     expect(body.errors).toHaveProperty('alcoholAllowed');
+    expect(body.errors).toHaveProperty('pickupDate');
   });
 
   it('incorrect add: flavour required', async () => {
@@ -69,6 +70,7 @@ describe('Order: add', () => {
       cakeWeight: 5,
       cakeShape: 'square',
       alcoholAllowed: false,
+      pickupDate: '2023-06-01',
     });
     const { status, body } = response;
 
@@ -91,7 +93,7 @@ describe('Order: add', () => {
       cakeInscription: 'sample inscription',
       commentsToOrder: 'be nice',
       occasion: 'birthday',
-      pickupDate: new Date(),
+      pickupDate: '2023-06-01',
     });
 
     const { status, body } = response;
@@ -113,7 +115,7 @@ describe('Order: add', () => {
     expect(body).toHaveProperty('cakeInscription', 'sample inscription');
     expect(body).toHaveProperty('commentsToOrder', 'be nice');
     expect(body).toHaveProperty('occasion', 'birthday');
-    expect(body).toHaveProperty('pickupDate');
+    expect(body).toHaveProperty('pickupDate', '2023-06-01T00:00:00.000Z');
   });
 
   it('correct add: flavour not required', async () => {
@@ -129,7 +131,7 @@ describe('Order: add', () => {
       cakeInscription: 'sample inscription',
       commentsToOrder: 'be nice',
       occasion: 'birthday',
-      pickupDate: new Date(),
+      pickupDate: '2023-06-01',
     });
 
     const { status, body } = response;
@@ -151,6 +153,6 @@ describe('Order: add', () => {
     expect(body).toHaveProperty('cakeInscription', 'sample inscription');
     expect(body).toHaveProperty('commentsToOrder', 'be nice');
     expect(body).toHaveProperty('occasion', 'birthday');
-    expect(body).toHaveProperty('pickupDate');
+    expect(body).toHaveProperty('pickupDate', '2023-06-01T00:00:00.000Z');
   });
 });

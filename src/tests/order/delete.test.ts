@@ -63,7 +63,7 @@ describe('Order: delete', () => {
       imageAttached: false,
       cakeInscription: null,
       commentsToOrder: null,
-      pickupDate: new Date(),
+      pickupDate: new Date('2023-06-01'),
     });
 
     const response = await request(app).delete(`${ROUTES.ORDERS.BASE}/${addedOrder.id}`);
@@ -88,7 +88,7 @@ describe('Order: delete', () => {
       imageAttached: false,
       cakeInscription: null,
       commentsToOrder: null,
-      pickupDate: new Date(),
+      pickupDate: new Date('2023-06-01'),
     });
     const response = await request(app).delete(`${ROUTES.ORDERS.BASE}?id=${addedOrder.id}`);
 

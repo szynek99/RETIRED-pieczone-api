@@ -41,7 +41,7 @@ describe('Order: get', () => {
       }),
     ]);
 
-    for (let i = 1; i <= 9; i += 1) {
+    for (let i = 0; i <= 9; i += 1) {
       addOrder({
         hash: nanoid(),
         firstname: 'Mark',
@@ -57,26 +57,9 @@ describe('Order: get', () => {
         commentsToOrder: null,
         occasion: null,
         imageAttached: false,
-        pickupDate: new Date(),
+        pickupDate: new Date('2023-06-01'),
       });
     }
-    sampleOrderOutput = await addOrder({
-      hash: nanoid(),
-      firstname: 'John',
-      surname: 'Vetto',
-      phoneNumber: `536389111`,
-      cakeType: 'chocolate',
-      spongeColour: 'dark',
-      cakeWeight: 4.5,
-      cakeShape: 'round',
-      alcoholAllowed: true,
-      occasion: 'Anniversary',
-      cakeInscription: 'Be happy',
-      commentsToOrder: 'wedding style',
-      imageAttached: false,
-      cakeFlavour: null,
-      pickupDate: new Date(),
-    });
   });
 
   beforeEach(() => {
@@ -105,6 +88,7 @@ describe('Order: get', () => {
     expect(body[0]).toHaveProperty('createdAt');
     expect(body[0]).toHaveProperty('updatedAt');
     expect(body[0]).toHaveProperty('hash');
+    expect(body[0]).toHaveProperty('pickupDate');
   });
 
   it('incorrect single get: no id', async () => {
@@ -124,24 +108,43 @@ describe('Order: get', () => {
   });
 
   it('correct single get by id', async () => {
-    const response = await request(app).get(`${ROUTES.ORDERS.BASE}/${sampleOrderOutput.id}`);
+    const placedOrder = await addOrder({
+      hash: nanoid(),
+      firstname: 'John',
+      surname: 'Vetto',
+      phoneNumber: `536389111`,
+      cakeType: 'chocolate',
+      spongeColour: 'dark',
+      cakeWeight: 4.5,
+      cakeShape: 'round',
+      alcoholAllowed: true,
+      occasion: 'Anniversary',
+      cakeInscription: 'Be happy',
+      commentsToOrder: 'wedding style',
+      imageAttached: false,
+      cakeFlavour: null,
+      pickupDate: new Date('2023-06-01'),
+    });
+
+    const response = await request(app).get(`${ROUTES.ORDERS.BASE}/${placedOrder.id}`);
     const { status, body } = response;
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('firstname', sampleOrderOutput.firstname);
-    expect(body).toHaveProperty('surname', sampleOrderOutput.surname);
-    expect(body).toHaveProperty('phoneNumber', sampleOrderOutput.phoneNumber);
-    expect(body).toHaveProperty('cakeType', sampleOrderOutput.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', sampleOrderOutput.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', sampleOrderOutput.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', sampleOrderOutput.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', sampleOrderOutput.alcoholAllowed);
+    expect(body).toHaveProperty('firstname', 'John');
+    expect(body).toHaveProperty('surname', 'Vetto');
+    expect(body).toHaveProperty('phoneNumber', '536389111');
+    expect(body).toHaveProperty('cakeType', 'chocolate');
+    expect(body).toHaveProperty('cakeFlavour', null);
+    expect(body).toHaveProperty('cakeWeight', 4.5);
+    expect(body).toHaveProperty('spongeColour', 'dark');
+    expect(body).toHaveProperty('cakeShape', 'round');
+    expect(body).toHaveProperty('alcoholAllowed', true);
     expect(body).toHaveProperty('status', 'pending');
     expect(body).toHaveProperty('createdAt');
     expect(body).toHaveProperty('updatedAt');
-    expect(body).toHaveProperty('cakeInscription', sampleOrderOutput.cakeInscription);
-    expect(body).toHaveProperty('commentsToOrder', sampleOrderOutput.commentsToOrder);
-    expect(body).toHaveProperty('occasion', sampleOrderOutput.occasion);
-    expect(body).toHaveProperty('pickupDate', sampleOrderOutput.pickupDate);
+    expect(body).toHaveProperty('cakeInscription', 'Be happy');
+    expect(body).toHaveProperty('commentsToOrder', 'wedding style');
+    expect(body).toHaveProperty('occasion', 'Anniversary');
+    expect(body).toHaveProperty('pickupDate', '2023-06-01T00:00:00.000Z');
   });
 
   it('incorrect single get by id: incorrect hash', async () => {
@@ -153,9 +156,25 @@ describe('Order: get', () => {
   });
 
   it('correct single get by hash', async () => {
-    const response = await request(app).get(
-      `${ROUTES.ORDERS.BASE}/public/${sampleOrderOutput.hash}`,
-    );
+    const placedOrder = await addOrder({
+      hash: nanoid(),
+      firstname: 'John',
+      surname: 'Vetto',
+      phoneNumber: `536389111`,
+      cakeType: 'chocolate',
+      spongeColour: 'dark',
+      cakeWeight: 4.5,
+      cakeShape: 'round',
+      alcoholAllowed: true,
+      occasion: 'Anniversary',
+      cakeInscription: 'Be happy',
+      commentsToOrder: 'wedding style',
+      imageAttached: false,
+      cakeFlavour: null,
+      pickupDate: new Date('2023-06-01'),
+    });
+
+    const response = await request(app).get(`${ROUTES.ORDERS.BASE}/public/${placedOrder.hash}`);
     const { status, body } = response;
     expect(status).toBe(HttpStatusCode.OK);
     expect(body.firstname).toBeUndefined();
@@ -165,7 +184,7 @@ describe('Order: get', () => {
     expect(body.cakeFlavour).toBeUndefined();
     expect(body.cakeWeight).toBeUndefined();
     expect(body.cakeShape).toBeUndefined();
-    expect(body).toHaveProperty('hash', sampleOrderOutput.hash);
+    expect(body).toHaveProperty('hash', placedOrder.hash);
     expect(body).toHaveProperty('status', 'pending');
     expect(body.createdAt).toBeUndefined();
     expect(body.updatedAt).toBeUndefined();
