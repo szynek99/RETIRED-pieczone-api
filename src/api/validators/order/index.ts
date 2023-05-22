@@ -24,7 +24,7 @@ const orderRules = {
   addSingle: [
     ...PRIMARY_VALIDATION,
     check('pickupDate')
-      .isDate()
+      .isISO8601()
       .withMessage('Nieprawidłowa wartość')
       .bail()
       .custom((value) => {
@@ -41,7 +41,7 @@ const orderRules = {
     ...PRIMARY_VALIDATION,
     ID_RULE,
     ARRAY_BELONING_RULE('status', ORDER_STATUS),
-    check('pickupDate').isDate().withMessage('Nieprawidłowa wartość'),
+    check('pickupDate').isISO8601().withMessage('Nieprawidłowa wartość'),
   ],
   getSingle: [ID_RULE],
   getMany: [
