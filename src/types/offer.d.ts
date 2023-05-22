@@ -11,7 +11,7 @@ export interface OfferAttributes {
   placement: number;
   visible: boolean;
   category: Categories;
-  images: string[];
+  images?: string[];
 }
 
 export interface AddOfferInput {
@@ -20,7 +20,7 @@ export interface AddOfferInput {
   placement: number;
   visible: boolean;
   category: Categories;
-  images: string[];
+  images?: string[];
 }
 
 export interface UpdateTypeProps {

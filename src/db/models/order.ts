@@ -1,6 +1,6 @@
 import sequelize from 'db/connection';
-import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 import { CakeShape, OrderAttributes, OrderStatus, SpongeColour } from 'types/order';
+import { UUID, UUIDV4, Model, STRING, Optional, FLOAT, BOOLEAN, DATE, Sequelize } from 'sequelize';
 
 export type OrderInput = Optional<OrderAttributes, 'id' | 'status' | 'createdAt' | 'updatedAt'>;
 
@@ -12,6 +12,8 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
   public hash!: string;
 
   public firstname!: string;
+
+  public pickupDate!: Date;
 
   public surname!: string;
 
@@ -37,7 +39,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 
   public commentsToOrder!: string | null;
 
-  public imageUrl!: string | null;
+  public imageAttached!: boolean;
 
   public createdAt!: Date;
 
@@ -60,6 +62,10 @@ Order.init(
       type: STRING,
       allowNull: false,
     },
+    pickupDate: {
+      type: DATE,
+      allowNull: false,
+    },
     surname: {
       type: STRING,
       allowNull: false,
@@ -80,10 +86,18 @@ Order.init(
     cakeType: {
       type: STRING,
       allowNull: false,
+      references: {
+        model: 'CakeType',
+        key: 'value',
+      },
     },
     cakeFlavour: {
       type: STRING,
       allowNull: true,
+      references: {
+        model: 'CakeFlavour',
+        key: 'value',
+      },
     },
     spongeColour: {
       type: STRING,
@@ -109,9 +123,10 @@ Order.init(
       type: STRING,
       allowNull: true,
     },
-    imageUrl: {
-      type: STRING,
-      allowNull: true,
+    imageAttached: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     createdAt: {
       type: DATE,

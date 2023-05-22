@@ -10,7 +10,6 @@ const modelStaticMethodMocks = {
 
 jest.mock('sequelize', () => {
   class MockModel {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static init(attributes: any, options: any) {
       modelStaticMethodMocks.init(attributes, options);
     }

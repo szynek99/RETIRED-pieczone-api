@@ -1,12 +1,14 @@
 import { isNil } from 'lodash';
+import isNull from 'lodash/isNull';
 import { OrderInput } from 'db/models/order';
 import { matchedData } from 'express-validator';
+import { getOrderById } from 'db/services/order';
 import { HttpStatusCode } from 'constants/common';
-import { singleFieldError } from 'api/utils/Response';
 import { getCakeTypeByValue } from 'db/services/cakeType';
 import { NextFunction, Request, Response } from 'express';
+import { getCakeFlavourByValue } from 'db/services/cakeFlavour';
+import { singleFieldError, requestError } from 'api/utils/Response';
 
-// eslint-disable-next-line import/prefer-default-export
 export const checkValidFlavour = async (
   req: Request,
   res: Response,
@@ -22,10 +24,36 @@ export const checkValidFlavour = async (
     return;
   }
 
-  if (cakeType.customizable && isNil(cakeFlavourValue)) {
-    res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagany'));
+  if (cakeType.customizable) {
+    if (!cakeFlavourValue) {
+      res.status(HttpStatusCode.UNPROCESSABLE).json(singleFieldError('cakeFlavour', 'Wymagane'));
+      return;
+    }
+    const cakeFlavour = await getCakeFlavourByValue(cakeFlavourValue);
+
+    if (isNil(cakeFlavour)) {
+      res
+        .status(HttpStatusCode.UNPROCESSABLE)
+        .json(singleFieldError('cakeFlavour', 'Nieprawidłowa wartość'));
+      return;
+    }
+  } else {
+    req.clearFlavour = true;
+  }
+
+  next();
+};
+
+export const checkResourceExistance = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = matchedData(req);
+  const order = await getOrderById(id);
+
+  if (isNull(order)) {
+    res.status(HttpStatusCode.NOT_FOUND).json(requestError('Nie znaleziono'));
     return;
   }
+  req.hash = order.hash;
+  req.imageAttached = order.imageAttached;
 
   next();
 };

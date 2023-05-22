@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const removeOrderImage = (hash: string) => {
+const removeOrderImage = (hash: string) =>
   fs.unlink(`uploads/${hash}.jpg`, (err) => {
     if (process.env.ENVIROMENT !== 'TEST') {
       if (err && err.code === 'ENOENT') {
@@ -15,5 +15,5 @@ const removeOrderImage = (hash: string) => {
       }
     }
   });
-};
+
 export default removeOrderImage;

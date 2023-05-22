@@ -4,41 +4,39 @@ import request from 'supertest';
 import { ROUTES } from 'constants/routes';
 import { resetOrder } from 'db/services/order';
 import { HttpStatusCode } from 'constants/common';
+import { NextFunction, Request, Response } from 'express';
+import { resetCakeType, addCakeType } from 'db/services/cakeType';
+import { resetCakeFlavour, addCakeFlavour } from 'db/services/cakeFlavour';
 
-const SAMPLE_ORDER_1 = {
-  firstname: 'John',
-  surname: 'Doe',
-  phoneNumber: '536389112',
-  cakeType: 'fruit',
-  cakeFlavour: 'cherry',
-  spongeColour: 'dark',
-  cakeWeight: 2.2,
-  cakeShape: 'round',
-  alcoholAllowed: true,
-};
-
-const SAMPLE_ORDER_2 = {
-  firstname: 'Mark',
-  surname: 'Dollitle',
-  phoneNumber: '546309112',
-  cakeType: 'vanilla',
-  cakeFlavour: 'cherry',
-  spongeColour: 'dark',
-  cakeWeight: 5,
-  cakeShape: 'square',
-  alcoholAllowed: false,
-  cakeInscription: 'sample inscription',
-  commentsToOrder: 'be nice',
-  occasion: 'birthday',
-};
-
-jest.mock('db/services/cakeType', () => ({
-  getCakeTypeByValue: async () => ({ customizable: true }),
+jest.mock('api/middleware/user', () => ({
+  verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
+  isAdmin: (_: Request, __: Response, next: NextFunction) => next(),
+  checkDuplicateUsername: (_: Request, __: Response, next: NextFunction) => next(),
 }));
 
 describe('Order: add', () => {
-  beforeAll(() => {
-    resetOrder();
+  beforeAll(async () => {
+    await resetOrder();
+    await Promise.all([resetCakeFlavour(), resetCakeType()]);
+    await Promise.all([
+      addCakeType({
+        name: 'Cream',
+        value: 'cream',
+        accessible: true,
+        customizable: true,
+      }),
+      addCakeType({
+        name: 'Chocolate',
+        value: 'chocolate',
+        accessible: true,
+        customizable: false,
+      }),
+      addCakeFlavour({
+        name: 'Cherry',
+        value: 'cherry',
+        accessible: true,
+      }),
+    ]);
   });
 
   beforeEach(() => {
@@ -59,6 +57,7 @@ describe('Order: add', () => {
     expect(body.errors).toHaveProperty('cakeWeight');
     expect(body.errors).toHaveProperty('cakeShape');
     expect(body.errors).toHaveProperty('alcoholAllowed');
+    expect(body.errors).toHaveProperty('pickupDate');
   });
 
   it('incorrect add: flavour required', async () => {
@@ -66,11 +65,12 @@ describe('Order: add', () => {
       firstname: 'Mark',
       surname: 'Dollitle',
       phoneNumber: '546309112',
-      cakeType: 'roche',
+      cakeType: 'cream',
       spongeColour: 'dark',
       cakeWeight: 5,
       cakeShape: 'square',
       alcoholAllowed: false,
+      pickupDate: '2023-06-01',
     });
     const { status, body } = response;
 
@@ -79,51 +79,80 @@ describe('Order: add', () => {
     expect(body.errors).toHaveProperty('cakeFlavour');
   });
 
-  it('correct add: no optional fields', async () => {
-    const response = await request(app).post(ROUTES.ORDERS.BASE).send(SAMPLE_ORDER_1);
+  it('correct add: flavour required', async () => {
+    const response = await request(app).post(ROUTES.ORDERS.BASE).send({
+      firstname: 'Mark',
+      surname: 'Dollitle',
+      phoneNumber: '546309112',
+      cakeType: 'cream',
+      cakeFlavour: 'cherry',
+      spongeColour: 'dark',
+      cakeWeight: 5,
+      cakeShape: 'square',
+      alcoholAllowed: false,
+      cakeInscription: 'sample inscription',
+      commentsToOrder: 'be nice',
+      occasion: 'birthday',
+      pickupDate: '2023-06-01',
+    });
+
     const { status, body } = response;
 
     expect(status).toBe(HttpStatusCode.OK);
     expect(body).toHaveProperty('hash');
     expect(body.hash).toHaveLength(21);
-    expect(body).toHaveProperty('firstname', SAMPLE_ORDER_1.firstname);
-    expect(body).toHaveProperty('surname', SAMPLE_ORDER_1.surname);
-    expect(body).toHaveProperty('phoneNumber', SAMPLE_ORDER_1.phoneNumber);
-    expect(body).toHaveProperty('cakeType', SAMPLE_ORDER_1.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', SAMPLE_ORDER_1.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', SAMPLE_ORDER_1.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', SAMPLE_ORDER_1.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', SAMPLE_ORDER_1.alcoholAllowed);
+    expect(body).toHaveProperty('firstname', 'Mark');
+    expect(body).toHaveProperty('surname', 'Dollitle');
+    expect(body).toHaveProperty('phoneNumber', '546309112');
+    expect(body).toHaveProperty('cakeType', 'cream');
+    expect(body).toHaveProperty('cakeFlavour', 'cherry');
+    expect(body).toHaveProperty('cakeWeight', 5);
+    expect(body).toHaveProperty('cakeShape', 'square');
+    expect(body).toHaveProperty('alcoholAllowed', false);
     expect(body).toHaveProperty('status', 'pending');
     expect(body).toHaveProperty('createdAt');
     expect(body).toHaveProperty('updatedAt');
-    expect(body).toHaveProperty('cakeInscription', null);
-    expect(body).toHaveProperty('commentsToOrder', null);
-    expect(body).toHaveProperty('imageUrl', null);
-    expect(body).toHaveProperty('occasion', null);
+    expect(body).toHaveProperty('cakeInscription', 'sample inscription');
+    expect(body).toHaveProperty('commentsToOrder', 'be nice');
+    expect(body).toHaveProperty('occasion', 'birthday');
+    expect(body).toHaveProperty('pickupDate', '2023-06-01T00:00:00.000Z');
   });
 
-  it('correct add: optional fields', async () => {
-    const response = await request(app).post(ROUTES.ORDERS.BASE).send(SAMPLE_ORDER_2);
+  it('correct add: flavour not required', async () => {
+    const response = await request(app).post(ROUTES.ORDERS.BASE).send({
+      firstname: 'Mark',
+      surname: 'Dollitle',
+      phoneNumber: '546309112',
+      cakeType: 'chocolate',
+      spongeColour: 'dark',
+      cakeWeight: 5,
+      cakeShape: 'square',
+      alcoholAllowed: false,
+      cakeInscription: 'sample inscription',
+      commentsToOrder: 'be nice',
+      occasion: 'birthday',
+      pickupDate: '2023-06-01',
+    });
+
     const { status, body } = response;
 
     expect(status).toBe(HttpStatusCode.OK);
     expect(body).toHaveProperty('hash');
     expect(body.hash).toHaveLength(21);
-    expect(body).toHaveProperty('firstname', SAMPLE_ORDER_2.firstname);
-    expect(body).toHaveProperty('surname', SAMPLE_ORDER_2.surname);
-    expect(body).toHaveProperty('phoneNumber', SAMPLE_ORDER_2.phoneNumber);
-    expect(body).toHaveProperty('cakeType', SAMPLE_ORDER_2.cakeType);
-    expect(body).toHaveProperty('cakeFlavour', SAMPLE_ORDER_2.cakeFlavour);
-    expect(body).toHaveProperty('cakeWeight', SAMPLE_ORDER_2.cakeWeight);
-    expect(body).toHaveProperty('cakeShape', SAMPLE_ORDER_2.cakeShape);
-    expect(body).toHaveProperty('alcoholAllowed', SAMPLE_ORDER_2.alcoholAllowed);
+    expect(body).toHaveProperty('firstname', 'Mark');
+    expect(body).toHaveProperty('surname', 'Dollitle');
+    expect(body).toHaveProperty('phoneNumber', '546309112');
+    expect(body).toHaveProperty('cakeType', 'chocolate');
+    expect(body).toHaveProperty('cakeFlavour', null);
+    expect(body).toHaveProperty('cakeWeight', 5);
+    expect(body).toHaveProperty('cakeShape', 'square');
+    expect(body).toHaveProperty('alcoholAllowed', false);
     expect(body).toHaveProperty('status', 'pending');
     expect(body).toHaveProperty('createdAt');
     expect(body).toHaveProperty('updatedAt');
-    expect(body).toHaveProperty('cakeInscription', SAMPLE_ORDER_2.cakeInscription);
-    expect(body).toHaveProperty('commentsToOrder', SAMPLE_ORDER_2.commentsToOrder);
-    expect(body).toHaveProperty('imageUrl', null);
-    expect(body).toHaveProperty('occasion', SAMPLE_ORDER_2.occasion);
+    expect(body).toHaveProperty('cakeInscription', 'sample inscription');
+    expect(body).toHaveProperty('commentsToOrder', 'be nice');
+    expect(body).toHaveProperty('occasion', 'birthday');
+    expect(body).toHaveProperty('pickupDate', '2023-06-01T00:00:00.000Z');
   });
 });

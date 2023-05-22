@@ -17,7 +17,7 @@ class Offer extends Model<OfferAttributes, OfferInput> implements OfferAttribute
 
   public category!: Categories;
 
-  public images!: string[];
+  public images!: string[] | undefined;
 
   public description!: string;
 }

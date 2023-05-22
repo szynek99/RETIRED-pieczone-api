@@ -11,4 +11,6 @@ export const GET_ATTRIBUTES = [
   'createdAt',
   'updatedAt',
   'hash',
+  'pickupDate',
 ];
+export const PUBLIC_GET_ATTRIBUTES = ['status', 'hash'];

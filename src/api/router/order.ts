@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import { Router } from 'express';
 import orderRules from 'api/validators/order';
-import { verifyToken } from 'api/middleware/user';
 import orderController from 'api/controllers/order';
 import { checkRequired } from 'api/middleware/common';
-import { checkValidFlavour } from 'api/middleware/order';
+import { isAdmin, verifyToken } from 'api/middleware/user';
+import { checkResourceExistance, checkValidFlavour } from 'api/middleware/order';
 
 dotenv.config();
 
@@ -24,19 +24,24 @@ orderRouter.get(
   orderController.getOrderPublic,
 );
 
-orderRouter.get('/', orderRules.getAll, [verifyToken, checkRequired], orderController.getOrders);
+orderRouter.get(
+  '/',
+  orderRules.getAll,
+  [verifyToken, isAdmin, checkRequired],
+  orderController.getOrders,
+);
 
 orderRouter.get(
   '/:id',
   orderRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, isAdmin, checkRequired],
   orderController.getOrder,
 );
 
 orderRouter.put(
   '/:id',
   orderRules.updateSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, isAdmin, checkRequired, checkResourceExistance, checkValidFlavour],
   orderController.putOrder,
 );
 
@@ -50,7 +55,7 @@ orderRouter.delete(
 orderRouter.delete(
   '/:id',
   orderRules.getSingle,
-  [verifyToken, checkRequired],
+  [verifyToken, checkRequired, checkResourceExistance],
   orderController.deleteOrder,
 );
 

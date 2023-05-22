@@ -33,6 +33,7 @@ CakeFlavour.init(
     },
     value: {
       type: STRING,
+      unique: true,
       allowNull: false,
     },
     accessible: {

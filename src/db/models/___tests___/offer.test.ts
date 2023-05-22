@@ -20,9 +20,9 @@ jest.mock('sequelize', () => {
   };
 });
 
-describe('Cake flavour model', () => {
+describe('Offer model', () => {
   it('Model.init', async () => {
-    await import('db/models/cakeFlavour');
+    await import('db/models/offer');
     expect(modelStaticMethodMocks.init).toBeCalledWith(
       {
         id: {
@@ -31,24 +31,35 @@ describe('Cake flavour model', () => {
           autoIncrement: true,
           allowNull: false,
         },
-        name: {
+        title: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        value: {
-          type: DataTypes.STRING,
+        placement: {
+          type: DataTypes.INTEGER,
           allowNull: false,
-          unique: true,
         },
-        accessible: {
+        visible: {
           type: DataTypes.BOOLEAN,
           defaultValue: true,
         },
+        category: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        description: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        images: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          allowNull: true,
+        },
       },
       {
-        tableName: 'CakeFlavour',
-        timestamps: false,
+        tableName: 'Offer',
         sequelize: mSequelize,
+        timestamps: false,
       },
     );
   });

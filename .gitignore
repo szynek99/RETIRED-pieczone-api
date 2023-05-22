@@ -38,5 +38,5 @@ prod.env
 dev.env
 
 # Ignore uploads directory
-uploads
-offer
+/uploads
+/offer

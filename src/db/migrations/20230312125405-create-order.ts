@@ -18,6 +18,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      pickupDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
       surname: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -38,10 +42,18 @@ module.exports = {
       cakeType: {
         type: DataTypes.STRING,
         allowNull: false,
+        references: {
+          model: 'CakeType',
+          key: 'value',
+        },
       },
       cakeFlavour: {
         type: DataTypes.STRING,
         allowNull: true,
+        references: {
+          model: 'CakeFlavour',
+          key: 'value',
+        },
       },
       spongeColour: {
         type: DataTypes.STRING,
@@ -67,9 +79,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      imageUrl: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      imageAttached: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         type: DataTypes.DATE,

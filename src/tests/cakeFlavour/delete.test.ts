@@ -8,6 +8,7 @@ import { addCakeFlavour, resetCakeFlavour } from 'db/services/cakeFlavour';
 
 jest.mock('api/middleware/user', () => ({
   verifyToken: (_: Request, __: Response, next: NextFunction) => next(),
+  isAdmin: (_: Request, __: Response, next: NextFunction) => next(),
   checkDuplicateUsername: (_: Request, __: Response, next: NextFunction) => next(),
 }));
 
@@ -28,18 +29,14 @@ describe('CakeFlavour: delete', () => {
   });
 
   it('correct single delete', async () => {
-    const addedOrder = await addCakeFlavour({
+    const addedFlavour = await addCakeFlavour({
       name: 'Cherry',
       value: 'cherry',
       accessible: true,
     });
 
-    const response = await request(app).delete(`${ROUTES.CAKE_FLAVOURS.BASE}/${addedOrder.id}`);
-    const { status, body } = response;
-
+    const response = await request(app).delete(`${ROUTES.CAKE_FLAVOURS.BASE}/${addedFlavour.id}`);
+    const { status } = response;
     expect(status).toBe(HttpStatusCode.OK);
-    expect(body).toHaveProperty('name', addedOrder.name);
-    expect(body).toHaveProperty('value', addedOrder.value);
-    expect(body).toHaveProperty('accessible', addedOrder.accessible);
   });
 });

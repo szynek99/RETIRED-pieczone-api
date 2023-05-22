@@ -50,15 +50,15 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const user = await getUserById(req.userId!);
+
   if (isNull(user)) {
     res.status(HttpStatusCode.FORBIDDEN).json(requestError('Użytkownik nie istnieje'));
     return;
   }
+
   if (user && user.role !== 'admin') {
     res.status(HttpStatusCode.FORBIDDEN).json(requestError('Niewystarczające uprawnienia'));
     return;
   }
   next();
 };
-
-export default { isAdmin, verifyToken, checkDuplicateUsername };

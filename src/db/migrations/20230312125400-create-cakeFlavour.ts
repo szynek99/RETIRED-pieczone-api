@@ -16,6 +16,7 @@ module.exports = {
       },
       value: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       accessible: {
