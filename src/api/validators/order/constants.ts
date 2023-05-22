@@ -1,11 +1,9 @@
+import isArray from 'lodash/isArray';
 import { param, check } from 'express-validator';
 import { BASIC_STRING_RULE } from 'api/validators/common';
 import { CAKE_SHAPE, SPONGE_COLOUR } from 'constants/order';
 
-export const ID_RULE = param('id')
-  .isString()
-  .matches(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
-  .withMessage('Nieprawidłowa wartość');
+export const ID_RULE = param('id').isUUID(4).withMessage('Nieprawidłowa wartość');
 
 export const PRIMARY_VALIDATION = [
   BASIC_STRING_RULE('firstname'),
@@ -40,4 +38,29 @@ export const PRIMARY_VALIDATION = [
     .isString()
     .optional({ nullable: true })
     .withMessage('Nieprawidłowa wartość'),
+  check('image')
+    .custom((_, { req: { files } }) => {
+      if (files && files.image) {
+        if (isArray(files.image)) {
+          return false;
+        }
+        if (!files.image.mimetype.startsWith('image')) {
+          return false;
+        }
+        return true;
+      }
+      return true;
+    })
+    .withMessage('Dozwolone jest tylko jeden plik graficzny')
+    .bail()
+    .custom((_, { req: { files } }) => {
+      if (files && files.image) {
+        if (files.image.size < 5000000) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    })
+    .withMessage('Zdjęcie za duże, maksymalny rozmiar to 5MB'),
 ];
