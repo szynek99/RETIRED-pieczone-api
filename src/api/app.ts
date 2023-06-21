@@ -6,6 +6,7 @@ import { ROUTES } from 'constants/routes';
 import offerRouter from 'api/router/offer';
 import orderRouter from 'api/router/order';
 import fileUpload from 'express-fileupload';
+import utilityRouter from 'api/router/utility';
 import express, { Application } from 'express';
 import cakeTypeRouter from 'api/router/cakeType';
 import cakeFlavourRouter from 'api/router/cakeFlavour';
@@ -23,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.ENVIROMENT !== 'TEST') {
   app.use(requestLogger);
 }
-
+app.use(ROUTES.UTILITY.BASE, utilityRouter);
 app.use(ROUTES.ORDERS.BASE, orderRouter);
 app.use(ROUTES.USER.BASE, userRouter);
 app.use(ROUTES.CAKE_TYPES.BASE, cakeTypeRouter);
