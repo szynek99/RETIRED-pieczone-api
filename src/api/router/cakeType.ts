@@ -14,6 +14,8 @@ dotenv.config();
 
 const cakeTypeRouter = Router();
 
+cakeTypeRouter.get('/public', cakeTypeController.getAllTypesPublic);
+
 cakeTypeRouter.get(
   '/',
   cakeTypeRules.getAll,

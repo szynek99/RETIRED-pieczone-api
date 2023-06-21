@@ -14,6 +14,8 @@ dotenv.config();
 
 const cakeFlavourRouter = Router();
 
+cakeFlavourRouter.get('/public', cakeFlavourController.getAllFlavoursPublic);
+
 cakeFlavourRouter.get(
   '/',
   cakeFlavourRules.getAll,

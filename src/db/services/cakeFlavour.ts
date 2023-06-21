@@ -19,6 +19,12 @@ export const getAllCakeFlavours = (queryParams: QueryParams) => {
   });
 };
 
+export const getAllCakeFlavoursPublic = () =>
+  CakeFlavour.findAll({
+    where: { accessible: true },
+    raw: true,
+  });
+
 export const removeCakeFlavour = (id: number) => CakeFlavour.destroy({ where: { id } });
 
 export const getCakeFlavourByValue = (value: string) => CakeFlavour.findOne({ where: { value } });
