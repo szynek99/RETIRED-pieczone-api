@@ -1,6 +1,7 @@
 import {
   addCakeType,
   getAllCakeTypes,
+  getAllCakeTypesPublic,
   getCakeType,
   removeCakeType,
   updateCakeType,
@@ -69,6 +70,16 @@ const getAllTypes = async (req: Request, res: Response) => {
   }
 };
 
+const getAllTypesPublic = async (_: Request, res: Response) => {
+  try {
+    const cakeTypes = await getAllCakeTypesPublic();
+
+    res.status(HttpStatusCode.OK).json(cakeTypes);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
 const deleteType = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
@@ -81,4 +92,4 @@ const deleteType = async (req: Request, res: Response) => {
   }
 };
 
-export default { postType, getType, getAllTypes, deleteType, putType };
+export default { postType, getType, getAllTypes, deleteType, putType, getAllTypesPublic };

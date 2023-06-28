@@ -18,6 +18,12 @@ export const getAllCakeTypes = (queryParams: QueryParams) => {
   });
 };
 
+export const getAllCakeTypesPublic = () =>
+  CakeType.findAll({
+    where: { accessible: true },
+    raw: true,
+  });
+
 export const removeCakeType = (id: number) => CakeType.destroy({ where: { id } });
 
 export const getCakeTypeByValue = (value: string) => CakeType.findOne({ where: { value } });

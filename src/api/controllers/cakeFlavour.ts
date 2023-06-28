@@ -4,6 +4,7 @@ import {
   updateCakeFlavour,
   getAllCakeFlavours,
   removeCakeFlavour,
+  getAllCakeFlavoursPublic,
 } from 'db/services/cakeFlavour';
 import * as dotenv from 'dotenv';
 import isNull from 'lodash/isNull';
@@ -69,6 +70,16 @@ const getAllFlavours = async (req: Request, res: Response) => {
   }
 };
 
+const getAllFlavoursPublic = async (req: Request, res: Response) => {
+  try {
+    const cakeFlavours = await getAllCakeFlavoursPublic();
+
+    res.status(HttpStatusCode.OK).json(cakeFlavours);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
 const deleteFlavour = async (req: Request, res: Response) => {
   try {
     const { id } = matchedData(req);
@@ -80,4 +91,11 @@ const deleteFlavour = async (req: Request, res: Response) => {
   }
 };
 
-export default { postFlavour, getFlavour, getAllFlavours, deleteFlavour, putFlavour };
+export default {
+  postFlavour,
+  getFlavour,
+  getAllFlavours,
+  deleteFlavour,
+  putFlavour,
+  getAllFlavoursPublic,
+};

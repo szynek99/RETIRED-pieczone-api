@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { isArray, isString } from 'lodash';
 import { check, param, query } from 'express-validator';
 import { GET_ATTRIBUTES, ORDER_STATUS } from 'constants/order';
@@ -28,9 +29,7 @@ const orderRules = {
       .withMessage('Nieprawidłowa wartość')
       .bail()
       .custom((value) => {
-        const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
-        if (todayDate > new Date(value)) {
+        if (moment().startOf('day').toDate() > moment(value).toDate()) {
           throw new Error();
         }
         return true;
