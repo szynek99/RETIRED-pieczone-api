@@ -6,7 +6,7 @@ const { PORT } = process.env;
 
 const start = () => {
   try {
-    app.listen(PORT, () => {
+    app.listen(Number(PORT), '0.0.0.0', () => {
       console.log(`Server is running on PORT ${PORT}`);
     });
   } catch (error) {
