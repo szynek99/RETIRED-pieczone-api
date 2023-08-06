@@ -10,7 +10,14 @@ import removeOfferImages from 'api/utils/offer/removeImages';
 import processImagesOffer from 'api/utils/offer/processImages';
 import { serverError, requestError } from 'api/utils/Response';
 import { AddOfferInput, QueryParams, UpdateTypeProps } from 'types/offer';
-import { addOffer, findAllOffers, findOffer, removeOffer, updateOffer } from 'db/services/offer';
+import {
+  addOffer,
+  findAllOffers,
+  findOffer,
+  getOfferCategoryPublic,
+  removeOffer,
+  updateOffer,
+} from 'db/services/offer';
 
 const postOffer = async (req: Request, res: Response) => {
   try {
@@ -110,4 +117,25 @@ const deleteOffer = async (req: Request, res: Response) => {
   }
 };
 
-export default { getOffer, postOffer, getAllOffers, putOffer, deleteOffer };
+const getOfferPublic = async (req: Request, res: Response) => {
+  try {
+    const { category } = matchedData(req);
+
+    const offers = await getOfferCategoryPublic(category);
+
+    const processedOffers = offers.map((offer) => {
+      let newOffer = { ...offer };
+      if (isNil(offer.images)) {
+        newOffer.images = [];
+      }
+      newOffer = processImagesOffer(offer);
+      return newOffer;
+    });
+
+    res.status(HttpStatusCode.OK).json(processedOffers);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json(serverError());
+  }
+};
+
+export default { getOffer, postOffer, getAllOffers, putOffer, deleteOffer, getOfferPublic };

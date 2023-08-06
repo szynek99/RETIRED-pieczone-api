@@ -20,6 +20,18 @@ const offerRules = {
       })
       .withMessage('Nieprawidłowa wartość'),
   ],
+  getPublic: [
+    query('category')
+      .isString()
+      .withMessage('Nieprawidłowa wartość')
+      .custom((value) => {
+        if (!value || !OFFER_CATEGORIES.includes(value)) {
+          throw new Error();
+        }
+        return true;
+      })
+      .withMessage('Nieprawidłowa wartość'),
+  ],
   addSingle: [
     BASIC_STRING_RULE('title'),
     check('placement').isNumeric().withMessage('Nieprawidłowa wartość'),

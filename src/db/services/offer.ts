@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { GET_ATTRIBUTES } from 'constants/offer';
 import Offer, { OfferInput } from 'db/models/offer';
-import { QueryParams, UpdateTypeProps } from 'types/offer';
+import { Categories, QueryParams, UpdateTypeProps } from 'types/offer';
 
 export const addOffer = (payload: OfferInput) => Offer.create(payload, { raw: true });
 
@@ -30,3 +30,10 @@ export const updateOffer = (id: number, props: UpdateTypeProps) =>
 export const removeOffer = (id: number) => Offer.destroy({ where: { id } });
 
 export const resetOffer = async () => Offer.truncate({ cascade: true });
+
+export const getOfferCategoryPublic = (category: Categories) =>
+  Offer.findAll({
+    where: { category, visible: true },
+    order: [['placement', 'ASC']],
+    raw: true,
+  });

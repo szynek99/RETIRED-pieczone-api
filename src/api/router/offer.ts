@@ -10,6 +10,8 @@ dotenv.config();
 
 const offerRouter = Router();
 
+offerRouter.get('/public', offerRules.getPublic, [checkRequired], offerController.getOfferPublic);
+
 offerRouter.post(
   '/',
   offerRules.addSingle,
