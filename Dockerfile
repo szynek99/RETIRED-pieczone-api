@@ -10,6 +10,8 @@ COPY ["package.json", "package-lock.json", "tsconfig.json", ".env", "./"]
 # Copies everything in the src directory to WORKDIR/src
 COPY ./src ./src
 
+RUN npm preinstall
+
 # Installs all packages
 RUN npm install
 

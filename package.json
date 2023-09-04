@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npm i nodemon -g",
     "dev": "nodemon -L -e ts --exec \"npm run build && npm start\"",
     "start": "ts-node dist/server.js",
     "build": "tsc -p .",
