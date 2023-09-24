@@ -6,7 +6,7 @@
   "scripts": {
     "preinstall": "npm i nodemon -g&& npm i typescript  -g&& npm i jest  -g",
     "dev": "nodemon -L -e ts --exec \"npm run build && npm start\"",
-    "start": "ts-node dist/server.js",
+    "start": "ts-node --files dist/server.js",
     "build": "tsc -p .",
     "test": "set ENVIROMENT=TEST&& set DB_HOST=127.0.0.1&& set DB_PORT=5433&& jest --detectOpenHandles",
     "lint": "prettier --check .",
