@@ -8,7 +8,7 @@
     "dev": "nodemon -L -e ts --exec \"npm run build && npm start\"",
     "start": "ts-node --files dist/server.js",
     "build": "tsc -p .",
-    "test": "set ENVIROMENT=TEST&& set DB_HOST=127.0.0.1&& set DB_PORT=5433&& jest --detectOpenHandles",
+    "test": "set ENVIROMENT=TEST&& set DB_HOST=127.0.0.1&& set DB_PORT=5433&& set DB_USER=postgres&& set DB_PASSWORD=password&& set DB_NAME=pieczone-test&&   jest --detectOpenHandles",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "prepare": "husky install"
